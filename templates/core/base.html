@@ -1,0 +1,41 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'es' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site_name|default:"cu2home" }}{% endblock %}</title>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <header>
+        {% block header %}
+        <nav>
+            <a href="{% url 'properties:list' %}">cu2home</a>
+        </nav>
+        {% endblock %}
+    </header>
+
+    <main>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        {% block footer %}
+        <p>&copy; {% now "Y" %} cu2home</p>
+        {% endblock %}
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

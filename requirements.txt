@@ -1,0 +1,14 @@
+Django>=5.0,<5.1
+psycopg2-binary>=2.9.9
+python-dotenv>=1.0.1
+django-htmx>=1.17,<1.18
+django-tailwind>=3.8,<3.9
+django-parler==2.3
+django-cors-headers>=4.3,<4.4
+django-allauth>=0.60,<0.61
+meilisearch>=0.30,<0.31
+redis>=5.0,<5.1
+celery>=5.3,<5.4
+gunicorn>=21.2,<21.3
+celery[redis]>=5.4,<6.0
+redis>=5.0,<6.0

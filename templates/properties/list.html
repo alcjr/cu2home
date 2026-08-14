@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}cu2home - Inmuebles en Cuba{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-[#1a3a5c] mb-6">Bienvenido a cu2home</h1>
+    <p class="text-[#6b6560] mb-8">Encuentra tu propiedad ideal en Cuba</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Aquí irán las tarjetas de propiedades -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
+            <div class="h-48 bg-gray-200 flex items-center justify-center text-gray-400">
+                Imagen de propiedad
+            </div>
+            <div class="p-4">
+                <h3 class="text-xl font-semibold text-[#2c2a28]">Casa en Miramar</h3>
+                <p class="text-[#6b6560]">La Habana · 3 hab · 120 m²</p>
+                <p class="text-2xl font-bold text-[#1a3a5c] mt-2">$120,000</p>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
+            <div class="h-48 bg-gray-200 flex items-center justify-center text-gray-400">
+                Imagen de propiedad
+            </div>
+            <div class="p-4">
+                <h3 class="text-xl font-semibold text-[#2c2a28]">Piso en Vedado</h3>
+                <p class="text-[#6b6560]">La Habana · 2 hab · 80 m²</p>
+                <p class="text-2xl font-bold text-[#1a3a5c] mt-2">$85,000</p>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
+            <div class="h-48 bg-gray-200 flex items-center justify-center text-gray-400">
+                Imagen de propiedad
+            </div>
+            <div class="p-4">
+                <h3 class="text-xl font-semibold text-[#2c2a28]">Finca en Viñales</h3>
+                <p class="text-[#6b6560]">Pinar del Río · 5 hab · 250 m²</p>
+                <p class="text-2xl font-bold text-[#1a3a5c] mt-2">$200,000</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

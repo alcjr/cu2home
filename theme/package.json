@@ -1,0 +1,12 @@
+{
+  "name": "cu2home-theme",
+  "version": "1.0.0",
+  "description": "Tailwind CSS styles for cu2home",
+  "scripts": {
+    "build": "npx tailwindcss -i ./static_src/styles.css -o ./static/css/output.css --minify",
+    "watch": "npx tailwindcss -i ./static_src/styles.css -o ./static/css/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

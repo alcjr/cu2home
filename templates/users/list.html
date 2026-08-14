@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "My saved searches" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "My saved searches" %}</h1>
+
+{% if searches %}
+    <ul>
+        {% for saved_search in searches %}
+            <li>
+                <strong>{{ saved_search }}</strong>
+                — {{ saved_search.get_frequency_display }}
+                {% if not saved_search.is_active %}({% trans "paused" %}){% endif %}
+
+                <form method="post" action="{% url 'properties:toggle_saved_search' saved_search.pk %}" style="display:inline">
+                    {% csrf_token %}
+                    <button type="submit">
+                        {% if saved_search.is_active %}{% trans "Pause" %}{% else %}{% trans "Resume" %}{% endif %}
+                    </button>
+                </form>
+
+                <form method="post" action="{% url 'properties:delete_saved_search' saved_search.pk %}" style="display:inline">
+                    {% csrf_token %}
+                    <button type="submit">{% trans "Delete" %}</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>{% trans "You don't have any saved searches yet." %}</p>
+    <p>{% trans "Save a search from the property listing to get email alerts about new matches." %}</p>
+{% endif %}
+{% endblock %}

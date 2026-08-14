@@ -1,0 +1,49 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "Panel access" %} — cu2home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {# TODO: sustituir por el pipeline de Tailwind del proyecto (core/js/tailwind.config.js) cuando esté disponible #}
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gray-50">
+    <div class="w-full max-w-sm bg-white p-8 rounded-lg shadow">
+        <h1 class="text-xl font-semibold mb-6 text-gray-900">{% trans "Panel access" %}</h1>
+
+        {% if form.non_field_errors %}
+            <div class="mb-4 text-sm text-red-600">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="{{ form.username.id_for_label }}">
+                    {% trans "Username" %}
+                </label>
+                <input type="text" name="{{ form.username.html_name }}" id="{{ form.username.id_for_label }}"
+                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                       autofocus required>
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="{{ form.password.id_for_label }}">
+                    {% trans "Password" %}
+                </label>
+                <input type="password" name="{{ form.password.html_name }}" id="{{ form.password.id_for_label }}"
+                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                       required>
+            </div>
+            <input type="hidden" name="next" value="{{ next }}">
+            <button type="submit"
+                    class="w-full bg-slate-900 text-white py-2 rounded-md text-sm font-medium hover:bg-slate-800">
+                {% trans "Log in" %}
+            </button>
+        </form>
+    </div>
+</body>
+</html>
