@@ -1,0 +1,16 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Mis favoritos" %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{% trans "Mis favoritos" %}</h1>
+    {% if favorites %}
+        <p>{% trans "Lista de propiedades favoritas:" %}</p>
+        <!-- Mostrar las propiedades -->
+    {% else %}
+        <p>{% trans "No tienes propiedades favoritas aún." %}</p>
+    {% endif %}
+</div>
+{% endblock %}

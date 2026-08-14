@@ -137,6 +137,16 @@ INSTALLED_APPS = [
     # 'apps.visor',
 ]
 
+
+
+USE_I18N = True
+LANGUAGE_CODE = 'es'
+LANGUAGES = [
+    ('es', 'Español'),
+    ('en', 'English'),
+]
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

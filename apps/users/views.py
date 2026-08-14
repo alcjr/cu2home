@@ -14,11 +14,22 @@ from .forms import SaveSearchForm, FavoriteListForm
 
 
 @login_required
+def favorites(request):
+    # Aquí la lógica para obtener los favoritos del usuario
+    return render(request, 'users/favorites.html')
+
+
+@login_required
 def favorite_list(request):
-    # Ejemplo de uso de la constante
-    default_name = DEFAULT_FAVORITE_LIST_NAME
-    # ... resto del código
-    return render(request, 'users/favorites.html', {'default_name': default_name})
+    """
+    Muestra la lista de favoritos del usuario actual.
+    """
+    # Aquí se debe obtener la lista de propiedades favoritas del usuario.
+    # Por ahora, devolvemos un template con un mensaje.
+    return render(request, 'users/favorites.html', {
+        'title': _('Mis favoritos'),
+        'favorites': [],  # Reemplazar con la lógica real
+    })
 
 
 @login_required

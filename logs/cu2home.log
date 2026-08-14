@@ -580,3 +580,198 @@ INFO 2026-08-14 13:01:25,029 autoreload Watching for file changes with StatReloa
 INFO 2026-08-14 13:02:59,636 autoreload C:\00_projects\cu2home\apps\users\models.py changed, reloading.
 INFO 2026-08-14 13:03:00,791 autoreload Watching for file changes with StatReloader
 INFO 2026-08-14 13:11:54,900 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:19:38,566 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:22:32,223 autoreload C:\00_projects\cu2home\cu2home\urls.py changed, reloading.
+INFO 2026-08-14 14:22:32,889 autoreload C:\00_projects\cu2home\cu2home\urls.py changed, reloading.
+INFO 2026-08-14 14:22:34,615 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:22:34,837 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:22:56,225 autoreload C:\00_projects\cu2home\apps\core\apps.py changed, reloading.
+INFO 2026-08-14 14:22:56,407 autoreload C:\00_projects\cu2home\apps\core\apps.py changed, reloading.
+INFO 2026-08-14 14:22:57,910 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:22:58,083 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:23:09,254 autoreload Watching for file changes with StatReloader
+ERROR 2026-08-14 14:23:11,482 log Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\apps\core\views.py", line 43, in index
+    return render(request, 'core/index.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\defaulttags.py", line 479, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\urls\resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'favorites' not found. 'favorites' is not a valid view function or pattern name.
+INFO 2026-08-14 14:28:33,416 autoreload C:\00_projects\cu2home\apps\users\urls.py changed, reloading.
+INFO 2026-08-14 14:28:34,466 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:28:55,361 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:31:11,990 autoreload C:\00_projects\cu2home\apps\users\urls.py changed, reloading.
+INFO 2026-08-14 14:31:12,243 autoreload C:\00_projects\cu2home\apps\users\urls.py changed, reloading.
+INFO 2026-08-14 14:31:13,129 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:31:13,392 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:32:07,422 autoreload C:\00_projects\cu2home\apps\users\views.py changed, reloading.
+INFO 2026-08-14 14:32:07,632 autoreload C:\00_projects\cu2home\apps\users\views.py changed, reloading.
+INFO 2026-08-14 14:32:08,743 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:32:08,932 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:32:16,422 autoreload C:\00_projects\cu2home\apps\users\views.py changed, reloading.
+INFO 2026-08-14 14:32:16,476 autoreload C:\00_projects\cu2home\apps\users\views.py changed, reloading.
+INFO 2026-08-14 14:32:17,886 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:32:17,927 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:36:57,220 autoreload Watching for file changes with StatReloader
+ERROR 2026-08-14 14:37:04,595 log Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\apps\core\views.py", line 43, in index
+    return render(request, 'core/index.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\defaulttags.py", line 479, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\urls\resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'register' not found. 'register' is not a valid view function or pattern name.
+ERROR 2026-08-14 14:37:06,757 log Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\apps\core\views.py", line 43, in index
+    return render(request, 'core/index.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\defaulttags.py", line 479, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\urls\resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'register' not found. 'register' is not a valid view function or pattern name.
+INFO 2026-08-14 14:40:39,877 autoreload C:\00_projects\cu2home\apps\authentication\urls.py changed, reloading.
+INFO 2026-08-14 14:40:40,521 autoreload C:\00_projects\cu2home\apps\authentication\urls.py changed, reloading.
+INFO 2026-08-14 14:40:41,140 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:40:41,678 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:41:18,389 autoreload C:\00_projects\cu2home\apps\authentication\views.py changed, reloading.
+INFO 2026-08-14 14:41:18,702 autoreload C:\00_projects\cu2home\apps\authentication\views.py changed, reloading.
+INFO 2026-08-14 14:41:20,010 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:41:20,214 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:41:30,110 autoreload C:\00_projects\cu2home\apps\authentication\urls.py changed, reloading.
+INFO 2026-08-14 14:41:30,228 autoreload C:\00_projects\cu2home\apps\authentication\urls.py changed, reloading.
+INFO 2026-08-14 14:41:31,323 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:41:31,483 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:45:51,369 autoreload C:\00_projects\cu2home\apps\authentication\urls.py changed, reloading.
+INFO 2026-08-14 14:45:51,492 autoreload C:\00_projects\cu2home\apps\authentication\urls.py changed, reloading.
+INFO 2026-08-14 14:45:52,723 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:45:52,819 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:46:03,756 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:46:56,533 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:47:56,168 autoreload C:\00_projects\cu2home\apps\authentication\views.py changed, reloading.
+INFO 2026-08-14 14:47:56,450 autoreload C:\00_projects\cu2home\apps\authentication\views.py changed, reloading.
+INFO 2026-08-14 14:47:57,433 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:47:57,906 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 14:48:04,242 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 15:10:07,789 autoreload C:\00_projects\cu2home\templates\authentication\login.html.py changed, reloading.
+INFO 2026-08-14 15:10:08,777 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 15:10:55,945 autoreload C:\00_projects\cu2home\templates\authentication\login.html.py changed, reloading.
+INFO 2026-08-14 15:10:57,014 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 15:19:23,133 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 15:25:23,168 autoreload C:\00_projects\cu2home\cu2home\settings.py changed, reloading.
+INFO 2026-08-14 15:25:24,971 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 15:25:38,047 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 15:27:15,390 autoreload C:\00_projects\cu2home\cu2home\urls.py changed, reloading.
+INFO 2026-08-14 15:27:15,828 autoreload C:\00_projects\cu2home\cu2home\urls.py changed, reloading.
+INFO 2026-08-14 15:27:16,683 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 15:27:17,216 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 15:29:15,495 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 15:33:27,214 autoreload Watching for file changes with StatReloader
