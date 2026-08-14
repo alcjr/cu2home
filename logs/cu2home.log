@@ -975,3 +975,8 @@ INFO 2026-08-14 16:46:51,751 autoreload Watching for file changes with StatReloa
 INFO 2026-08-14 16:52:37,504 autoreload Watching for file changes with StatReloader
 INFO 2026-08-14 17:02:33,842 autoreload Watching for file changes with StatReloader
 INFO 2026-08-14 17:06:48,428 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 17:40:04,178 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 17:40:17,423 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-14 17:40:28,092 log Not Found: /favicon.ico
+INFO 2026-08-14 18:00:42,393 autoreload Watching for file changes with StatReloader
+INFO 2026-08-14 18:18:35,080 autoreload Watching for file changes with StatReloader

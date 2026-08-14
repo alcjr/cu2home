@@ -8,24 +8,19 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
 <style>
-    /* ===== PALETA DE COLORES ===== */
+    /* ===== PALETA (heredada de base, reafirmada por si se usa aislada) ===== */
     :root {
         --tinta: #12222E;
         --azul-malecon: #1B4B66;
         --terracota: #C1512D;
+        --terracota-dark: #a8452a;
         --cal-viva: #F6F1E4;
         --verde-almendares: #2F6B4F;
         --laton: #C9A227;
+        --linea: #e7ded0;
+        --texto-suave: #5c6b73;
     }
 
-    /* ===== RESET & BASE ===== */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-        font-family: 'Inter', sans-serif;
-        background: var(--cal-viva);
-        color: var(--tinta);
-        line-height: 1.5;
-    }
     a { text-decoration: none; color: inherit; }
     ul { list-style: none; }
     img { max-width: 100%; display: block; }
@@ -33,21 +28,30 @@
 
     /* ===== HERO ===== */
     .hero {
-        background: linear-gradient(135deg, var(--tinta) 0%, var(--azul-malecon) 100%);
-        padding: 30px 0 40px;
+        position: relative;
+        padding: 72px 0 88px;
         color: #fff;
         text-align: center;
-        position: relative;
         overflow: hidden;
-        border-bottom: 4px solid var(--terracota);
+        isolation: isolate;
     }
-    .hero::after {
+    .hero-bg {
+        position: absolute;
+        inset: 0;
+        background-image: url("{% static 'core/images/hero-cuba.png' %}");
+        background-size: cover;
+        background-position: center 60%;
+        z-index: -2;
+        transform: scale(1.03);
+    }
+    /* overlay que mantiene la identidad tinta -> malecón y garantiza contraste */
+    .hero::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="0,100 100,0 100,100" fill="rgba(255,255,255,0.04)"/></svg>');
-        background-size: 100% 100%;
-        pointer-events: none;
+        z-index: -1;
+        background:
+            linear-gradient(180deg, rgba(18,34,46,0.82) 0%, rgba(18,34,46,0.55) 45%, rgba(27,75,102,0.78) 100%);
     }
     .hero-content {
         position: relative;
@@ -55,42 +59,62 @@
         max-width: 1000px;
         margin: 0 auto;
     }
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--cal-viva);
+        background: rgba(201,162,39,0.18);
+        border: 1px solid rgba(201,162,39,0.5);
+        padding: 6px 16px;
+        border-radius: 40px;
+        margin-bottom: 20px;
+    }
+    .hero-eyebrow i { color: var(--laton); }
     .hero h1 {
         font-family: 'Fraunces', serif;
-        font-size: 2.8rem;
-        font-weight: 800;
-        letter-spacing: -1px;
-        margin-bottom: 4px;
+        font-size: clamp(2.2rem, 5vw, 3.6rem);
+        font-weight: 900;
+        letter-spacing: -1.2px;
+        line-height: 1.05;
+        margin-bottom: 12px;
         color: #fff;
+        text-shadow: 0 2px 24px rgba(0,0,0,0.35);
     }
-    .hero h1 span { color: var(--laton); }
+    .hero h1 span {
+        color: var(--laton);
+        font-style: italic;
+    }
     .hero p {
-        font-size: 1.1rem;
-        opacity: 0.9;
-        margin-bottom: 20px;
+        font-size: clamp(1rem, 2vw, 1.2rem);
+        opacity: 0.95;
+        margin-bottom: 30px;
         font-weight: 400;
+        text-shadow: 0 1px 12px rgba(0,0,0,0.3);
     }
 
     /* ===== SEARCH TABS ===== */
     .search-tabs {
         display: flex;
         justify-content: center;
-        gap: 4px;
-        background: rgba(255,255,255,0.10);
-        backdrop-filter: blur(4px);
+        gap: 6px;
+        background: rgba(18,34,46,0.35);
+        backdrop-filter: blur(6px);
         border-radius: 60px;
-        padding: 4px;
-        margin-bottom: 16px;
-        max-width: 480px;
-        margin-left: auto;
-        margin-right: auto;
-        border: 1px solid rgba(255,255,255,0.15);
+        padding: 5px;
+        margin: 0 auto 16px;
+        max-width: 500px;
+        border: 1px solid rgba(255,255,255,0.18);
     }
     .search-tabs button {
         border: none;
         background: transparent;
-        color: #e2e8f0;
-        padding: 8px 20px;
+        color: rgba(255,255,255,0.8);
+        padding: 9px 22px;
         border-radius: 40px;
         font-weight: 600;
         font-size: 0.9rem;
@@ -102,73 +126,73 @@
     .search-tabs button.active {
         background: var(--terracota);
         color: #fff;
-        box-shadow: 0 4px 12px rgba(193,81,45,0.4);
+        box-shadow: 0 6px 18px rgba(193,81,45,0.45);
     }
-    .search-tabs button:hover:not(.active) { color: #fff; }
-    .search-tabs button[data-tab="swap"] { background: var(--verde-almendares); color: #fff; }
-    .search-tabs button[data-tab="swap"].active { background: var(--verde-almendares); box-shadow: 0 4px 12px rgba(47,107,79,0.4); }
-    .search-tabs button[data-tab="swap"]:hover:not(.active) { background: rgba(47,107,79,0.3); }
+    .search-tabs button:hover:not(.active) { color: #fff; background: rgba(255,255,255,0.08); }
+    .search-tabs button[data-tab="swap"].active { background: var(--verde-almendares); box-shadow: 0 6px 18px rgba(47,107,79,0.45); }
 
     /* ===== SEARCH FORM ===== */
     .search-form {
         background: #fff;
-        border-radius: 60px;
-        padding: 6px 6px 6px 18px;
+        border-radius: 22px;
+        padding: 14px;
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 6px;
-        box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+        gap: 8px;
+        box-shadow: 0 24px 60px rgba(18,34,46,0.35);
         transition: box-shadow 0.3s;
-        border: 2px solid var(--laton);
+        max-width: 1040px;
+        margin: 0 auto;
     }
-    .search-form:focus-within { box-shadow: 0 20px 48px rgba(0,0,0,0.3); border-color: var(--terracota); }
+    .search-form:focus-within { box-shadow: 0 28px 70px rgba(18,34,46,0.45); }
     .search-form .field-group {
-        flex: 1 1 100px;
-        min-width: 80px;
+        flex: 1 1 130px;
+        min-width: 110px;
         position: relative;
     }
     .search-form .field-group i {
         position: absolute;
-        left: 12px;
+        left: 14px;
         top: 50%;
         transform: translateY(-50%);
         color: var(--azul-malecon);
         font-size: 0.8rem;
+        pointer-events: none;
     }
     .search-form select,
     .search-form input {
         width: 100%;
-        padding: 10px 12px 10px 32px;
-        border: none;
-        background: #f1f5f9;
-        border-radius: 40px;
+        padding: 12px 12px 12px 36px;
+        border: 1px solid var(--linea);
+        background: #faf7f0;
+        border-radius: 12px;
         font-size: 0.9rem;
         font-family: 'Inter', sans-serif;
         color: var(--tinta);
         outline: none;
-        transition: background 0.2s;
+        transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
         appearance: none;
         -webkit-appearance: none;
     }
     .search-form select {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231B4B66' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
-        background-position: right 16px center;
-        padding-right: 40px;
+        background-position: right 14px center;
+        padding-right: 36px;
     }
     .search-form select:focus,
-    .search-form input:focus { background: #e9eef4; }
+    .search-form input:focus { background: #fff; border-color: var(--terracota); box-shadow: 0 0 0 3px rgba(193,81,45,0.12); }
     .search-form .btn-search {
         background: var(--terracota);
         border: none;
-        border-radius: 40px;
-        padding: 10px 24px;
+        border-radius: 12px;
+        padding: 12px 26px;
         color: #fff;
         font-weight: 700;
         font-size: 0.95rem;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: background 0.2s, transform 0.1s;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -176,16 +200,31 @@
         flex: 0 0 auto;
         font-family: 'Inter', sans-serif;
     }
-    .search-form .btn-search:hover { background: #a8452a; }
+    .search-form .btn-search:hover { background: var(--terracota-dark); }
+    .search-form .btn-search:active { transform: scale(0.98); }
+
+    /* ===== SECCIÓN GENÉRICA ===== */
+    .section { padding: 56px 0; }
+    .section-head-block { text-align: center; max-width: 640px; margin: 0 auto 36px; }
+    .section-kicker {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--terracota);
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+    }
 
     /* ===== MAP & PROVINCIAS SECTION ===== */
     .map-section {
-        padding: 30px 0 20px;
+        padding: 56px 0;
         background: var(--cal-viva);
     }
     .map-row {
         display: flex;
-        gap: 30px;
+        gap: 24px;
         align-items: stretch;
     }
     .map-container {
@@ -193,9 +232,20 @@
         min-height: 480px;
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.10);
-        border: 4px solid var(--laton);
+        box-shadow: 0 12px 40px rgba(18,34,46,0.12);
+        border: 1px solid var(--linea);
         background: #d9d0c0;
+        position: relative;
+    }
+    /* fina línea de latón sólo en la esquina superior como acento */
+    .map-container::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--terracota), var(--laton));
+        z-index: 500;
+        pointer-events: none;
     }
     .map-container #cubaMap {
         width: 100%;
@@ -204,142 +254,135 @@
     }
     .province-list {
         flex: 1;
-        min-width: 200px;
+        min-width: 220px;
         max-height: 480px;
         overflow-y: auto;
-        padding-right: 8px;
         background: #fff;
         border-radius: 20px;
-        padding: 16px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.06);
-        border: 2px solid var(--laton);
+        padding: 10px;
+        box-shadow: 0 12px 40px rgba(18,34,46,0.08);
+        border: 1px solid var(--linea);
     }
+    .province-list-head {
+        font-family: 'Fraunces', serif;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--tinta);
+        padding: 8px 12px 12px;
+        border-bottom: 1px solid var(--linea);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .province-list-head i { color: var(--terracota); }
     .province-list::-webkit-scrollbar { width: 6px; }
     .province-list::-webkit-scrollbar-thumb { background: var(--azul-malecon); border-radius: 8px; }
     .province-item {
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 10px 14px;
+        padding: 10px 12px;
         border-radius: 12px;
         cursor: pointer;
-        transition: all 0.2s;
-        margin-bottom: 4px;
+        transition: all 0.18s;
+        margin-bottom: 2px;
         border: 1px solid transparent;
         font-family: 'Inter', sans-serif;
     }
-    .province-item:hover {
-        background: #f0ebe0;
-        border-color: var(--laton);
-    }
+    .province-item:hover { background: #faf7f0; }
     .province-item.active {
-        background: #e8dcc8;
-        border-color: var(--terracota);
-        box-shadow: 0 0 0 2px var(--terracota);
+        background: #fbeee7;
+        border-color: rgba(193,81,45,0.4);
     }
     .province-item .icon {
-        font-size: 1.4rem;
-        color: var(--terracota);
-        width: 32px;
-        text-align: center;
+        font-size: 1.1rem;
+        color: var(--azul-malecon);
+        width: 36px; height: 36px;
+        display: flex; align-items: center; justify-content: center;
+        background: #f0ebe0;
+        border-radius: 10px;
+        flex-shrink: 0;
+        transition: background 0.18s, color 0.18s;
     }
+    .province-item.active .icon { background: var(--terracota); color: #fff; }
     .province-item .info { flex: 1; }
     .province-item .info .name {
         font-weight: 600;
         font-size: 0.95rem;
         font-family: 'Fraunces', serif;
+        color: var(--tinta);
     }
     .province-item .info .count {
-        font-size: 0.8rem;
-        color: #64748b;
+        font-size: 0.78rem;
+        color: var(--texto-suave);
     }
     .province-item .badge-count {
-        background: var(--azul-malecon);
-        color: #fff;
+        background: #eef2f0;
+        color: var(--azul-malecon);
         border-radius: 40px;
-        padding: 2px 12px;
+        padding: 3px 12px;
         font-size: 0.75rem;
-        font-weight: 600;
+        font-weight: 700;
+        font-family: 'IBM Plex Mono', monospace;
     }
-
-    /* ===== CONFIANZA (reubicado y más compacto) ===== */
-    .trust-section {
-        background: var(--tinta);
-        color: #fff;
-        padding: 20px 0; /* reducido de 30px a 20px */
-        border-top: 4px solid var(--terracota); /* borde más fino */
-        border-bottom: 4px solid var(--terracota);
-        margin: 0; /* sin margen extra */
-    }
-    .trust-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 20px; /* reducido */
-        text-align: center;
-    }
-    .trust-item i {
-        font-size: 2rem; /* reducido de 2.4rem */
-        color: var(--laton);
-        margin-bottom: 8px; /* reducido */
-    }
-    .trust-item h3 {
-        font-family: 'Fraunces', serif;
-        font-size: 1rem; /* reducido de 1.2rem */
-        margin-bottom: 4px; /* reducido */
-        color: var(--cal-viva);
-    }
-    .trust-item p {
-        font-size: 0.85rem; /* reducido de 0.9rem */
-        opacity: 0.8;
-        max-width: 220px; /* reducido */
-        margin: 0 auto;
-    }
+    .province-item.active .badge-count { background: var(--azul-malecon); color: #fff; }
 
     /* ===== PROPERTIES ===== */
-    .section { padding: 50px 0; }
     .section-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
         margin-bottom: 28px;
         flex-wrap: wrap;
         gap: 12px;
     }
     .section-header h2 {
         font-family: 'Fraunces', serif;
-        font-size: 2.2rem;
-        font-weight: 700;
-        letter-spacing: -0.5px;
+        font-size: clamp(1.7rem, 3vw, 2.3rem);
+        font-weight: 800;
+        letter-spacing: -0.6px;
         color: var(--tinta);
+    }
+    .section-header h2 small {
+        display: block;
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        font-size: 0.95rem;
+        color: var(--texto-suave);
+        letter-spacing: 0;
+        margin-top: 4px;
     }
     .section-header .link {
         color: var(--terracota);
         font-weight: 600;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         gap: 6px;
         transition: gap 0.2s;
         font-family: 'Inter', sans-serif;
+        white-space: nowrap;
     }
     .section-header .link:hover { gap: 12px; }
 
     .cards-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-        gap: 28px;
+        gap: 24px;
     }
     .property-card {
         background: #fff;
-        border-radius: 20px;
+        border-radius: 18px;
         overflow: hidden;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        box-shadow: 0 4px 20px rgba(18,34,46,0.06);
         transition: transform 0.25s, box-shadow 0.25s;
-        border: 2px solid var(--laton);
+        border: 1px solid var(--linea);
+        display: flex;
+        flex-direction: column;
     }
     .property-card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 12px 32px rgba(0,0,0,0.12);
-        border-color: var(--terracota);
+        box-shadow: 0 18px 40px rgba(18,34,46,0.14);
     }
     .property-card .card-img {
         height: 200px;
@@ -351,50 +394,66 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        transition: transform 0.4s ease;
     }
+    .property-card:hover .card-img img { transform: scale(1.06); }
     .property-card .card-img .badge {
         position: absolute;
         top: 12px;
         left: 12px;
         background: var(--terracota);
         color: #fff;
-        padding: 4px 14px;
+        padding: 5px 14px;
         border-radius: 40px;
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.3px;
+        letter-spacing: 0.4px;
         font-family: 'Inter', sans-serif;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
-    .property-card .card-body { padding: 18px 20px 20px; }
+    .property-card .card-img .fav {
+        position: absolute;
+        top: 10px; right: 10px;
+        width: 34px; height: 34px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.9);
+        color: var(--azul-malecon);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.85rem;
+        transition: color 0.2s, transform 0.2s;
+    }
+    .property-card .card-img .fav:hover { color: var(--terracota); transform: scale(1.1); }
+    .property-card .card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
     .property-card .card-body .price {
         font-family: 'IBM Plex Mono', monospace;
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         font-weight: 700;
         color: var(--tinta);
+        letter-spacing: -0.5px;
     }
+    .property-card .card-body .price span { font-size: 0.8rem; color: var(--texto-suave); font-weight: 400; }
     .property-card .card-body .location {
         font-size: 0.9rem;
-        color: #475569;
-        margin: 4px 0 8px;
+        color: var(--texto-suave);
         display: flex;
         align-items: center;
         gap: 6px;
     }
-    .property-card .card-body .location i { color: var(--azul-malecon); }
+    .property-card .card-body .location i { color: var(--terracota); }
     .property-card .card-body .details {
         display: flex;
         gap: 16px;
         font-size: 0.85rem;
-        color: #475569;
-        margin-top: 8px;
-        border-top: 1px solid #e9eef4;
+        color: var(--tinta);
+        margin-top: auto;
+        border-top: 1px solid var(--linea);
         padding-top: 12px;
     }
     .property-card .card-body .details span {
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: 5px;
         font-family: 'IBM Plex Mono', monospace;
     }
     .property-card .card-body .details i { color: var(--azul-malecon); }
@@ -402,38 +461,29 @@
     /* ===== RESPONSIVE ===== */
     @media (max-width: 992px) {
         .map-row { flex-direction: column; }
-        .province-list { max-height: 200px; }
-        .map-container { min-height: 300px; }
-        .map-container #cubaMap { height: 300px; }
-        .trust-grid { grid-template-columns: repeat(2, 1fr); }
+        .province-list { max-height: 260px; }
+        .map-container { min-height: 320px; }
+        .map-container #cubaMap { height: 320px; }
     }
     @media (max-width: 768px) {
-        .hero { padding: 20px 0 30px; }
-        .hero h1 { font-size: 2rem; }
-        .hero p { font-size: 1rem; margin-bottom: 16px; }
+        .hero { padding: 48px 0 60px; }
         .search-form {
-            border-radius: 32px;
+            border-radius: 18px;
             padding: 12px;
             flex-direction: column;
             align-items: stretch;
             gap: 8px;
         }
         .search-form .field-group { flex: 1 1 auto; min-width: 100%; }
-        .search-form .btn-search { border-radius: 40px; justify-content: center; padding: 12px; }
-        .search-tabs { border-radius: 40px; flex-wrap: wrap; justify-content: center; max-width: 100%; }
-        .search-tabs button { padding: 6px 14px; font-size: 0.85rem; }
+        .search-form .btn-search { border-radius: 12px; justify-content: center; padding: 13px; }
+        .search-tabs { flex-wrap: wrap; justify-content: center; max-width: 100%; }
+        .search-tabs button { padding: 7px 16px; font-size: 0.85rem; }
         .cards-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-        .section-header h2 { font-size: 1.6rem; }
-        .trust-grid { grid-template-columns: 1fr 1fr; }
-        .trust-item p { max-width: 100%; }
     }
     @media (max-width: 480px) {
-        .hero h1 { font-size: 1.6rem; }
-        .hero p { font-size: 0.9rem; }
         .cards-grid { grid-template-columns: 1fr; }
-        .map-container { min-height: 240px; }
-        .map-container #cubaMap { height: 240px; }
-        .trust-grid { grid-template-columns: 1fr; }
+        .map-container { min-height: 260px; }
+        .map-container #cubaMap { height: 260px; }
     }
 </style>
 {% endblock %}
@@ -441,7 +491,9 @@
 {% block content %}
 <!-- ===== HERO ===== -->
 <section class="hero">
+    <div class="hero-bg" role="img" aria-label="{% trans 'Arquitectura del Malecón de La Habana al atardecer' %}"></div>
     <div class="container hero-content">
+        <span class="hero-eyebrow"><i class="fas fa-map-marked-alt"></i> {% trans "Toda la isla en un solo lugar" %}</span>
         <h1>{% trans "Tu hogar en <span>Cuba</span>" %}</h1>
         <p>{% trans "Miles de propiedades en venta, alquiler y permuta en toda la isla" %}</p>
 
@@ -508,11 +560,16 @@
 <!-- ===== MAPA Y PROVINCIAS (FACETADO) ===== -->
 <section class="map-section">
     <div class="container">
+        <div class="section-head-block">
+            <span class="section-kicker">{% trans "Explora por región" %}</span>
+            <h2 style="font-family:'Fraunces',serif;font-size:clamp(1.7rem,3vw,2.3rem);font-weight:800;letter-spacing:-0.6px;color:var(--tinta);">{% trans "Encuentra tu provincia" %}</h2>
+        </div>
         <div class="map-row">
             <div class="map-container">
                 <div id="cubaMap"></div>
             </div>
             <div class="province-list" id="provinceList">
+                <div class="province-list-head"><i class="fas fa-location-dot"></i> {% trans "Provincias" %}</div>
                 {% for province in provinces_with_counts %}
                     <div class="province-item" data-province-id="{{ province.id }}" data-province-name="{{ province.name }}">
                         <span class="icon"><i class="fas {{ province.icon|default:'fa-city' }}"></i></span>
@@ -523,7 +580,7 @@
                         <span class="badge-count">{{ province.count }}</span>
                     </div>
                 {% empty %}
-                    <p>{% trans "No hay provincias disponibles." %}</p>
+                    <p style="padding:16px;color:var(--texto-suave);">{% trans "No hay provincias disponibles." %}</p>
                 {% endfor %}
             </div>
         </div>
@@ -534,7 +591,7 @@
 <section class="section">
     <div class="container">
         <div class="section-header">
-            <h2>{% trans "Destacados" %} <span style="font-weight:400;font-size:1.1rem;color:#64748b;">· {% trans "Las mejores propiedades" %}</span></h2>
+            <h2>{% trans "Destacados" %}<small>{% trans "Las mejores propiedades de la isla" %}</small></h2>
             <a href="{% url 'properties:list' %}" class="link">{% trans "Ver todas" %} <i class="fas fa-arrow-right"></i></a>
         </div>
 
@@ -548,9 +605,10 @@
                             <img src="https://picsum.photos/seed/{{ property.id }}/800/600" alt="{{ property.title }}" loading="lazy">
                         {% endif %}
                         <span class="badge">{{ property.get_status_display }}</span>
+                        <span class="fav" aria-label="{% trans 'Guardar' %}"><i class="far fa-heart"></i></span>
                     </div>
                     <div class="card-body">
-                        <div class="price">{{ property.price }} CUP</div>
+                        <div class="price">{{ property.price }} <span>CUP</span></div>
                         <div class="location"><i class="fas fa-map-pin"></i> {{ property.city }}, {{ property.province.name }}</div>
                         <div class="details">
                             <span><i class="fas fa-bed"></i> {{ property.rooms }}</span>
@@ -562,34 +620,6 @@
             {% empty %}
                 <p>{% trans "No hay propiedades destacadas disponibles." %}</p>
             {% endfor %}
-        </div>
-    </div>
-</section>
-
-<!-- ===== FRANJA DE CONFIANZA (reubicada y más compacta) ===== -->
-<section class="trust-section">
-    <div class="container">
-        <div class="trust-grid">
-            <div class="trust-item">
-                <i class="fas fa-shield-alt"></i>
-                <h3>{% trans "Seguridad garantizada" %}</h3>
-                <p>{% trans "Transacciones protegidas con verificación de identidad y documentos." %}</p>
-            </div>
-            <div class="trust-item">
-                <i class="fas fa-globe-americas"></i>
-                <h3>{% trans "Para la diáspora" %}</h3>
-                <p>{% trans "Compra, alquila o permuta desde cualquier país con total confianza." %}</p>
-            </div>
-            <div class="trust-item">
-                <i class="fas fa-handshake"></i>
-                <h3>{% trans "Asesoría local" %}</h3>
-                <p>{% trans "Agentes en cada provincia con conocimiento del mercado cubano." %}</p>
-            </div>
-            <div class="trust-item">
-                <i class="fas fa-credit-card"></i>
-                <h3>{% trans "Pagos flexibles" %}</h3>
-                <p>{% trans "Aceptamos MLC, CUP, USD y EUR con tipos de cambio actualizados." %}</p>
-            </div>
         </div>
     </div>
 </section>
@@ -747,17 +777,18 @@
         tooltipStyle.innerHTML = `
             .province-tooltip {
                 font-family: 'Fraunces', serif;
-                background: rgba(18,34,46,0.85);
+                background: rgba(18,34,46,0.9);
                 color: #F6F1E4;
-                border: 2px solid #C9A227;
+                border: 1px solid #C9A227;
                 border-radius: 8px;
                 padding: 6px 14px;
-                font-size: 1rem;
+                font-size: 0.95rem;
                 font-weight: 600;
+                box-shadow: 0 6px 18px rgba(0,0,0,0.25);
                 backdrop-filter: blur(4px);
             }
             .province-tooltip::before {
-                border-top-color: rgba(18,34,46,0.85);
+                border-top-color: rgba(18,34,46,0.9);
             }
         `;
         document.head.appendChild(tooltipStyle);
