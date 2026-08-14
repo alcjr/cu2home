@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.gis.db import models as gis_models
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils.text import slugify
 from parler.models import TranslatableModel, TranslatedFields
 
 from .constants import PROPERTY_TYPES
@@ -9,12 +10,47 @@ from .constants import PROPERTY_TYPES
 MAX_IMAGES_PER_PROPERTY = settings.MAX_IMAGES_PER_PROPERTY
 
 
-# Función requerida por la migración 0003_propertyimage.py
+# ===== GEOGRAFÍA DE CUBA =====
+class Province(models.Model):
+    name = models.CharField(max_length=100, unique=True, verbose_name=_('Province'))
+    slug = models.SlugField(max_length=100, unique=True, blank=True, verbose_name=_('Slug'))
+
+    class Meta:
+        verbose_name = _('Province')
+        verbose_name_plural = _('Provinces')
+        ordering = ['name']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
+class Municipality(models.Model):
+    province = models.ForeignKey(Province, on_delete=models.CASCADE, related_name='municipalities', verbose_name=_('Province'))
+    name = models.CharField(max_length=100, verbose_name=_('Municipality'))
+    slug = models.SlugField(max_length=100, blank=True, verbose_name=_('Slug'))
+
+    class Meta:
+        verbose_name = _('Municipality')
+        verbose_name_plural = _('Municipalities')
+        ordering = ['province__name', 'name']
+        unique_together = ('province', 'name')
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.name} ({self.province.name})"
+
+
+# ===== PROPIEDADES =====
 def property_image_upload_path(instance, filename):
-    """
-    Ruta de subida para las imágenes de propiedades.
-    Se mantiene por compatibilidad con migraciones existentes.
-    """
     return f'properties/{instance.property_id}/images/{filename}'
 
 
@@ -36,7 +72,14 @@ class Property(TranslatableModel):
         verbose_name=_('Property type'),
     )
     city = models.CharField(max_length=100, verbose_name=_('City'))
-    province = models.CharField(max_length=100, blank=True, verbose_name=_('Province'))
+    province = models.ForeignKey(
+        Province,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='properties',
+        verbose_name=_('Province'),
+    )
     address = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Address'))
     location = gis_models.PointField(srid=4326, verbose_name=_('Location'), null=True, blank=True)
     price = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Price'))

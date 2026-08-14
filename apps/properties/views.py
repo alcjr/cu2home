@@ -1,23 +1,13 @@
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.core.paginator import Paginator
 from django.db.models import F
-from django.shortcuts import get_object_or_404, render
+from django.views.decorators.http import require_GET
 
 from .forms import PropertyFilterForm
-from .models import Property
-
-# Whitelist explícita: nunca pasar request.GET['sort'] directo a order_by().
-# Evita ordenar por campos de relación (agent__password) o provocar
-# FieldError con nombres arbitrarios.
-ALLOWED_SORT_FIELDS = {
-    'created_at': 'created_at',
-    '-created_at': '-created_at',
-    'price': 'price',
-    '-price': '-price',
-    'surface': 'surface',
-    '-surface': '-surface',
-}
-DEFAULT_SORT = '-created_at'
+from .models import Property, Province, Municipality
+from .constants import PROPERTY_TYPES
 
 
 def property_list(request):
@@ -49,8 +39,16 @@ def property_list(request):
         if data.get('has_air_conditioning'):
             properties = properties.filter(has_air_conditioning=True)
 
-    sort_param = request.GET.get('sort', DEFAULT_SORT)
-    sort = ALLOWED_SORT_FIELDS.get(sort_param, DEFAULT_SORT)
+    sort_param = request.GET.get('sort', '-created_at')
+    allowed_sort = {
+        'created_at': 'created_at',
+        '-created_at': '-created_at',
+        'price': 'price',
+        '-price': '-price',
+        'surface': 'surface',
+        '-surface': '-surface',
+    }
+    sort = allowed_sort.get(sort_param, '-created_at')
     properties = properties.order_by(sort)
 
     paginator = Paginator(properties, settings.SEARCH_RESULTS_PER_PAGE)
@@ -60,7 +58,7 @@ def property_list(request):
     context = {
         'properties': page_obj,
         'form': form,
-        'current_sort': sort_param if sort_param in ALLOWED_SORT_FIELDS else DEFAULT_SORT,
+        'current_sort': sort_param if sort_param in allowed_sort else '-created_at',
     }
 
     if request.htmx:
@@ -70,14 +68,24 @@ def property_list(request):
 
 
 def property_detail(request, pk, slug):
-    # `slug` es decorativo (SEO); la búsqueda real va por pk. No se fuerza
-    # redirect canónico todavía -- pendiente si se quiere ese comportamiento.
     obj = get_object_or_404(Property, pk=pk, is_active=True)
-
-    # Incremento atómico: evita perder vistas por condiciones de carrera
-    # bajo tráfico concurrente (el patrón anterior leía y escribía en dos
-    # pasos no atómicos).
     Property.objects.filter(pk=obj.pk).update(views_count=F('views_count') + 1)
     obj.refresh_from_db(fields=['views_count'])
-
     return render(request, 'properties/detail.html', {'property': obj})
+
+
+@require_GET
+def get_municipalities(request):
+    """HTMX endpoint: devuelve los municipios de una provincia seleccionada."""
+    province_id = request.GET.get('province_id')
+    if province_id:
+        try:
+            province = Province.objects.get(id=province_id)
+            municipalities = province.municipalities.all().order_by('name')
+            options = ''.join([
+                f'<option value="{m.id}">{m.name}</option>' for m in municipalities
+            ])
+            return HttpResponse(f'<option value="">---</option>{options}')
+        except Province.DoesNotExist:
+            pass
+    return HttpResponse('<option value="">---</option>')
