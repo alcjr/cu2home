@@ -175,10 +175,12 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
                 'apps.core.context_processors.site_settings',
+                'apps.properties.context_processors.featured_properties',
             ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'cu2home.wsgi.application'
 

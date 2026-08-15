@@ -6,10 +6,9 @@ from .models import Municipality, Province
 
 
 class PropertyFilterForm(forms.Form):
+    q = forms.CharField(required=False, label=_('Search'), max_length=200, help_text=_('Title or description'))
     city = forms.CharField(required=False, label=_('City'), max_length=100)
 
-    # Los nombres de campo coinciden a propósito con los <select name="province_id">
-    # y <select name="municipality_id"> del buscador en core/index.html.
     province_id = forms.ModelChoiceField(
         required=False,
         label=_('Province'),

@@ -70,8 +70,9 @@ class Property(TranslatableModel):
         choices=PROPERTY_TYPES,
         default='apartment',
         verbose_name=_('Property type'),
+        db_index=True,
     )
-    city = models.CharField(max_length=100, verbose_name=_('City'))
+    city = models.CharField(max_length=100, verbose_name=_('City'), db_index=True)
     province = models.ForeignKey(
         Province,
         on_delete=models.SET_NULL,
@@ -79,18 +80,28 @@ class Property(TranslatableModel):
         blank=True,
         related_name='properties',
         verbose_name=_('Province'),
+        db_index=True,
+    )
+    municipality = models.ForeignKey(
+        Municipality,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='properties',
+        verbose_name=_('Municipality'),
+        db_index=True,
     )
     address = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Address'))
     location = gis_models.PointField(srid=4326, verbose_name=_('Location'), null=True, blank=True)
-    price = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Price'))
-    surface = models.PositiveIntegerField(null=True, blank=True, verbose_name=_('Surface (m²)'))
-    rooms = models.PositiveIntegerField(null=True, blank=True, verbose_name=_('Rooms'))
-    bathrooms = models.PositiveIntegerField(null=True, blank=True, verbose_name=_('Bathrooms'))
+    price = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Price'), db_index=True)
+    surface = models.PositiveIntegerField(null=True, blank=True, verbose_name=_('Surface (m²)'), db_index=True)
+    rooms = models.PositiveIntegerField(null=True, blank=True, verbose_name=_('Rooms'), db_index=True)
+    bathrooms = models.PositiveIntegerField(null=True, blank=True, verbose_name=_('Bathrooms'), db_index=True)
     has_elevator = models.BooleanField(default=False, verbose_name=_('Elevator'))
     has_heating = models.BooleanField(default=False, verbose_name=_('Heating'))
     has_air_conditioning = models.BooleanField(default=False, verbose_name=_('Air conditioning'))
-    slug = models.SlugField(max_length=200, unique=True, verbose_name=_('Slug'))
-    is_active = models.BooleanField(default=True, verbose_name=_('Active'))
+    slug = models.SlugField(max_length=200, unique=True, verbose_name=_('Slug'), db_index=True)
+    is_active = models.BooleanField(default=True, verbose_name=_('Active'), db_index=True)
     views_count = models.PositiveIntegerField(default=0, verbose_name=_('Views'))
     agent = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -105,14 +116,19 @@ class Property(TranslatableModel):
         choices=PropertyStatus.choices,
         default=PropertyStatus.AVAILABLE,
         verbose_name=_('Status'),
+        db_index=True,
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = _('Property')
         verbose_name_plural = _('Properties')
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['province', 'municipality']),
+            models.Index(fields=['price', 'surface']),
+        ]
 
     def __str__(self):
         try:
@@ -123,6 +139,11 @@ class Property(TranslatableModel):
     @property
     def image_count(self):
         return self.images.count()
+
+    @classmethod
+    def get_featured(cls, limit=6):
+        """Retorna propiedades destacadas (las más recientes activas)"""
+        return cls.objects.filter(is_active=True).select_related('province', 'municipality')[:limit]
 
 
 class PropertyImage(models.Model):

@@ -1,0 +1,27 @@
+{% load i18n %}
+
+<div class="cards-grid" id="cards-grid">
+    {% for property in properties %}
+        <a class="property-card" href="{% url 'properties:detail' property.pk property.slug %}">
+            <div class="card-img">
+                {% if property.images.first %}
+                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" loading="lazy">
+                {% else %}
+                    <img src="https://picsum.photos/seed/{{ property.id }}/800/600" alt="{{ property.title }}" loading="lazy">
+                {% endif %}
+                <span class="badge">{{ property.get_status_display }}</span>
+            </div>
+            <div class="card-body">
+                <div class="price">{{ property.price }} CUP</div>
+                <div class="location"><i class="fas fa-map-pin"></i> {{ property.city }}, {{ property.province.name }}</div>
+                <div class="details">
+                    <span><i class="fas fa-bed"></i> {{ property.rooms }}</span>
+                    <span><i class="fas fa-bath"></i> {{ property.bathrooms }}</span>
+                    <span><i class="fas fa-vector-square"></i> {{ property.surface }} m²</span>
+                </div>
+            </div>
+        </a>
+    {% empty %}
+        <p class="empty-state">{% trans "No hay propiedades que coincidan con los filtros seleccionados." %}</p>
+    {% endfor %}
+</div>

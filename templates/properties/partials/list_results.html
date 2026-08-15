@@ -1,0 +1,57 @@
+{% load i18n %}
+{# =========================================================
+   Contenido de #results-container. Se renderiza dentro de
+   properties/list.html en petición normal, y se devuelve solo
+   (sin el <div> contenedor) cuando la petición viene por HTMX
+   -- filtros o paginación -- para intercambiarse vía
+   hx-target="#results-container".
+   ========================================================= #}
+<p class="results-count">
+    {% blocktrans count counter=properties.paginator.count %}
+        {{ counter }} propiedad encontrada
+    {% plural %}
+        {{ counter }} propiedades encontradas
+    {% endblocktrans %}
+</p>
+
+<div class="cards-grid">
+    {% for property in properties %}
+        {% include "properties/partials/_property_card.html" %}
+    {% empty %}
+        <p class="empty-state">{% trans "No se encontraron propiedades con los filtros seleccionados." %}</p>
+    {% endfor %}
+</div>
+
+{% if properties.paginator.num_pages > 1 %}
+<nav class="pagination" aria-label="{% trans 'Paginación de resultados' %}">
+    {% if properties.has_previous %}
+        <a href="{% if querystring %}?{{ querystring }}&page={{ properties.previous_page_number }}{% else %}?page={{ properties.previous_page_number }}{% endif %}"
+           hx-get="{% url 'properties:list' %}{% if querystring %}?{{ querystring }}&page={{ properties.previous_page_number }}{% else %}?page={{ properties.previous_page_number }}{% endif %}"
+           hx-target="#results-container" hx-swap="innerHTML" hx-push-url="true"
+           aria-label="{% trans 'Página anterior' %}">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+    {% endif %}
+
+    {% for num in properties.paginator.page_range %}
+        {% if num == properties.number %}
+            <span class="current">{{ num }}</span>
+        {% elif num > properties.number|add:'-3' and num < properties.number|add:'3' %}
+            <a href="{% if querystring %}?{{ querystring }}&page={{ num }}{% else %}?page={{ num }}{% endif %}"
+               hx-get="{% url 'properties:list' %}{% if querystring %}?{{ querystring }}&page={{ num }}{% else %}?page={{ num }}{% endif %}"
+               hx-target="#results-container" hx-swap="innerHTML" hx-push-url="true">{{ num }}</a>
+        {% elif num == 2 or num == properties.paginator.num_pages|add:'-1' %}
+            <span class="ellipsis">…</span>
+        {% endif %}
+    {% endfor %}
+
+    {% if properties.has_next %}
+        <a href="{% if querystring %}?{{ querystring }}&page={{ properties.next_page_number }}{% else %}?page={{ properties.next_page_number }}{% endif %}"
+           hx-get="{% url 'properties:list' %}{% if querystring %}?{{ querystring }}&page={{ properties.next_page_number }}{% else %}?page={{ properties.next_page_number }}{% endif %}"
+           hx-target="#results-container" hx-swap="innerHTML" hx-push-url="true"
+           aria-label="{% trans 'Página siguiente' %}">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    {% endif %}
+</nav>
+{% endif %}
