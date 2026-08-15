@@ -1,11 +1,11 @@
 {% load i18n %}
-{# =========================================================
-   Contenido de #results-container. Se renderiza dentro de
-   properties/list.html en petición normal, y se devuelve solo
-   (sin el <div> contenedor) cuando la petición viene por HTMX
-   -- filtros o paginación -- para intercambiarse vía
-   hx-target="#results-container".
-   ========================================================= #}
+{% comment %}
+Contenido de #results-container. Se renderiza dentro de
+properties/list.html en petición normal, y se devuelve solo
+(sin el <div> contenedor) cuando la petición viene por HTMX
+-- filtros o paginación -- para intercambiarse vía
+hx-target="#results-container".
+{% endcomment %}
 <p class="results-count">
     {% blocktrans count counter=properties.paginator.count %}
         {{ counter }} propiedad encontrada

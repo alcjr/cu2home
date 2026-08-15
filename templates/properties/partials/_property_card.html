@@ -1,13 +1,13 @@
 {% load i18n %}
-{# =========================================================
-   Cartilla de propiedad — parcial reutilizable.
-   Espera una variable de contexto `property` (instancia de
-   apps.properties.models.Property).
-   Usado por: core/index.html (destacados) y
-   properties/list.html + properties/partials/list_results.html
-   (resultados de búsqueda/filtros), para que ambas vistas
-   muestren exactamente la misma cartilla.
-   ========================================================= #}
+{% comment %}
+Cartilla de propiedad — parcial reutilizable.
+Espera una variable de contexto `property` (instancia de
+apps.properties.models.Property).
+Usado por: core/index.html (destacados) y
+properties/list.html + properties/partials/list_results.html
+(resultados de búsqueda/filtros), para que ambas vistas
+muestren exactamente la misma cartilla.
+{% endcomment %}
 <a class="property-card" href="{% url 'properties:detail' property.pk property.slug %}">
     <div class="card-img">
         {% if property.images.first %}
