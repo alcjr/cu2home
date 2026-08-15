@@ -1,0 +1,115 @@
+{% load i18n %}
+{% comment %}
+    PARTIAL: mapa de Cuba con silueta real (costa continua dibujada a
+    mano, no GIS de precisión) + un pin clicable por provincia.
+
+    Uso:
+      {% include "core/includes/cuba_map_svg.html" with svg_id="cubaMapMini" show_labels=False %}
+
+    show_labels=True añade el nombre de cada provincia junto a su pin
+    (se usa en el mapa grande de la sección "Explora por provincia").
+
+    IMPORTANTE: para comentarios multilínea en templates Django hay que
+    usar el tag de bloque "comment" (con su cierre correspondiente) en
+    vez de la sintaxis de comentario de una sola línea entre llaves y
+    almohadilla — esa última no admite varias líneas; si abarca más de
+    una, Django deja de tratarlo como comentario y lo imprime literalmente.
+{% endcomment %}
+<svg id="{{ svg_id }}" viewBox="0 0 1040 340" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="{% trans 'Mapa de Cuba por provincias' %}">
+    <!-- Silueta de la isla (costa continua, decorativa) -->
+    <path class="cuba-silhouette" d="
+        M10,152
+        L35,130 L75,110 L130,98 L190,88 L250,82 L300,75 L335,65 L360,72 L410,68
+        L470,58 L540,52 L610,48 L670,50 L720,52 L770,58 L820,62 L865,65 L905,78
+        L945,95 L980,120 L1015,145
+        L995,175 L955,168 L960,178 L920,190 L880,205 L850,218 L825,238 L795,222
+        L750,225 L700,220 L650,225 L600,222 L545,212 L490,200 L445,195 L415,208
+        L390,196 L350,215 L315,235 L270,205 L230,188 L190,178 L150,172 L110,165
+        L65,160 Z" />
+
+    <!-- Isla de la Juventud -->
+    <path class="cuba-silhouette cuba-silhouette-jv" d="
+        M140,255 L185,245 L210,265 L205,295 L165,308 L125,295 L105,272 Z" />
+
+    <!-- Pines de provincias -->
+    <g class="province-pin" data-name="Pinar del Río" transform="translate(75,145)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="-14">Pinar del Río</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Artemisa" transform="translate(170,138)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="-14">Artemisa</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="La Habana" transform="translate(255,133)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="-14">La Habana</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Mayabeque" transform="translate(292,150)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="22">Mayabeque</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Matanzas" transform="translate(365,138)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="-14">Matanzas</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Cienfuegos" transform="translate(425,158)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="22">Cienfuegos</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Villa Clara" transform="translate(500,128)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="-14">Villa Clara</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Sancti Spíritus" transform="translate(560,142)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="22">Sancti Spíritus</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Ciego de Ávila" transform="translate(630,133)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="-14">Ciego de Ávila</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Camagüey" transform="translate(715,140)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="22">Camagüey</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Las Tunas" transform="translate(790,148)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="-14">Las Tunas</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Holguín" transform="translate(855,128)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="-14">Holguín</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Granma" transform="translate(825,192)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="22">Granma</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Santiago de Cuba" transform="translate(900,155)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="22">Santiago de Cuba</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Guantánamo" transform="translate(958,138)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="-14">Guantánamo</text>{% endif %}
+    </g>
+    <g class="province-pin" data-name="Isla de la Juventud" transform="translate(157,276)">
+        <circle class="pin-hit" r="17" />
+        <circle class="pin-dot" r="7" />
+        {% if show_labels %}<text class="pin-label" x="0" y="22">Isla de la Juventud</text>{% endif %}
+    </g>
+</svg>

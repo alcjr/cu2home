@@ -1,0 +1,59 @@
+{% load static i18n %}
+{% comment %}
+    PARTIAL: mapa de Cuba por provincias, renderizado con Leaflet sobre
+    la silueta real de cada provincia (GeoJSON, no rectángulos ni
+    bounding boxes). No usa capa de teselas (tiles) de terceros: las
+    provincias se dibujan como polígonos vectoriales sobre un fondo
+    propio, así que no hay dependencia de red externa (CartoDB/OSM) ni
+    filtros CSS sobre imágenes de mapa.
+
+    Las provincias se emparejan con los datos de Django por NOMBRE
+    normalizado (sin acentos, minúsculas) — nunca por ID fijo — para
+    no depender de que los IDs de la base de datos coincidan con un
+    orden hardcodeado.
+
+    Uso:
+      {% include "core/includes/cuba_map_leaflet.html" with map_id="cubaMapMini" variant="mini" %}
+      {% include "core/includes/cuba_map_leaflet.html" with map_id="cubaMapLarge" variant="full" show_list=True %}
+
+    variant:
+      "mini" -> mapa compacto decorativo (hero), sin lista, sin interacción de arrastre.
+      "full" -> mapa grande interactivo + lista de provincias con contador.
+
+    show_list=True añade la lista lateral de provincias (usa
+    provinces_with_counts del contexto del padre; el include hereda
+    el contexto salvo que se use "only").
+{% endcomment %}
+<div class="province-map province-map--{{ variant|default:'full' }}" data-map-id="{{ map_id }}" data-variant="{{ variant|default:'full' }}">
+    <div class="province-map-frame">
+        <div id="{{ map_id }}" class="province-map-canvas" role="group" aria-label="{% trans 'Mapa de Cuba por provincias' %}"></div>
+        {% if variant == "mini" %}
+            <div class="province-map-caption">
+                <strong>{% trans "Cuba en un vistazo" %}</strong>
+                <span id="{{ map_id }}Selection">{% trans "Toca una provincia" %}</span>
+            </div>
+        {% else %}
+            <p class="map-hint"><i class="fas fa-hand-pointer"></i> {% trans "Haz clic o pulsa Intro sobre una provincia para ver sus municipios" %}</p>
+        {% endif %}
+    </div>
+
+    {% if show_list %}
+        <div class="province-list" id="{{ map_id }}List">
+            <div class="province-list-head"><i class="fas fa-location-dot"></i> {% trans "Provincias" %}</div>
+            <div class="province-list-items">
+                {% for province in provinces_with_counts %}
+                    <button type="button" class="province-item" data-province-name="{{ province.name }}">
+                        <span class="icon"><i class="fas {{ province.icon|default:'fa-city' }}"></i></span>
+                        <span class="info">
+                            <span class="name">{{ province.name }}</span>
+                            <span class="count">{{ province.count|default:0 }} {% trans "propiedades" %}</span>
+                        </span>
+                        <span class="badge-count">{{ province.count|default:0 }}</span>
+                    </button>
+                {% empty %}
+                    <p class="province-list-empty">{% trans "No hay provincias disponibles." %}</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>

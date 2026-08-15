@@ -4,67 +4,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#12222E">
     <title>{% block title %}{{ site_name|default:"cu2home" }}{% endblock %}</title>
-    {% block extra_css %}{% endblock %}
-    {% block extra_head %}{% endblock %}
-    <!-- ===== HTMX ===== -->
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <!-- ===== FUENTES ===== -->
+
+    <!-- ===== TIPOGRAFÍA ===== -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 -->
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <!-- ===== ICONOS ===== -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    {% block extra_css %}{% endblock %}
+    {% block extra_head %}{% endblock %}
+
+    <!-- ===== HTMX ===== -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
     <style>
-        /* ===== PALETA ===== */
+        /* =========================================================
+           DESIGN TOKENS — cu2home
+           Identidad: portal inmobiliario cubano. Verde Malecón,
+           terracota de tejado habanero, cal de fachada, turquesa
+           Caribe. Serif editorial para titulares, sans funcional
+           para cuerpo, mono para datos (precios, m², stats).
+           ========================================================= */
         :root {
-            --tinta: #12222E;
-            --tinta-80: #2a3a45;
-            --azul-malecon: #1B4B66;
-            --terracota: #C1512D;
-            --terracota-dark: #a8452a;
-            --cal-viva: #F6F1E4;
-            --verde-almendares: #2F6B4F;
-            --laton: #C9A227;
-            --linea: #e7ded0;      /* hairline neutro cálido */
-            --texto-suave: #5c6b73;
+            --night-header: #0A2E2A;
+            --night: #123F3A;
+            --night-deep: #0E3B36;
+            --terracotta: #E15B33;
+            --terracotta-dark: #C1471F;
+            --turquoise: #2F9C95;
+            --turquoise-dark: #227A74;
+            --sand: #F5EFE3;
+            --sand-deep: #ECE1CB;
+            --paper: #FFFFFF;
+            --ink: #16211D;
+            --muted: #5B6A62;
+            --line: #E3D9C4;
+            --gold: #C9A24B;
+
+            --font-display: 'Fraunces', Georgia, serif;
+            --font-body: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'IBM Plex Mono', 'SFMono-Regular', monospace;
+
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+            --shadow-soft: 0 4px 20px rgba(14, 59, 54, 0.08);
+            --shadow-lift: 0 16px 40px rgba(14, 59, 54, 0.18);
         }
 
-        /* ===== RESET Y LAYOUT BASE ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        html, body { min-height: 100%; }
+        html, body { height: 100%; }
         body {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--cal-viva);
-            color: var(--tinta);
-            line-height: 1.55;
+            font-family: var(--font-body);
+            background: var(--sand);
+            color: var(--ink);
             -webkit-font-smoothing: antialiased;
+        }
+        a { color: inherit; }
+        img { max-width: 100%; display: block; }
+
+        /* Foco visible accesible en toda la app */
+        a:focus-visible, button:focus-visible, select:focus-visible,
+        input:focus-visible, [tabindex]:focus-visible {
+            outline: 2px solid var(--turquoise);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
         }
 
         /* ===== HEADER ===== */
         header {
+            flex-shrink: 0;
+            background: var(--night-header);
+            border-bottom: 1px solid rgba(225,91,51,0.22);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.18);
             position: sticky;
             top: 0;
-            flex-shrink: 0;
-            background: rgba(255,255,255,0.88);
-            backdrop-filter: saturate(1.4) blur(10px);
-            -webkit-backdrop-filter: saturate(1.4) blur(10px);
-            box-shadow: 0 1px 0 var(--linea);
-            padding: 14px 24px;
             z-index: 100;
-        }
-        /* fina línea de acento en la parte superior en vez del borde grueso */
-        header::before {
-            content: '';
-            position: absolute;
-            inset: 0 0 auto 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--terracota) 0%, var(--laton) 60%, var(--azul-malecon) 100%);
         }
         .header-inner {
             display: flex;
@@ -72,181 +104,119 @@
             justify-content: space-between;
             max-width: 1280px;
             margin: 0 auto;
-            flex-wrap: wrap;
-            gap: 16px;
+            padding: 14px 24px;
+            gap: 24px;
         }
         .logo a {
             display: flex;
             align-items: center;
             gap: 10px;
             text-decoration: none;
+            flex-shrink: 0;
         }
-        .logo img {
-            height: 40px;
-            width: auto;
-        }
+        .logo img { height: 36px; width: auto; }
         .logo span {
-            font-family: 'Fraunces', serif;
-            font-size: 1.85rem;
-            font-weight: 800;
-            color: var(--tinta);
-            letter-spacing: -0.6px;
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.3px;
         }
-        .logo span b { color: var(--terracota); font-weight: 800; }
-        .language-selector { position: relative; }
-        .language-selector::after {
-            content: '\f107';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--azul-malecon);
-            pointer-events: none;
-            font-size: 0.8rem;
+        .logo .dot { color: var(--terracotta); }
+
+        /* Selector de idioma: solo dos banderas (ES / EN) */
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
         }
-        .language-selector select {
-            padding: 9px 38px 9px 18px;
-            border-radius: 40px;
-            border: 1px solid var(--linea);
-            background: #fff;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-            font-size: 0.9rem;
+        .lang-switch form { display: inline-flex; }
+        .lang-flag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.18);
+            background: rgba(255,255,255,0.05);
+            font-size: 1.15rem;
+            line-height: 1;
             cursor: pointer;
-            color: var(--tinta);
-            appearance: none;
-            -webkit-appearance: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s, background 0.2s, transform 0.15s;
         }
-        .language-selector select:hover { border-color: var(--laton); }
-        .language-selector select:focus { outline: none; border-color: var(--terracota); box-shadow: 0 0 0 3px rgba(193,81,45,0.15); }
+        .lang-flag:hover { transform: translateY(-1px); background: rgba(255,255,255,0.1); }
+        .lang-flag.is-active {
+            border-color: var(--terracotta);
+            background: rgba(225,91,51,0.16);
+        }
 
         /* ===== MAIN ===== */
-        main { flex: 1; padding: 0; }
-
-        /* ===== MENSAJES ===== */
-        .messages {
-            list-style: none;
+        main { flex: 1; }
+        ul.messages { list-style: none; }
+        ul.messages li {
             max-width: 1280px;
             margin: 16px auto 0;
-            padding: 0 24px;
-        }
-        .messages li {
-            background: #fff;
-            border: 1px solid var(--linea);
-            border-left: 4px solid var(--azul-malecon);
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin-bottom: 8px;
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border-left: 4px solid var(--turquoise);
             font-size: 0.9rem;
         }
-        .messages li.success { border-left-color: var(--verde-almendares); }
-        .messages li.error, .messages li.danger { border-left-color: var(--terracota); }
-        .messages li.warning { border-left-color: var(--laton); }
+        ul.messages li.error { border-left-color: var(--terracotta); }
 
         /* ===== FOOTER ===== */
         footer {
             flex-shrink: 0;
-            background: var(--tinta);
-            color: var(--cal-viva);
-            padding: 40px 24px 24px;
+            background: var(--night-header);
+            color: rgba(255,255,255,0.65);
             margin-top: auto;
-            position: relative;
+            padding: 56px 24px 0;
         }
-        footer::before {
-            content: '';
-            position: absolute;
-            inset: 0 0 auto 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--azul-malecon) 0%, var(--laton) 40%, var(--terracota) 100%);
+        .footer-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1fr 1fr;
+            gap: 32px;
+            padding-bottom: 40px;
         }
-        footer .container { max-width: 1280px; margin: 0 auto; }
-        .footer-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-            padding-bottom: 24px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(246,241,228,0.12);
+        .footer-col h4 {
+            font-family: var(--font-display);
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 16px;
         }
-        .footer-brand {
-            font-family: 'Fraunces', serif;
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: -0.4px;
-        }
-        .footer-brand b { color: var(--terracota); }
-        .footer-social { display: flex; gap: 10px; }
-        .footer-social a {
-            width: 38px; height: 38px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 50%;
-            border: 1px solid rgba(246,241,228,0.2);
-            color: var(--cal-viva);
-            transition: background 0.2s, border-color 0.2s, transform 0.2s;
-        }
-        .footer-social a:hover { background: var(--terracota); border-color: var(--terracota); transform: translateY(-2px); }
-        .footer-features {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 14px 28px;
-            padding: 4px 0 24px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(246,241,228,0.12);
-        }
-        .footer-feature {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            color: var(--cal-viva);
-        }
-        .footer-feature i {
-            font-size: 0.95rem;
-            color: var(--laton);
-            width: 34px; height: 34px;
-            display: inline-flex; align-items: center; justify-content: center;
-            background: rgba(201,162,39,0.12);
-            border: 1px solid rgba(201,162,39,0.3);
-            border-radius: 10px;
-            flex-shrink: 0;
-        }
-        .footer-feature h3 {
-            font-family: 'Fraunces', serif;
-            font-size: 0.95rem;
-            font-weight: 700;
-            margin: 0;
-        }
+        .footer-col p { font-size: 0.88rem; line-height: 1.6; max-width: 32ch; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .footer-col ul a { text-decoration: none; font-size: 0.88rem; color: rgba(255,255,255,0.65); transition: color 0.2s; }
+        .footer-col ul a:hover { color: var(--terracotta); }
+        .footer-logo { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+        .footer-logo span { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: #fff; }
         .footer-bottom {
+            max-width: 1280px;
+            margin: 0 auto;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 18px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 8px;
-            font-size: 0.85rem;
-            opacity: 0.75;
+            gap: 12px;
+            font-size: 0.8rem;
         }
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .footer-bottom .legal-links { display: flex; gap: 18px; }
+        .footer-bottom .legal-links a { text-decoration: none; color: rgba(255,255,255,0.5); }
+        .footer-bottom .legal-links a:hover { color: #fff; }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            header { padding: 12px 16px; }
-            .header-inner { flex-direction: column; align-items: stretch; gap: 10px; }
-            .logo a { justify-content: center; }
-            .logo span { font-size: 1.5rem; }
-            .language-selector { text-align: center; }
-            .language-selector select { width: 100%; max-width: 220px; }
-            .footer-top { flex-direction: column; text-align: center; }
-            .footer-bottom { flex-direction: column; text-align: center; }
+        @media (max-width: 900px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; }
         }
-        @media (max-width: 480px) {
-            .logo img { height: 32px; }
-            .logo span { font-size: 1.25rem; }
+        @media (max-width: 560px) {
+            .footer-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -257,22 +227,23 @@
             <div class="logo">
                 <a href="{% url 'properties:list' %}">
                     <img src="{% static 'core/images/cu2home.png' %}" alt="cu2home">
-                    <span>cu2<b>home</b></span>
+                    <span>cu2home<span class="dot">.</span></span>
                 </a>
             </div>
-            <div class="language-selector">
-                <form action="{% url 'set_language' %}" method="post" id="language-form">
+
+            {% get_current_language as current_language %}
+            <div class="lang-switch">
+                <form action="{% url 'set_language' %}" method="post">
                     {% csrf_token %}
                     <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                    <select name="language" onchange="document.getElementById('language-form').submit();">
-                        {% get_current_language as current_language %}
-                        {% get_available_languages as LANGUAGES %}
-                        {% for lang_code, lang_name in LANGUAGES %}
-                            <option value="{{ lang_code }}" {% if lang_code == current_language %}selected{% endif %}>
-                                {{ lang_name }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                    <input name="language" type="hidden" value="es">
+                    <button type="submit" class="lang-flag {% if current_language == 'es' %}is-active{% endif %}" aria-label="{% trans 'Español' %}" title="Español">🇪🇸</button>
+                </form>
+                <form action="{% url 'set_language' %}" method="post">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                    <input name="language" type="hidden" value="en">
+                    <button type="submit" class="lang-flag {% if current_language == 'en' %}is-active{% endif %}" aria-label="English" title="English">🇺🇸</button>
                 </form>
             </div>
         </div>
@@ -292,37 +263,44 @@
 
     <footer>
         {% block footer %}
-        <div class="container">
-            <div class="footer-top">
-                <div class="footer-brand">cu2<b>home</b></div>
-                <div class="footer-social">
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                    <a href="#" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <span>cu2home<span style="color:var(--terracotta)">.</span></span>
                 </div>
+                <p>{% trans "El portal inmobiliario que conecta a los cubanos con su próximo hogar, dentro y fuera de la isla." %}</p>
             </div>
-            <div class="footer-features">
-                <div class="footer-feature">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>{% trans "Seguridad garantizada" %}</h3>
-                </div>
-                <div class="footer-feature">
-                    <i class="fas fa-globe-americas"></i>
-                    <h3>{% trans "Para la diáspora" %}</h3>
-                </div>
-                <div class="footer-feature">
-                    <i class="fas fa-handshake"></i>
-                    <h3>{% trans "Asesoría local" %}</h3>
-                </div>
-                <div class="footer-feature">
-                    <i class="fas fa-credit-card"></i>
-                    <h3>{% trans "Pagos flexibles" %}</h3>
-                </div>
+            <div class="footer-col">
+                <h4>{% trans "Portal" %}</h4>
+                <ul>
+                    <li><a href="{% url 'properties:list' %}">{% trans "Ver todos los anuncios" %}</a></li>
+                    <li><a href="#">{% trans "Publicar anuncio" %}</a></li>
+                    <li><a href="{% url 'properties:list' %}#mapa-provincias">{% trans "Explorar por provincia" %}</a></li>
+                </ul>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; {% now "Y" %} {{ site_name|default:"cu2home" }} · {% trans "Portal inmobiliario de Cuba" %}</p>
-                <p>{% trans "Venta · Alquiler · Permuta en toda la isla" %}</p>
+            <div class="footer-col">
+                <h4>{% trans "Ayuda" %}</h4>
+                <ul>
+                    <li><a href="#">{% trans "Cómo funciona" %}</a></li>
+                    <li><a href="#">{% trans "Preguntas frecuentes" %}</a></li>
+                    <li><a href="#">{% trans "Contacto" %}</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>{% trans "Legal" %}</h4>
+                <ul>
+                    <li><a href="#">{% trans "Términos y condiciones" %}</a></li>
+                    <li><a href="#">{% trans "Privacidad" %}</a></li>
+                    <li><a href="#">{% trans "Cookies" %}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; {% now "Y" %} {{ site_name|default:"cu2home" }}</p>
+            <div class="legal-links">
+                <a href="#">{% trans "Términos" %}</a>
+                <a href="#">{% trans "Privacidad" %}</a>
+                <a href="#">{% trans "Cookies" %}</a>
             </div>
         </div>
         {% endblock %}

@@ -2,10 +2,26 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from .constants import PROPERTY_TYPES
+from .models import Municipality, Province
 
 
 class PropertyFilterForm(forms.Form):
     city = forms.CharField(required=False, label=_('City'), max_length=100)
+
+    # Los nombres de campo coinciden a propósito con los <select name="province_id">
+    # y <select name="municipality_id"> del buscador en core/index.html.
+    province_id = forms.ModelChoiceField(
+        required=False,
+        label=_('Province'),
+        queryset=Province.objects.all(),
+        empty_label=_('All'),
+    )
+    municipality_id = forms.ModelChoiceField(
+        required=False,
+        label=_('Municipality'),
+        queryset=Municipality.objects.all(),
+        empty_label=_('All'),
+    )
 
     min_price = forms.DecimalField(required=False, label=_('Min price'), decimal_places=2, max_digits=12, min_value=0)
     max_price = forms.DecimalField(required=False, label=_('Max price'), decimal_places=2, max_digits=12, min_value=0)
