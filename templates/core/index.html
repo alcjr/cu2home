@@ -638,6 +638,249 @@
         .result-card-img { width: 100%; min-height: 200px; }
     }
 
+    /* ---- Ventana de detalle (quick view, doble click en una tarjeta) ----
+       Dos cards independientes: inmueble (principal) + agente/usuario que
+       lo publicó (secundaria, a modo de sidebar de contacto). En pantallas
+       estrechas se apilan una debajo de otra. */
+    .qv-layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 18px;
+        align-items: start;
+    }
+    @media (min-width: 700px) {
+        .qv-layout { grid-template-columns: 1fr 260px; }
+    }
+    .qv-card {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        padding: 20px;
+    }
+    .qv-card-heading {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 14px;
+    }
+    .qv-card-agent { display: flex; flex-direction: column; }
+    .qv-agent-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+    .qv-agent-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        background: var(--sand-deep);
+    }
+    .qv-agent-avatar.placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--turquoise-dark);
+    }
+    .qv-agent-name {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--ink);
+        line-height: 1.25;
+    }
+    .qv-agent-type {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: var(--turquoise-dark);
+    }
+    .qv-agent-agency {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 12px;
+    }
+    .qv-agent-agency i { color: var(--terracotta); }
+    .qv-agent-bio {
+        font-size: 0.85rem;
+        line-height: 1.55;
+        color: var(--ink);
+        margin-bottom: 14px;
+        white-space: pre-line;
+    }
+    .qv-agent-contact {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        border-top: 1px solid var(--line);
+        padding-top: 14px;
+    }
+    .qv-agent-contact a {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        color: var(--ink);
+        transition: color 0.15s;
+        word-break: break-word;
+    }
+    .qv-agent-contact a:hover { color: var(--terracotta); }
+    .qv-agent-contact i { color: var(--terracotta); width: 14px; flex-shrink: 0; }
+    .qv-agent-empty {
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+    .qv-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 240px;
+        color: var(--muted);
+        font-size: 0.95rem;
+        gap: 10px;
+    }
+    .qv-error {
+        padding: 24px;
+        color: var(--muted);
+        text-align: center;
+    }
+    .qv-gallery-main {
+        width: 100%;
+        height: 320px;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        background: var(--sand-deep);
+        margin-bottom: 10px;
+    }
+    .qv-gallery-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .qv-gallery-thumbs {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        margin-bottom: 18px;
+    }
+    .qv-gallery-thumbs img {
+        width: 72px;
+        height: 56px;
+        object-fit: cover;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        flex-shrink: 0;
+        border: 2px solid transparent;
+        opacity: 0.7;
+        transition: opacity 0.15s, border-color 0.15s;
+    }
+    .qv-gallery-thumbs img:hover { opacity: 1; }
+    .qv-gallery-thumbs img.is-active { opacity: 1; border-color: var(--terracotta); }
+    .qv-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 6px;
+    }
+    .qv-title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.4rem;
+        color: var(--ink);
+    }
+    .qv-price {
+        font-family: var(--font-mono);
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--ink);
+        white-space: nowrap;
+    }
+    .qv-status {
+        display: inline-block;
+        background: var(--night);
+        color: #fff;
+        padding: 4px 12px;
+        border-radius: 40px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        margin-bottom: 12px;
+    }
+    .qv-location {
+        font-size: 0.92rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 16px;
+    }
+    .qv-location i { color: var(--terracotta); }
+    .qv-details {
+        display: flex;
+        gap: 22px;
+        flex-wrap: wrap;
+        font-size: 0.9rem;
+        color: var(--muted);
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        padding: 14px 0;
+        margin-bottom: 16px;
+    }
+    .qv-details span { display: flex; align-items: center; gap: 6px; }
+    .qv-details i { color: #94a3b8; }
+    .qv-amenities {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+    }
+    .qv-amenities span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.82rem;
+        color: var(--turquoise-dark);
+        background: var(--sand);
+        border-radius: 40px;
+        padding: 5px 12px;
+    }
+    .qv-description {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: var(--ink);
+        margin-bottom: 20px;
+        white-space: pre-line;
+    }
+    .qv-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+    .qv-footer a.btn-full {
+        background: var(--terracotta);
+        color: #fff;
+        border-radius: var(--radius-sm);
+        padding: 10px 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .qv-footer a.btn-full:hover { background: var(--terracotta-dark); }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 980px) {
         .hero-top-row { grid-template-columns: 1fr; gap: 20px; }
@@ -806,6 +1049,10 @@
         <div class="results-grid-wrap">
             <div id="resultsGrid"></div>
         </div>
+
+        <!-- Ventana de detalle (quick view): se muestra al hacer doble click
+             sobre una tarjeta de la grilla de Resultados. -->
+        <div id="propertyQuickView"></div>
     </div>
 </section>
 
@@ -876,6 +1123,13 @@
            que properties:list (PropertyFilterForm).
            ===================================================== */
         const RESULTS_JSON_URL = "{% url 'properties:results_json' %}";
+        // Plantilla con pk=0 de relleno: se sustituye el segmento "/0/"
+        // por el id real en propertyQuickViewJsonUrl(). Evita depender de
+        // reverse() en JS (no disponible) sin hardcodear la ruta a mano.
+        const QUICK_VIEW_JSON_URL_TEMPLATE = "{% url 'properties:quick_view_json' pk=0 %}";
+        function propertyQuickViewJsonUrl(pk) {
+            return QUICK_VIEW_JSON_URL_TEMPLATE.replace('/0/', '/' + encodeURIComponent(pk) + '/');
+        }
         const municipalitySelect = document.getElementById('municipality');
         const propertyTypeSelect = document.getElementById('propertyType');
         const maxPriceInput = document.getElementById('maxPrice');
@@ -934,6 +1188,283 @@
                     });
             },
         });
+
+        /* =====================================================
+           VENTANA DE DETALLE (quick view) — doble click en una
+           tarjeta de la grilla. Trae el registro COMPLETO desde
+           properties:quick_view_json (no reutiliza los datos ya
+           cargados en la grilla, que son deliberadamente mínimos).
+           ===================================================== */
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str == null ? '' : String(str);
+            return div.innerHTML;
+        }
+
+        const quickViewPopup = new DevExpress.ui.dxPopup(document.getElementById('propertyQuickView'), {
+            width: 'min(920px, 94vw)',
+            height: 'auto',
+            maxHeight: '88vh',
+            showTitle: true,
+            title: '',
+            dragEnabled: false,
+            hideOnOutsideClick: true,
+            showCloseButton: true,
+            contentTemplate: function() {
+                const el = document.createElement('div');
+                el.id = 'qvContent';
+                el.className = 'qv-loading';
+                el.textContent = "{% trans 'Cargando detalle…' %}";
+                return el;
+            },
+        });
+
+        function renderQuickViewGallery(images) {
+            const wrap = document.createElement('div');
+            const main = document.createElement('div');
+            main.className = 'qv-gallery-main';
+            const mainImg = document.createElement('img');
+            const cover = images.find(function(img) { return img.is_cover; }) || images[0];
+            mainImg.src = cover.url;
+            main.append(mainImg);
+            wrap.append(main);
+
+            if (images.length > 1) {
+                const thumbs = document.createElement('div');
+                thumbs.className = 'qv-gallery-thumbs';
+                images.forEach(function(img, idx) {
+                    const t = document.createElement('img');
+                    t.src = img.url;
+                    if (img === cover) t.classList.add('is-active');
+                    t.addEventListener('click', function() {
+                        mainImg.src = img.url;
+                        thumbs.querySelectorAll('img').forEach(function(x) { x.classList.remove('is-active'); });
+                        t.classList.add('is-active');
+                    });
+                    thumbs.append(t);
+                });
+                wrap.append(thumbs);
+            }
+            return wrap;
+        }
+
+        function renderQuickViewAmenities(data) {
+            const amenities = [
+                [data.has_elevator, 'fa-arrow-up-long', "{% trans 'Ascensor' %}"],
+                [data.has_heating, 'fa-fire', "{% trans 'Calefacción' %}"],
+                [data.has_air_conditioning, 'fa-snowflake', "{% trans 'Aire acondicionado' %}"],
+            ].filter(function(item) { return item[0]; });
+
+            if (!amenities.length) return null;
+            const wrap = document.createElement('div');
+            wrap.className = 'qv-amenities';
+            amenities.forEach(function(item) {
+                const span = document.createElement('span');
+                span.innerHTML = '<i class="fas ' + item[1] + '"></i> ' + escapeHtml(item[2]);
+                wrap.append(span);
+            });
+            return wrap;
+        }
+
+        /* Card de "Publicado por": datos del agente/usuario (apps.users.UserProfile)
+           que subió el inmueble. data.agent puede venir null (Property.agent es
+           opcional) -- en ese caso se muestra un estado vacío en vez de romper
+           el layout de dos columnas. */
+        function renderAgentCard(agent) {
+            const card = document.createElement('div');
+            card.className = 'qv-card qv-card-agent';
+
+            const heading = document.createElement('div');
+            heading.className = 'qv-card-heading';
+            heading.textContent = "{% trans 'Publicado por' %}";
+            card.append(heading);
+
+            if (!agent) {
+                const empty = document.createElement('p');
+                empty.className = 'qv-agent-empty';
+                empty.textContent = "{% trans 'Anuncio publicado por el equipo de cu2home.' %}";
+                card.append(empty);
+                return card;
+            }
+
+            const header = document.createElement('div');
+            header.className = 'qv-agent-header';
+
+            const avatar = document.createElement(agent.avatar_url ? 'img' : 'div');
+            if (agent.avatar_url) {
+                avatar.className = 'qv-agent-avatar';
+                avatar.src = agent.avatar_url;
+                avatar.alt = agent.name || '';
+            } else {
+                avatar.className = 'qv-agent-avatar placeholder';
+                avatar.textContent = (agent.name || '?').trim().charAt(0).toUpperCase();
+            }
+            header.append(avatar);
+
+            const identity = document.createElement('div');
+            const name = document.createElement('div');
+            name.className = 'qv-agent-name';
+            name.textContent = agent.name || "{% trans 'Usuario de cu2home' %}";
+            identity.append(name);
+            if (agent.user_type_display) {
+                const type = document.createElement('div');
+                type.className = 'qv-agent-type';
+                type.textContent = agent.user_type_display;
+                identity.append(type);
+            }
+            header.append(identity);
+            card.append(header);
+
+            if (agent.agency_name) {
+                const agency = document.createElement('div');
+                agency.className = 'qv-agent-agency';
+                agency.innerHTML = '<i class="fas fa-building"></i> ' + escapeHtml(agent.agency_name);
+                card.append(agency);
+            }
+
+            if (agent.bio) {
+                const bio = document.createElement('p');
+                bio.className = 'qv-agent-bio';
+                bio.textContent = agent.bio;
+                card.append(bio);
+            }
+
+            const contact = document.createElement('div');
+            contact.className = 'qv-agent-contact';
+            if (agent.phone) {
+                const tel = document.createElement('a');
+                tel.href = 'tel:' + agent.phone.replace(/\s+/g, '');
+                tel.innerHTML = '<i class="fas fa-phone"></i> ' + escapeHtml(agent.phone);
+                contact.append(tel);
+            }
+            if (agent.email) {
+                const mail = document.createElement('a');
+                mail.href = 'mailto:' + agent.email;
+                mail.innerHTML = '<i class="fas fa-envelope"></i> ' + escapeHtml(agent.email);
+                contact.append(mail);
+            }
+            if (contact.children.length) card.append(contact);
+
+            return card;
+        }
+
+        function buildQuickViewContent(data) {
+            const layout = document.createElement('div');
+            layout.className = 'qv-layout';
+
+            const propertyCard = document.createElement('div');
+            propertyCard.className = 'qv-card qv-card-property';
+
+            const root = propertyCard;
+            root.append(renderQuickViewGallery(data.images));
+
+            if (data.status) {
+                const status = document.createElement('span');
+                status.className = 'qv-status';
+                status.textContent = data.status;
+                root.append(status);
+            }
+
+            const top = document.createElement('div');
+            top.className = 'qv-top';
+            const title = document.createElement('span');
+            title.className = 'qv-title';
+            title.textContent = data.title || '';
+            const price = document.createElement('span');
+            price.className = 'qv-price';
+            price.textContent = formatPrice(data.price);
+            top.append(title, price);
+            root.append(top);
+
+            const location = document.createElement('div');
+            location.className = 'qv-location';
+            const locParts = [data.address, data.city, data.municipality, data.province].filter(Boolean);
+            location.innerHTML = '<i class="fas fa-map-pin"></i> ' + escapeHtml(locParts.join(', '));
+            root.append(location);
+
+            const details = document.createElement('div');
+            details.className = 'qv-details';
+            const detailItems = [
+                ['fa-home', data.property_type || '—'],
+                ['fa-bed', (data.rooms != null ? data.rooms : '—') + ' ' + "{% trans 'hab.' %}"],
+                ['fa-bath', (data.bathrooms != null ? data.bathrooms : '—') + ' ' + "{% trans 'baños' %}"],
+                ['fa-vector-square', (data.surface != null ? data.surface : '—') + ' m²'],
+                ['fa-eye', (data.views_count != null ? data.views_count : 0) + ' ' + "{% trans 'vistas' %}"],
+            ];
+            detailItems.forEach(function(item) {
+                const span = document.createElement('span');
+                span.innerHTML = '<i class="fas ' + item[0] + '"></i> ' + escapeHtml(item[1]);
+                details.append(span);
+            });
+            root.append(details);
+
+            const amenities = renderQuickViewAmenities(data);
+            if (amenities) root.append(amenities);
+
+            if (data.description) {
+                const desc = document.createElement('p');
+                desc.className = 'qv-description';
+                desc.textContent = data.description;
+                root.append(desc);
+            }
+
+            const footer = document.createElement('div');
+            footer.className = 'qv-footer';
+            const link = document.createElement('a');
+            link.className = 'btn-full';
+            link.href = data.detail_url;
+            link.innerHTML = '<i class="fas fa-arrow-right"></i> ' + "{% trans 'Ver ficha completa' %}";
+            footer.append(link);
+            root.append(footer);
+
+            layout.append(propertyCard, renderAgentCard(data.agent));
+            return layout;
+        }
+
+        function openPropertyQuickView(cardData) {
+            quickViewPopup.option('title', cardData.title || '');
+            quickViewPopup.show();
+
+            fetch(propertyQuickViewJsonUrl(cardData.id))
+                .then(function(response) {
+                    if (!response.ok) throw new Error('quick view fetch failed');
+                    return response.json();
+                })
+                .then(function(data) {
+                    const content = quickViewPopup.content();
+                    content.innerHTML = '';
+                    content.append(buildQuickViewContent(data));
+                })
+                .catch(function() {
+                    const content = quickViewPopup.content();
+                    content.innerHTML = '';
+                    const err = document.createElement('div');
+                    err.className = 'qv-error';
+                    err.textContent = "{% trans 'No se pudo cargar el detalle de esta propiedad.' %}";
+                    content.append(err);
+                });
+        }
+
+        /* Un solo click navega a la ficha completa; un doble click abre el
+           quick view. El navegador dispara SIEMPRE click antes que dblclick,
+           así que si se navega en el propio onRowClick, el doble click nunca
+           llega a producirse (la página ya se fue). Se resuelve con el
+           patrón clásico de temporizador: si llega un segundo click dentro
+           de la ventana, se cancela la navegación y se abre el detalle. */
+        let cardClickTimer = null;
+        const CARD_CLICK_DELAY_MS = 250;
+        function handleCardActivation(data) {
+            if (cardClickTimer) {
+                clearTimeout(cardClickTimer);
+                cardClickTimer = null;
+                openPropertyQuickView(data);
+                return;
+            }
+            cardClickTimer = setTimeout(function() {
+                cardClickTimer = null;
+                if (data.detail_url) window.location.href = data.detail_url;
+            }, CARD_CLICK_DELAY_MS);
+        }
 
         /* Construye el contenido de cada fila como una tarjeta horizontal
            (foto grande a la izquierda + datos a la derecha), reutilizando
@@ -996,6 +1527,9 @@
             body.append(details);
 
             card.append(body);
+            card.addEventListener('click', function() {
+                handleCardActivation(data);
+            });
             return card;
         }
 
@@ -1037,11 +1571,13 @@
                 tr.append(td);
                 container.append(tr);
             },
-            onRowClick: function(e) {
-                if (e.data && e.data.detail_url) {
-                    window.location.href = e.data.detail_url;
-                }
-            },
+            // La navegación/apertura del quick view NO se gestiona aquí con
+            // onRowClick/onRowDblClick: DevExtreme dispara esos eventos a
+            // partir de sus propios listeners sobre el <tr>, y con
+            // rowTemplate personalizado (no son las filas nativas del grid)
+            // el doble click no llega a distinguirse de forma fiable del
+            // click simple. Se gestiona directamente en el elemento
+            // .result-card vía handleCardActivation (ver buildResultCard).
         });
 
         function reloadResultsGrid() {

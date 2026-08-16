@@ -16,6 +16,11 @@ logger = logging.getLogger(__name__)
 # fuente de verdad de la lógica de envío; el management command es un
 # wrapper fino que llama a dispatch_saved_search_alerts().
 MIN_HOURS_BETWEEN_DAILY_ALERTS = 20
+# Igual que MIN_HOURS_BETWEEN_DAILY_ALERTS pero para SavedSearch.Frequency.WEEKLY.
+# Sin este throttle, como el beat dispara dispatch_saved_search_alerts cada
+# hora (ver CELERY_BEAT_SCHEDULE), una alerta WEEKLY con resultados nuevos
+# se reenviaría en cada tick horario en vez de una vez por semana.
+MIN_HOURS_BETWEEN_WEEKLY_ALERTS = 24 * 7
 
 
 @shared_task(
@@ -102,9 +107,17 @@ def dispatch_saved_search_alerts():
             skipped += 1
             continue
 
-        if saved_search.frequency == SavedSearch.Frequency.DAILY and saved_search.last_notified_at:
+        # IMMEDIATE no lleva throttle a propósito (esa es su semántica: avisar
+        # en cuanto haya resultados nuevos). DAILY y WEEKLY sí lo necesitan,
+        # porque el beat pasa por aquí cada hora.
+        min_hours_by_frequency = {
+            SavedSearch.Frequency.DAILY: MIN_HOURS_BETWEEN_DAILY_ALERTS,
+            SavedSearch.Frequency.WEEKLY: MIN_HOURS_BETWEEN_WEEKLY_ALERTS,
+        }
+        min_hours = min_hours_by_frequency.get(saved_search.frequency)
+        if min_hours and saved_search.last_notified_at:
             elapsed = now - saved_search.last_notified_at
-            if elapsed < timedelta(hours=MIN_HOURS_BETWEEN_DAILY_ALERTS):
+            if elapsed < timedelta(hours=min_hours):
                 skipped += 1
                 continue
 

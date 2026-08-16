@@ -2,21 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
-from django.core.paginator import Paginator
-from django.conf import settings
+from django.views.decorators.http import require_POST
 
 # Importaciones corregidas
-from apps.properties.constants import DEFAULT_FAVORITE_LIST_NAME
-from apps.properties.models import SavedSearch, Property
-from apps.properties.forms import PropertyFilterForm
-from .models import UserProfile
-from .forms import SaveSearchForm, FavoriteListForm
-
-
-@login_required
-def favorites(request):
-    # Aquí la lógica para obtener los favoritos del usuario
-    return render(request, 'users/favorites.html')
+from apps.properties.models import SavedSearch
+from .forms import SaveSearchForm
 
 
 @login_required
@@ -54,6 +44,7 @@ def create_saved_search(request):
 
 
 @login_required
+@require_POST
 def delete_saved_search(request, pk):
     search = get_object_or_404(SavedSearch, pk=pk, user=request.user)
     search.delete()
@@ -62,6 +53,7 @@ def delete_saved_search(request, pk):
 
 
 @login_required
+@require_POST
 def toggle_saved_search(request, pk):
     search = get_object_or_404(SavedSearch, pk=pk, user=request.user)
     search.is_active = not search.is_active

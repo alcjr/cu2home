@@ -8,4 +8,5 @@ urlpatterns = [
     path('<int:pk>/<slug:slug>/', views.property_detail, name='detail'),
     path('get-municipalities/', views.get_municipalities, name='get_municipalities'),
     path('results.json', views.property_results_json, name='results_json'),
+    path('<int:pk>/quick-view.json', views.property_detail_json, name='quick_view_json'),
 ]
