@@ -6,11 +6,6 @@
 {% block extra_css %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 <style>
-    /* ============================================================
-       SOBRESCRITURA PARA DETAIL: El scroll debe estar en main,
-       no en body. Se fuerza main a ocupar todo el espacio entre
-       header y footer.
-       ============================================================ */
     html, body {
         height: 100%;
         margin: 0;
@@ -33,11 +28,9 @@
         flex: 1;
         overflow-y: auto;
         padding-bottom: 0;
-        /* Asegura que el scroll esté en main */
         min-height: 0;
         height: 100%;
     }
-    /* Ajuste para que el contenedor no añada scroll extra */
     .container {
         max-width: 1280px;
         margin: 0 auto;
@@ -48,7 +41,6 @@
     ul { list-style: none; }
     img { max-width: 100%; display: block; }
 
-    /* ===== BREADCRUMB ===== */
     .detail-crumb {
         padding: 20px 0 0;
         font-family: 'IBM Plex Mono', monospace;
@@ -85,7 +77,6 @@
     }
     .detail-crumb .btn-close i { font-size: 0.9rem; }
 
-    /* ===== ENCABEZADO ===== */
     .detail-head {
         display: flex;
         justify-content: space-between;
@@ -137,37 +128,168 @@
         letter-spacing: -1px;
     }
 
-    /* ===== GALERÍA ===== */
-    .gallery {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        grid-template-rows: 1fr 1fr;
-        gap: 10px;
-        height: 460px;
+    /* ============================================================
+       GALERÍA - CARRUSEL CON IMAGEN GRANDE + MINIATURAS
+       ============================================================ */
+    .gallery-wrapper {
+        margin-bottom: 40px;
+        background: #f8f9fa;
         border-radius: 20px;
         overflow: hidden;
-        margin-bottom: 40px;
+        border: 1px solid var(--linea);
     }
-    .gallery .g-main { grid-row: 1 / 3; position: relative; background: #d1d9e6; overflow: hidden; }
-    .gallery .g-item { position: relative; background: #d1d9e6; overflow: hidden; }
-    .gallery img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
-    .gallery .g-main:hover img,
-    .gallery .g-item:hover img { transform: scale(1.05); }
-    .gallery .more-overlay {
+
+    /* Imagen grande */
+    .gallery-main {
+        position: relative;
+        width: 100%;
+        height: 500px;
+        background: #1a1a1a;
+        overflow: hidden;
+    }
+    .gallery-main img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: opacity 0.3s ease;
+    }
+    .gallery-main .gallery-counter {
         position: absolute;
-        inset: 0;
-        background: rgba(18,34,46,0.55);
+        bottom: 16px;
+        right: 20px;
+        background: rgba(0,0,0,0.6);
         color: #fff;
+        padding: 4px 14px;
+        border-radius: 40px;
+        font-size: 0.8rem;
+        font-family: 'IBM Plex Mono', monospace;
+        backdrop-filter: blur(4px);
+        pointer-events: none;
+    }
+
+    /* Controles de navegación sobre la imagen grande */
+    .gallery-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255,255,255,0.85);
+        border: none;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        font-family: 'Inter', sans-serif;
-        font-weight: 600;
-        font-size: 1rem;
+        font-size: 1.1rem;
+        color: var(--tinta);
+        transition: all 0.2s;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        z-index: 5;
+    }
+    .gallery-nav:hover {
+        background: #fff;
+        transform: translateY(-50%) scale(1.05);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .gallery-nav.prev { left: 16px; }
+    .gallery-nav.next { right: 16px; }
+    .gallery-nav:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        transform: translateY(-50%) scale(0.95);
     }
 
-    /* ===== LAYOUT PRINCIPAL ===== */
+    /* Miniaturas - Carrusel horizontal */
+    .gallery-thumbs {
+        padding: 14px 20px;
+        background: #fff;
+        border-top: 1px solid var(--linea);
+        position: relative;
+    }
+    .gallery-thumbs-wrapper {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 4px 0;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+    .gallery-thumbs-wrapper::-webkit-scrollbar {
+        height: 4px;
+    }
+    .gallery-thumbs-wrapper::-webkit-scrollbar-track {
+        background: #f0f0f0;
+        border-radius: 4px;
+    }
+    .gallery-thumbs-wrapper::-webkit-scrollbar-thumb {
+        background: var(--terracota);
+        border-radius: 4px;
+    }
+
+    .gallery-thumb {
+        flex-shrink: 0;
+        width: 120px;
+        height: 80px;
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 3px solid transparent;
+        transition: all 0.2s;
+        opacity: 0.7;
+        position: relative;
+        background: #f0f2f5;
+    }
+    .gallery-thumb:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+    .gallery-thumb.is-active {
+        border-color: var(--terracota);
+        opacity: 1;
+        box-shadow: 0 4px 12px rgba(193, 81, 45, 0.3);
+    }
+    .gallery-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Botones de scroll para miniaturas */
+    .thumb-scroll-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255,255,255,0.9);
+        border: 1px solid var(--linea);
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        color: var(--tinta);
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        z-index: 2;
+    }
+    .thumb-scroll-btn:hover {
+        background: #fff;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+    .thumb-scroll-btn.left { left: 8px; }
+    .thumb-scroll-btn.right { right: 8px; }
+    .thumb-scroll-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    /* ============================================================
+       RESTO DE LA PÁGINA
+       ============================================================ */
     .detail-grid {
         display: grid;
         grid-template-columns: 1fr 360px;
@@ -196,7 +318,6 @@
     }
     .panel h2 i { color: var(--terracota); font-size: 1rem; }
 
-    /* specs */
     .specs {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -242,7 +363,6 @@
     }
     .description p { margin-bottom: 12px; }
 
-    /* amenidades */
     .amenities {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -258,35 +378,76 @@
     .amenity i { color: var(--verde-almendares); width: 18px; }
 
     #detailMap {
-        height: 320px;
+        height: 400px;
         border-radius: 14px;
         overflow: hidden;
-        border: 1px solid var(--linea);
+        border: 2px solid var(--linea);
+        background: #f0f2f5;
+        position: relative;
+        z-index: 1;
+    }
+    .map-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 400px;
+        background: #f8f9fa;
+        border-radius: 14px;
+        border: 2px solid var(--linea);
+        color: var(--texto-suave);
+        font-size: 1rem;
+        font-family: 'Inter', sans-serif;
+    }
+    .map-loading i {
+        margin-right: 10px;
+        color: var(--terracota);
+        font-size: 1.5rem;
+    }
+    .map-label {
+        margin-top: 8px;
+        font-size: 0.85rem;
+        color: var(--texto-suave);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .map-label i {
+        color: var(--terracota);
     }
 
-    /* ===== SIDEBAR CONTACTO ===== */
+    /* ===== SIDEBAR CONTACTO - AGENTE COMPLETO ===== */
     .contact-card { position: sticky; top: 90px; }
     .agent {
         display: flex;
         align-items: center;
         gap: 14px;
-        padding-bottom: 18px;
-        margin-bottom: 18px;
+        padding-bottom: 16px;
+        margin-bottom: 16px;
         border-bottom: 1px solid var(--linea);
     }
     .agent .avatar {
-        width: 54px;
-        height: 54px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
-        background: var(--azul-malecon);
-        color: #fff;
+        background: var(--sand-deep);
+        color: var(--turquoise-dark);
         display: flex;
         align-items: center;
         justify-content: center;
         font-family: 'Fraunces', serif;
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         font-weight: 700;
         flex-shrink: 0;
+        overflow: hidden;
+    }
+    .agent .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .agent .who {
+        flex: 1;
+        min-width: 0;
     }
     .agent .who .name {
         font-family: 'Fraunces', serif;
@@ -295,13 +456,80 @@
         color: var(--tinta);
     }
     .agent .who .role {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: var(--turquoise-dark);
+        margin-top: 2px;
+    }
+    .agent .who .agency {
         font-size: 0.82rem;
         color: var(--texto-suave);
+        margin-top: 2px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
+    .agent .who .agency i {
+        color: var(--terracota);
+        font-size: 0.7rem;
+    }
+
+    .agent-bio {
+        font-size: 0.85rem;
+        line-height: 1.55;
+        color: var(--tinta);
+        padding: 12px 0;
+        border-bottom: 1px solid var(--linea);
+        margin-bottom: 14px;
+        white-space: pre-line;
+    }
+    .agent-bio:empty {
+        display: none;
+    }
+
+    .agent-contact {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .agent-contact .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.85rem;
+        color: var(--tinta);
+        padding: 6px 10px;
+        border-radius: 8px;
+        transition: background 0.15s;
+        word-break: break-word;
+    }
+    .agent-contact .contact-item:hover {
+        background: var(--sand);
+    }
+    .agent-contact .contact-item i {
+        color: var(--terracota);
+        width: 18px;
+        flex-shrink: 0;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+    .agent-contact .contact-item a {
+        color: var(--tinta);
+        transition: color 0.15s;
+    }
+    .agent-contact .contact-item a:hover {
+        color: var(--terracota);
+    }
+
     .contact-btns {
         display: flex;
         flex-direction: column;
         gap: 10px;
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid var(--linea);
     }
     .contact-btns a,
     .contact-btns button {
@@ -309,19 +537,20 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        padding: 13px;
+        padding: 12px;
         border-radius: 12px;
         font-weight: 600;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         font-family: 'Inter', sans-serif;
         cursor: pointer;
         border: none;
         transition: all 0.2s;
+        width: 100%;
     }
     .btn-primary { background: var(--terracota); color: #fff; }
     .btn-primary:hover { background: var(--terracota-dark); }
-    .btn-wa { background: var(--verde-almendares); color: #fff; }
-    .btn-wa:hover { filter: brightness(1.08); }
+    .btn-wa { background: #25D366; color: #fff; }
+    .btn-wa:hover { background: #1da851; }
     .btn-ghost {
         background: #fff;
         color: var(--tinta);
@@ -331,6 +560,7 @@
         border-color: var(--terracota) !important;
         color: var(--terracota);
     }
+
     .ref-note {
         margin-top: 16px;
         padding-top: 16px;
@@ -342,26 +572,85 @@
         justify-content: space-between;
     }
 
+    .agent-social {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+    .agent-social a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--sand);
+        color: var(--texto-suave);
+        transition: all 0.2s;
+        font-size: 0.9rem;
+    }
+    .agent-social a:hover {
+        background: var(--terracota);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .verified-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #e8f5e9;
+        color: #2e7d32;
+        font-size: 0.65rem;
+        font-weight: 600;
+        padding: 2px 10px;
+        border-radius: 40px;
+        margin-left: 6px;
+    }
+    .verified-badge i {
+        font-size: 0.6rem;
+    }
+
     @media (max-width: 992px) {
         .detail-grid { grid-template-columns: 1fr; }
         .contact-card { position: static; }
-        .gallery { height: 380px; }
+        .gallery-main { height: 380px; }
     }
     @media (max-width: 640px) {
-        .gallery {
-            grid-template-columns: 1fr;
-            grid-template-rows: 240px auto;
-            height: auto;
-        }
-        .gallery .g-main { grid-row: auto; height: 240px; }
-        .gallery .g-side {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-        .gallery .g-item { height: 90px; }
+        .gallery-main { height: 280px; }
+        .gallery-thumb { width: 80px; height: 60px; }
         .detail-head { flex-direction: column; }
         .detail-head .price-block { text-align: left; }
+        #detailMap { height: 300px; }
+        .agent .avatar {
+            width: 48px;
+            height: 48px;
+            font-size: 1.1rem;
+        }
+        .agent .who .name {
+            font-size: 0.95rem;
+        }
+        .gallery-nav {
+            width: 34px;
+            height: 34px;
+            font-size: 0.8rem;
+        }
+        .gallery-nav.prev { left: 8px; }
+        .gallery-nav.next { right: 8px; }
+        .gallery-thumbs { padding: 10px 12px; }
+        .thumb-scroll-btn { display: none; }
+    }
+
+    .leaflet-popup-content {
+        font-family: 'Inter', sans-serif;
+        min-width: 150px;
+    }
+    .leaflet-popup-content strong {
+        color: #C1512D;
+    }
+    .cu-pin {
+        filter: drop-shadow(0 3px 8px rgba(193, 81, 45, 0.4));
     }
 </style>
 {% endblock %}
@@ -379,11 +668,17 @@
         </a>
     </div>
 
-    <!-- ENCABEZADO -->
     <div class="detail-head">
         <div class="title-block">
             <h1>{{ property.title }}</h1>
-            <div class="loc"><i class="fas fa-map-marker-alt"></i> {{ property.address|default:property.city }}, {{ property.province.name }}</div>
+            <div class="loc">
+                <i class="fas fa-map-marker-alt"></i> 
+                {% if property.municipality %}
+                    {{ property.municipality.name }}, {{ property.province.name }}
+                {% else %}
+                    {{ property.address|default:property.city }}, {{ property.province.name }}
+                {% endif %}
+            </div>
             <div class="status-tags">
                 <span class="tag op">{{ property.get_operation_type_display }}</span>
                 {% if property.get_property_type_display %}<span class="tag type">{{ property.get_property_type_display }}</span>{% endif %}
@@ -395,36 +690,69 @@
     </div>
 </div>
 
-<!-- GALERÍA -->
+<!-- ===== GALERÍA - CARRUSEL ===== -->
 <div class="container">
-    <div class="gallery">
-        <div class="g-main">
-            {% if property.images.first %}
-                <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}">
-            {% else %}
-                <img src="https://picsum.photos/seed/{{ property.id }}/1000/800" alt="{{ property.title }}">
-            {% endif %}
-        </div>
-        {% for image in property.images.all|slice:"1:3" %}
-            <div class="g-item">
-                <img src="{{ image.image.url }}" alt="{{ property.title }}">
-                {% if forloop.last and property.images.count > 3 %}
-                    <div class="more-overlay"><i class="fas fa-images"></i> +{{ property.images.count|add:"-3" }} {% trans "fotos" %}</div>
+    <div class="gallery-wrapper">
+        <!-- Imagen grande -->
+        <div class="gallery-main" id="galleryMain">
+            {% with images=property.images.all %}
+                {% if images %}
+                    <img id="galleryMainImg" src="{{ images.first.image.url }}" alt="{{ property.title }}">
+                {% else %}
+                    <img id="galleryMainImg" src="https://picsum.photos/seed/{{ property.id }}/1200/600" alt="{{ property.title }}">
                 {% endif %}
-            </div>
-        {% empty %}
-            <div class="g-item"><img src="https://picsum.photos/seed/{{ property.id }}a/600/400" alt="{{ property.title }}"></div>
-            <div class="g-item"><img src="https://picsum.photos/seed/{{ property.id }}b/600/400" alt="{{ property.title }}"></div>
-        {% endfor %}
+                <div class="gallery-counter" id="galleryCounter">
+                    {% if images %}<span id="currentIndex">1</span> / {{ images|length }}{% else %}1 / 1{% endif %}
+                </div>
+                
+                <!-- Botones de navegación -->
+                <button class="gallery-nav prev" id="galleryPrev" aria-label="Anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="gallery-nav next" id="galleryNext" aria-label="Siguiente">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            {% endwith %}
+        </div>
+
+        <!-- Miniaturas -->
+        <div class="gallery-thumbs">
+            {% with images=property.images.all %}
+                <button class="thumb-scroll-btn left" id="thumbScrollLeft" aria-label="Desplazar miniaturas izquierda">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="gallery-thumbs-wrapper" id="galleryThumbs">
+                    {% if images %}
+                        {% for image in images %}
+                            <div class="gallery-thumb {% if forloop.first %}is-active{% endif %}" data-index="{{ forloop.counter0 }}">
+                                <img src="{{ image.image.url }}" alt="{{ property.title }} - Foto {{ forloop.counter }}" loading="lazy">
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Imagen de placeholder si no hay fotos -->
+                        <div class="gallery-thumb is-active" data-index="0">
+                            <img src="https://picsum.photos/seed/{{ property.id }}/200/150" alt="{{ property.title }}" loading="lazy">
+                        </div>
+                        <div class="gallery-thumb" data-index="1">
+                            <img src="https://picsum.photos/seed/{{ property.id }}a/200/150" alt="{{ property.title }}" loading="lazy">
+                        </div>
+                        <div class="gallery-thumb" data-index="2">
+                            <img src="https://picsum.photos/seed/{{ property.id }}b/200/150" alt="{{ property.title }}" loading="lazy">
+                        </div>
+                    {% endif %}
+                </div>
+                <button class="thumb-scroll-btn right" id="thumbScrollRight" aria-label="Desplazar miniaturas derecha">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            {% endwith %}
+        </div>
     </div>
 </div>
 
-<!-- CONTENIDO -->
+<!-- ===== CONTENIDO ===== -->
 <div class="container">
     <div class="detail-grid">
-        <!-- COLUMNA PRINCIPAL -->
         <div class="detail-main">
-            <!-- Especificaciones -->
             <div class="panel">
                 <h2><i class="fas fa-clipboard-list"></i> {% trans "Características" %}</h2>
                 <div class="specs">
@@ -449,7 +777,6 @@
                 </div>
             </div>
 
-            <!-- Descripción -->
             <div class="panel">
                 <h2><i class="fas fa-align-left"></i> {% trans "Descripción" %}</h2>
                 <div class="description">
@@ -461,54 +788,125 @@
                 </div>
             </div>
 
-            <!-- Ubicación -->
             <div class="panel">
                 <h2><i class="fas fa-map-location-dot"></i> {% trans "Ubicación" %}</h2>
+                
+                <div class="map-label">
+                    <i class="fas fa-location-dot"></i>
+                    {% if property.municipality %}
+                        <span><strong>{{ property.municipality.name }}</strong> - {{ property.province.name }}</span>
+                    {% else %}
+                        <span>{{ property.province.name }}</span>
+                    {% endif %}
+                    {% if property.address %}
+                        <span style="color: var(--texto-suave);">| {{ property.address }}</span>
+                    {% endif %}
+                </div>
+
                 <div id="detailMap"
-                     data-lat="{{ property.latitude|default:'21.5' }}"
-                     data-lng="{{ property.longitude|default:'-79.5' }}"></div>
+                     data-lat="{{ property.municipality.latitude|default:'21.5' }}"
+                     data-lng="{{ property.municipality.longitude|default:'-79.5' }}"
+                     data-municipio="{{ property.municipality.name|default:'' }}"
+                     data-provincia="{{ property.province.name|default:'' }}"
+                     data-direccion="{{ property.address|default:'' }}"
+                     data-titulo="{{ property.title|default:'' }}"
+                     style="margin-top: 12px;">
+                </div>
             </div>
         </div>
 
-        <!-- SIDEBAR CONTACTO -->
+        <!-- ===== SIDEBAR CONTACTO - AGENTE COMPLETO ===== -->
         <aside>
             <div class="panel contact-card">
-                {% with agent=property.agent %}
+                {% with agent=property.agent profile=property.agent.profile %}
                     <div class="agent">
                         <div class="avatar">
-                            {% if agent %}
-                                {{ agent.get_full_name|default:agent.username|default:"CU"|slice:":2"|upper }}
+                            {% if profile and profile.avatar %}
+                                <img src="{{ profile.avatar.url }}" alt="{{ agent.get_full_name|default:agent.username }}">
                             {% else %}
-                                CU
+                                {{ agent.get_full_name|default:agent.username|default:"CU"|slice:":2"|upper }}
                             {% endif %}
                         </div>
                         <div class="who">
                             <div class="name">
-                                {% if agent %}
-                                    {{ agent.get_full_name|default:agent.username|default:"cu2home" }}
-                                {% else %}
-                                    cu2home
+                                {{ agent.get_full_name|default:agent.username|default:"cu2home" }}
+                                {% if profile and profile.is_verified %}
+                                    <span class="verified-badge"><i class="fas fa-check-circle"></i> {% trans "Verificado" %}</span>
                                 {% endif %}
                             </div>
                             <div class="role">
-                                {% if agent and agent.profile.is_agent %}
-                                    {% trans "Agente verificado" %}
+                                {% if profile %}
+                                    {{ profile.get_user_type_display|default:_("Usuario") }}
                                 {% else %}
-                                    {% trans "Anunciante verificado" %}
+                                    {% trans "Usuario" %}
                                 {% endif %}
                             </div>
+                            {% if profile and profile.agency_name %}
+                                <div class="agency">
+                                    <i class="fas fa-building"></i> {{ profile.agency_name }}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
+
+                    <!-- Biografía -->
+                    {% if profile and profile.bio %}
+                        <div class="agent-bio">{{ profile.bio|linebreaks }}</div>
+                    {% endif %}
+
+                    <!-- Información de contacto -->
+                    <div class="agent-contact">
+                        {% if profile and profile.phone %}
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <a href="tel:{{ profile.phone }}">{{ profile.phone }}</a>
+                            </div>
+                        {% endif %}
+                        
+                        {% if agent and agent.email %}
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <a href="mailto:{{ agent.email }}">{{ agent.email }}</a>
+                            </div>
+                        {% endif %}
+
+                        {% if profile and profile.address %}
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ profile.address }}</span>
+                            </div>
+                        {% endif %}
+
+                        {% if profile and profile.website %}
+                            <div class="contact-item">
+                                <i class="fas fa-globe"></i>
+                                <a href="{{ profile.website }}" target="_blank" rel="noopener">{{ profile.website }}</a>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Redes Sociales -->
+                    {% if profile and profile.social_links %}
+                        <div class="agent-social">
+                            {% for social in profile.social_links %}
+                                <a href="{{ social.url }}" target="_blank" rel="noopener" title="{{ social.platform }}">
+                                    <i class="fab fa-{{ social.platform|lower }}"></i>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Botones de acción -->
                     <div class="contact-btns">
-                        {% if agent and agent.profile.phone %}
-                            <a href="tel:{{ agent.profile.phone }}" class="btn-primary">
+                        {% if profile and profile.phone %}
+                            <a href="tel:{{ profile.phone }}" class="btn-primary">
                                 <i class="fas fa-phone"></i> {% trans "Llamar" %}
                             </a>
-                            <a href="https://wa.me/{{ agent.profile.phone }}" class="btn-wa" target="_blank" rel="noopener">
+                            <a href="https://wa.me/{{ profile.phone|cut:'+'|cut:' '|cut:'-' }}" class="btn-wa" target="_blank" rel="noopener">
                                 <i class="fab fa-whatsapp"></i> {% trans "WhatsApp" %}
                             </a>
                         {% else %}
-                            <button type="button" class="btn-primary">
+                            <button type="button" class="btn-primary" onclick="window.location.href='mailto:{{ agent.email|default:'info@cu2home.com' }}'">
                                 <i class="fas fa-envelope"></i> {% trans "Contactar anunciante" %}
                             </button>
                         {% endif %}
@@ -516,6 +914,7 @@
                             <i class="far fa-heart"></i> {% trans "Guardar en favoritos" %}
                         </button>
                     </div>
+
                     <div class="ref-note">
                         <span>{% trans "Ref." %} #{{ property.id|stringformat:"05d" }}</span>
                         <span>{{ property.created_at|date:"d/m/Y" }}</span>
@@ -531,10 +930,11 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
     (function() {
-        /* =====================================================
-           FORMATO DE MONEDA (desde config.ini -> settings.py ->
-           context processor). Mismo formato que en index.html.
-           ===================================================== */
+        'use strict';
+
+        /* ============================================================
+           FORMATO DE MONEDA
+           ============================================================ */
         const CURRENCY_SYMBOL = "{{ currency_symbol|default:'$' }}";
         const CURRENCY_DECIMAL_PLACES = {{ currency_decimal_places|default:2 }};
         const CURRENCY_THOUSANDS_SEP = "{{ currency_thousands_sep|default:'.' }}";
@@ -558,7 +958,6 @@
             }
         }
 
-        // Formatear el precio al cargar la página
         const priceEl = document.getElementById('propertyPrice');
         if (priceEl) {
             const rawPrice = parseFloat(priceEl.textContent.trim());
@@ -567,32 +966,378 @@
             }
         }
 
-        /* =====================================================
-           MAPA LEAFTLET
-           ===================================================== */
-        const el = document.getElementById('detailMap');
-        if (!el) return;
-        const lat = parseFloat(el.dataset.lat) || 21.5;
-        const lng = parseFloat(el.dataset.lng) || -79.5;
-        const map = L.map('detailMap').setView([lat, lng], 14);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; CartoDB',
-            maxZoom: 19
-        }).addTo(map);
-        const icon = L.divIcon({
-            className: 'cu-pin',
-            html: '<div style="background:#C1512D;width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 3px 8px rgba(0,0,0,0.35);border:2px solid #fff;"></div>',
-            iconSize: [26, 26],
-            iconAnchor: [13, 26]
-        });
-        L.marker([lat, lng], { icon: icon }).addTo(map);
+        /* ============================================================
+           GALERÍA - CARRUSEL
+           ============================================================ */
+        (function initGallery() {
+            const mainImg = document.getElementById('galleryMainImg');
+            const thumbsContainer = document.getElementById('galleryThumbs');
+            const thumbElements = thumbsContainer ? thumbsContainer.querySelectorAll('.gallery-thumb') : [];
+            const counter = document.getElementById('currentIndex');
+            const totalCounter = document.querySelector('.gallery-counter');
+            const prevBtn = document.getElementById('galleryPrev');
+            const nextBtn = document.getElementById('galleryNext');
+            const scrollLeftBtn = document.getElementById('thumbScrollLeft');
+            const scrollRightBtn = document.getElementById('thumbScrollRight');
+
+            let currentIndex = 0;
+            const totalImages = thumbElements.length || 1;
+
+            function updateGallery(index) {
+                if (index < 0) index = totalImages - 1;
+                if (index >= totalImages) index = 0;
+                currentIndex = index;
+
+                // Actualizar imagen grande
+                const thumb = thumbElements[index];
+                if (thumb) {
+                    const imgSrc = thumb.querySelector('img')?.src;
+                    if (imgSrc) {
+                        mainImg.style.opacity = '0';
+                        setTimeout(() => {
+                            mainImg.src = imgSrc;
+                            mainImg.style.opacity = '1';
+                        }, 150);
+                    }
+                }
+
+                // Actualizar contador
+                if (counter) {
+                    counter.textContent = index + 1;
+                }
+                if (totalCounter) {
+                    totalCounter.textContent = (index + 1) + ' / ' + totalImages;
+                }
+
+                // Actualizar estado activo de miniaturas
+                thumbElements.forEach((el, i) => {
+                    el.classList.toggle('is-active', i === index);
+                });
+
+                // Scroll de la miniatura activa al centro del contenedor
+                if (thumbsContainer && thumbElements[index]) {
+                    const containerWidth = thumbsContainer.offsetWidth;
+                    const thumbWidth = thumbElements[index].offsetWidth + 10; // + gap
+                    const scrollPos = thumbElements[index].offsetLeft - (containerWidth / 2) + (thumbWidth / 2);
+                    thumbsContainer.scrollTo({
+                        left: Math.max(0, scrollPos),
+                        behavior: 'smooth'
+                    });
+                }
+
+                // Actualizar estado de botones de navegación
+                if (prevBtn) prevBtn.disabled = totalImages <= 1;
+                if (nextBtn) nextBtn.disabled = totalImages <= 1;
+            }
+
+            // Evento: clic en miniatura
+            thumbElements.forEach((thumb, index) => {
+                thumb.addEventListener('click', function() {
+                    updateGallery(index);
+                });
+            });
+
+            // Evento: botón anterior
+            if (prevBtn) {
+                prevBtn.addEventListener('click', function() {
+                    updateGallery(currentIndex - 1);
+                });
+            }
+
+            // Evento: botón siguiente
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function() {
+                    updateGallery(currentIndex + 1);
+                });
+            }
+
+            // Evento: teclado (flechas izquierda/derecha)
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    updateGallery(currentIndex - 1);
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    updateGallery(currentIndex + 1);
+                }
+            });
+
+            // Evento: scroll de miniaturas con botones
+            if (scrollLeftBtn && thumbsContainer) {
+                scrollLeftBtn.addEventListener('click', function() {
+                    thumbsContainer.scrollBy({ left: -200, behavior: 'smooth' });
+                });
+            }
+            if (scrollRightBtn && thumbsContainer) {
+                scrollRightBtn.addEventListener('click', function() {
+                    thumbsContainer.scrollBy({ left: 200, behavior: 'smooth' });
+                });
+            }
+
+            // Mostrar/ocultar botones de scroll según contenido
+            if (thumbsContainer) {
+                function checkScrollButtons() {
+                    if (scrollLeftBtn && scrollRightBtn) {
+                        const hasScroll = thumbsContainer.scrollWidth > thumbsContainer.clientWidth;
+                        scrollLeftBtn.style.display = hasScroll ? 'flex' : 'none';
+                        scrollRightBtn.style.display = hasScroll ? 'flex' : 'none';
+                    }
+                }
+                checkScrollButtons();
+                window.addEventListener('resize', checkScrollButtons);
+                // También verificar después de que las imágenes carguen
+                setTimeout(checkScrollButtons, 500);
+            }
+
+            // Inicializar
+            updateGallery(0);
+
+            // Exponer para debug
+            window.gallery = { updateGallery, currentIndex: () => currentIndex };
+        })();
+
+        /* ============================================================
+           MAPA
+           ============================================================ */
+        function initMap() {
+            const el = document.getElementById('detailMap');
+            if (!el) {
+                console.error('❌ Elemento #detailMap no encontrado');
+                return;
+            }
+
+            const lat = parseFloat(el.dataset.lat) || 21.5;
+            const lng = parseFloat(el.dataset.lng) || -79.5;
+            const municipio = el.dataset.municipio || '';
+            const provincia = el.dataset.provincia || '';
+            const direccion = el.dataset.direccion || '';
+            const titulo = el.dataset.titulo || '';
+
+            console.log('📍 Coordenadas:', lat, lng);
+            console.log('📍 Municipio:', municipio);
+
+            if (isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) {
+                console.warn('⚠️ Coordenadas inválidas, usando coordenadas de Cuba');
+                el.innerHTML = `
+                    <div class="map-loading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        {% trans "Coordenadas no disponibles para este municipio" %}
+                    </div>
+                `;
+                return;
+            }
+
+            const zoom = 7;
+            
+            const map = L.map(el, {
+                center: [lat, lng],
+                zoom: zoom,
+                zoomControl: true,
+                scrollWheelZoom: true,
+                fadeAnimation: true,
+                zoomAnimation: true,
+                attributionControl: true
+            });
+
+            const cubaBounds = L.latLngBounds(
+                L.latLng(19.5, -85.5),
+                L.latLng(23.5, -73.5)
+            );
+            map.setMaxBounds(cubaBounds);
+            map.setMinZoom(6);
+            map.setMaxZoom(18);
+
+            const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 19,
+                minZoom: 6,
+                className: 'map-tiles'
+            }).addTo(map);
+
+            const cartoLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; CartoDB',
+                maxZoom: 19,
+                minZoom: 6,
+                className: 'map-tiles'
+            });
+
+            cartoLayer.on('load', function() {
+                map.removeLayer(osmLayer);
+                map.addLayer(cartoLayer);
+                console.log('✅ Cambiado a CartoDB');
+            });
+
+            cartoLayer.on('error', function() {
+                console.log('ℹ️ Usando OpenStreetMap como fallback');
+            });
+
+            setTimeout(() => {
+                map.addLayer(cartoLayer);
+            }, 500);
+
+            const icon = L.divIcon({
+                className: 'cu-pin',
+                html: `
+                    <div style="
+                        background: #C1512D;
+                        width: 44px;
+                        height: 44px;
+                        border-radius: 50% 50% 50% 0;
+                        transform: rotate(-45deg);
+                        box-shadow: 0 6px 25px rgba(193, 81, 45, 0.5);
+                        border: 4px solid #ffffff;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        position: relative;
+                        transition: all 0.3s ease;
+                    ">
+                        <span style="
+                            transform: rotate(45deg);
+                            font-size: 20px;
+                            color: white;
+                            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                        ">🏠</span>
+                    </div>
+                `,
+                iconSize: [44, 44],
+                iconAnchor: [22, 44],
+                popupAnchor: [0, -44]
+            });
+
+            const marker = L.marker([lat, lng], { 
+                icon: icon,
+                zIndexOffset: 1000
+            }).addTo(map);
+
+            let popupContent = `
+                <div style="text-align: center; padding: 6px 4px; min-width: 180px;">
+            `;
+            
+            if (municipio) {
+                popupContent += `
+                    <div style="font-size: 1.2rem; font-weight: 700; color: #C1512D; margin-bottom: 4px;">
+                        📍 ${municipio}
+                    </div>
+                `;
+            }
+            
+            if (provincia) {
+                popupContent += `
+                    <div style="color: #555; font-size: 0.95rem; margin-bottom: 4px;">
+                        ${provincia}
+                    </div>
+                `;
+            }
+            
+            if (direccion) {
+                popupContent += `
+                    <div style="color: #888; font-size: 0.85rem; border-top: 1px solid #eee; padding-top: 6px; margin-top: 4px;">
+                        ${direccion}
+                    </div>
+                `;
+            }
+            
+            if (titulo && !municipio && !provincia) {
+                popupContent += `
+                    <div style="font-size: 1rem; font-weight: 600; color: #333;">
+                        ${titulo}
+                    </div>
+                `;
+            }
+            
+            popupContent += '</div>';
+
+            marker.bindPopup(popupContent, {
+                maxWidth: 300,
+                className: 'custom-popup'
+            });
+
+            setTimeout(() => {
+                marker.openPopup();
+            }, 800);
+
+            const circle = L.circle([lat, lng], {
+                color: '#C1512D',
+                fillColor: '#C1512D',
+                fillOpacity: 0.08,
+                weight: 2.5,
+                opacity: 0.4,
+                radius: 10000,
+                className: 'area-circle'
+            }).addTo(map);
+
+            if (municipio) {
+                const labelIcon = L.divIcon({
+                    className: 'municipio-label',
+                    html: `
+                        <div style="
+                            background: rgba(255,255,255,0.92);
+                            padding: 6px 16px;
+                            border-radius: 30px;
+                            font-weight: 700;
+                            font-size: 0.9rem;
+                            color: #C1512D;
+                            border: 2.5px solid #C1512D;
+                            box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+                            white-space: nowrap;
+                            font-family: 'Inter', sans-serif;
+                            letter-spacing: 0.3px;
+                            backdrop-filter: blur(4px);
+                        ">
+                            ${municipio}
+                        </div>
+                    `,
+                    iconSize: [null, null],
+                    iconAnchor: [0, 0]
+                });
+                
+                const labelLat = lat + 0.035;
+                const labelLng = lng;
+                
+                L.marker([labelLat, labelLng], { 
+                    icon: labelIcon, 
+                    interactive: false,
+                    keyboard: false
+                }).addTo(map);
+            }
+
+            setTimeout(() => {
+                map.invalidateSize();
+                map.setView([lat, lng], zoom);
+                console.log('✅ Mapa inicializado correctamente');
+            }, 400);
+
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    map.invalidateSize();
+                    map.setView([lat, lng], zoom);
+                }, 250);
+            });
+
+            map.on('scrollWheelZoom', function(e) {
+                e.originalEvent.stopPropagation();
+            });
+
+            L.control.zoom({
+                position: 'bottomright'
+            }).addTo(map);
+
+            console.log(`🗺️ Mapa centrado en: ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initMap);
+        } else {
+            initMap();
+        }
+
     })();
 </script>
 {% endblock %}
 
-<!-- ============================================================
-     FOOTER SIMPLIFICADO (idéntico al de index.html)
-     ============================================================ -->
 {% block footer %}
 <footer style="background: #0A2E2A; color: rgba(255,255,255,0.65); padding: 14px 24px; flex-shrink: 0; border-top: 1px solid rgba(225,91,51,0.22); box-shadow: none;">
     <div style="max-width:1280px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">

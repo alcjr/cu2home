@@ -11,6 +11,7 @@ from .models import Property, Province, Municipality
 from .constants import PROPERTY_TYPES
 
 
+# Whitelist de ordenación compartida entre la vista HTML y el endpoint JSON.
 ALLOWED_SORT = {
     'created_at': 'created_at',
     '-created_at': '-created_at',
@@ -24,6 +25,10 @@ ALLOWED_SORT = {
 
 
 def _filtered_properties(request):
+    """
+    Aplica los filtros de ``PropertyFilterForm`` y la ordenación permitida
+    sobre el queryset base de propiedades activas.
+    """
     properties = Property.objects.filter(is_active=True).select_related(
         'province', 'municipality'
     ).prefetch_related('images')
@@ -228,6 +233,7 @@ def _serialize_property_detail(obj, request):
         'address': obj.address or '',
         'province': obj.province.name if obj.province else '',
         'municipality': obj.municipality.name if obj.municipality else '',
+        # ===== COORDENADAS DEL MUNICIPIO PARA EL MAPA =====
         'municipality_latitude': float(obj.municipality.latitude) if obj.municipality and obj.municipality.latitude else None,
         'municipality_longitude': float(obj.municipality.longitude) if obj.municipality and obj.municipality.longitude else None,
         'property_type': obj.get_property_type_display(),

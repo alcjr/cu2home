@@ -177,7 +177,6 @@ def _serialize_property_for_grid(obj, request):
 
 
 @require_GET
-@require_GET
 def property_results_json(request):
     """
     Endpoint JSON consumido por el ``CustomStore`` del ``dxDataGrid`` de
@@ -236,6 +235,36 @@ def get_municipalities(request):
     return HttpResponse('<option value="">---</option>')
 
 
+def _serialize_agent(agent, request):
+    """
+    Representación JSON del agente/usuario que subió la propiedad, para
+    la card de "Publicado por" del quick view. ``agent`` es un
+    ``auth.User`` (puede ser ``None`` -- ``Property.agent`` es
+    ``null=True``); su ficha ampliada (teléfono, avatar, bio, agencia)
+    vive en ``UserProfile`` (``apps.users``), accesible como
+    ``agent.profile`` -- puede no existir todavía en usuarios muy
+    antiguos creados antes de la señal ``post_save`` que la crea, de ahí
+    el ``getattr`` defensivo.
+    """
+    if agent is None:
+        return None
+
+    profile = getattr(agent, 'profile', None)
+
+    return {
+        'name': agent.get_full_name() or agent.username,
+        'email': agent.email or '',
+        'phone': profile.phone if profile else '',
+        'avatar_url': (
+            request.build_absolute_uri(profile.avatar.url)
+            if profile and profile.avatar else None
+        ),
+        'agency_name': profile.agency_name if profile else '',
+        'bio': profile.bio if profile else '',
+        'user_type_display': profile.get_user_type_display() if profile else '',
+    }
+
+
 def _serialize_property_detail(obj, request):
     """
     Representación JSON COMPLETA de una propiedad, para la ventana de
@@ -244,9 +273,11 @@ def _serialize_property_detail(obj, request):
 
     A diferencia de ``_serialize_property_for_grid`` (mínima, pensada
     para no sobrecargar el listado paginado), aquí sí se incluyen
-    descripción, dirección, comodidades y la galería completa de
-    imágenes -- solo se pide bajo demanda, para UNA propiedad, cuando
-    el usuario hace doble click.
+    descripción, dirección, comodidades, la galería completa de
+    imágenes y los datos del agente/usuario que publicó el inmueble
+    (bloque ``agent``, consumido por la card de "Publicado por" del
+    quick view) -- solo se pide bajo demanda, para UNA propiedad,
+    cuando el usuario hace doble click.
     """
     images = [
         {
@@ -280,6 +311,7 @@ def _serialize_property_detail(obj, request):
         'status': obj.get_status_display(),
         'views_count': obj.views_count,
         'detail_url': reverse('properties:detail', args=[obj.pk, obj.slug]),
+        'agent': _serialize_agent(obj.agent, request),
     }
 
 
@@ -295,7 +327,9 @@ def property_detail_json(request, pk):
     despublicadas.
     """
     obj = get_object_or_404(
-        Property.objects.select_related('province', 'municipality').prefetch_related('images'),
+        Property.objects.select_related(
+            'province', 'municipality', 'agent', 'agent__profile'
+        ).prefetch_related('images'),
         pk=pk,
         is_active=True,
     )

@@ -4489,3 +4489,15 @@ django.template.base.VariableDoesNotExist: Failed lookup for key [username] in N
 INFO 2026-08-16 16:07:52,778 autoreload Watching for file changes with StatReloader
 INFO 2026-08-16 16:23:21,339 autoreload Watching for file changes with StatReloader
 INFO 2026-08-16 16:27:17,057 autoreload Watching for file changes with StatReloader
+INFO 2026-08-16 17:00:02,595 autoreload Watching for file changes with StatReloader
+INFO 2026-08-16 17:06:22,204 autoreload Watching for file changes with StatReloader
+INFO 2026-08-16 17:36:55,988 autoreload Watching for file changes with StatReloader
+INFO 2026-08-16 17:43:26,415 autoreload Watching for file changes with StatReloader
+INFO 2026-08-16 18:02:53,202 autoreload C:\00_projects\cu2home\apps\properties\views.py changed, reloading.
+INFO 2026-08-16 18:02:54,294 autoreload Watching for file changes with StatReloader
+INFO 2026-08-16 18:03:01,349 autoreload Watching for file changes with StatReloader
+INFO 2026-08-16 18:16:44,293 autoreload C:\00_projects\cu2home\apps\properties\views.py changed, reloading.
+INFO 2026-08-16 18:16:45,910 autoreload Watching for file changes with StatReloader
+INFO 2026-08-16 18:17:56,345 autoreload Watching for file changes with StatReloader
+INFO 2026-08-16 18:26:48,142 autoreload Watching for file changes with StatReloader
+INFO 2026-08-16 18:39:19,552 autoreload Watching for file changes with StatReloader

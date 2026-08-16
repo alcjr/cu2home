@@ -33,6 +33,28 @@ class Municipality(models.Model):
     province = models.ForeignKey(Province, on_delete=models.CASCADE, related_name='municipalities', verbose_name=_('Province'))
     name = models.CharField(max_length=100, verbose_name=_('Municipality'))
     slug = models.SlugField(max_length=100, blank=True, verbose_name=_('Slug'))
+    
+    # ===== NUEVOS CAMPOS PARA COORDENADAS =====
+    latitude = models.DecimalField(
+        max_digits=10, 
+        decimal_places=7, 
+        null=True, 
+        blank=True, 
+        verbose_name=_('Latitude')
+    )
+    longitude = models.DecimalField(
+        max_digits=10, 
+        decimal_places=7, 
+        null=True, 
+        blank=True, 
+        verbose_name=_('Longitude')
+    )
+    location = gis_models.PointField(
+        srid=4326, 
+        verbose_name=_('Location'), 
+        null=True, 
+        blank=True
+    )
 
     class Meta:
         verbose_name = _('Municipality')
@@ -43,6 +65,11 @@ class Municipality(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
+        
+        # Actualizar PointField si hay latitud y longitud
+        if self.latitude is not None and self.longitude is not None:
+            self.location = gis_models.Point(self.longitude, self.latitude, srid=4326)
+        
         super().save(*args, **kwargs)
 
     def __str__(self):
