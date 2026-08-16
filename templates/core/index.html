@@ -499,55 +499,144 @@
     .section-header .link:hover { gap: 12px; }
 
     /* =========================================================
-       GRID DE RESULTADOS (DevExtreme dxDataGrid)
-       Sustituye a la antigua cuadrícula de tarjetas (.cards-grid /
-       .property-card, ahora eliminadas de este fichero — esa lógica
-       de tarjetas sigue viva en core/base.html para properties/list.html,
-       que no forma parte de este cambio).
+       GRID DE RESULTADOS (DevExtreme dxDataGrid con rowTemplate)
+       Sustituye a la antigua cuadrícula de tarjetas verticales
+       (.cards-grid / .property-card, ahora eliminadas de este
+       fichero — esa lógica sigue viva en core/base.html para
+       properties/list.html, que no forma parte de este cambio).
+       Cada fila del grid se renderiza como una tarjeta horizontal
+       (foto grande + datos) vía rowTemplate/buildResultCard, en
+       vez de columnas tabulares — visualmente más cercana a las
+       .property-card originales, manteniendo la recarga dinámica
+       y la paginación de DevExtreme.
        ========================================================= */
     .results-grid-wrap {
-        background: var(--paper);
-        border-radius: var(--radius-lg);
-        border: 1px solid var(--line);
-        padding: 8px;
-        box-shadow: var(--shadow-soft);
+        background: transparent;
+        padding: 4px 0 0;
     }
     .results-grid-wrap .dx-datagrid {
         font-family: var(--font-body);
         color: var(--ink);
+        background: transparent;
     }
-    .results-grid-wrap .dx-datagrid-headers {
-        background: var(--night);
-        color: #fff;
-        font-family: var(--font-display);
-        font-weight: 600;
+    .results-grid-wrap .dx-datagrid-rowsview {
+        background: transparent;
     }
-    .results-grid-wrap .dx-datagrid-headers .dx-datagrid-text-content { color: #fff; }
-    .results-grid-wrap .dx-datagrid-rowsview .dx-row:hover:not(.dx-row-removed) > td {
-        background: var(--sand);
-        cursor: pointer;
-    }
-    .results-grid-wrap .dx-datagrid-rowsview .dx-row {
-        border-bottom: 1px solid var(--line);
-    }
-    .results-grid-wrap .grid-price {
-        font-family: var(--font-mono);
-        font-weight: 600;
-    }
-    .grid-thumb {
-        width: 72px;
-        height: 54px;
-        object-fit: cover;
-        border-radius: var(--radius-sm);
-        display: block;
+    .results-grid-wrap .dx-datagrid-rowsview .dx-row.result-card-row > td {
+        padding: 0;
+        border: none !important;
+        background: transparent !important;
     }
     .results-grid-wrap .dx-pager {
         font-family: var(--font-mono);
+        margin-top: 8px;
     }
     .results-grid-wrap .dx-pager .dx-selection {
         background-color: var(--terracotta);
     }
+
+    /* ---- Tarjeta horizontal de resultado (foto grande + datos) ---- */
+    .result-card {
+        display: flex;
+        align-items: stretch;
+        gap: 20px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        margin: 0 0 14px;
+        cursor: pointer;
+        transition: transform 0.22s, box-shadow 0.22s;
+    }
+    .result-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lift);
+    }
+    .result-card-img {
+        position: relative;
+        flex-shrink: 0;
+        width: 240px;
+        min-height: 160px;
+        background: var(--sand-deep);
+    }
+    .result-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .result-card-img .badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: var(--night);
+        color: #fff;
+        padding: 4px 12px;
+        border-radius: 40px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+    .result-card-body {
+        flex: 1;
+        min-width: 0;
+        padding: 18px 22px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+    }
+    .result-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .result-card-title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--ink);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 60ch;
+    }
+    .result-card-price {
+        font-family: var(--font-mono);
+        font-size: 1.35rem;
+        font-weight: 600;
+        color: var(--ink);
+        white-space: nowrap;
+    }
+    .result-card-location {
+        font-size: 0.88rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .result-card-location i { color: var(--terracotta); }
+    .result-card-details {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-top: 6px;
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+    }
+    .result-card-details span { display: flex; align-items: center; gap: 6px; }
+    .result-card-details i { color: #94a3b8; }
     .empty-state { color: var(--muted); font-size: 0.95rem; }
+
+    @media (max-width: 640px) {
+        .result-card { flex-direction: column; }
+        .result-card-img { width: 100%; min-height: 200px; }
+    }
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 980px) {
@@ -791,6 +880,35 @@
         const propertyTypeSelect = document.getElementById('propertyType');
         const maxPriceInput = document.getElementById('maxPrice');
 
+        /* =====================================================
+           FORMATO DE MONEDA (desde config.ini -> settings.py ->
+           context processor -> aquí). Nada de "CUP"/"$" hardcodeado:
+           si mañana cambia la moneda o el formato, se edita
+           config.ini y punto, sin tocar esta plantilla.
+           ===================================================== */
+        const CURRENCY_SYMBOL = "{{ currency_symbol|default:'$' }}";
+        const CURRENCY_DECIMAL_PLACES = {{ currency_decimal_places|default:2 }};
+        const CURRENCY_THOUSANDS_SEP = "{{ currency_thousands_sep|default:'.' }}";
+        const CURRENCY_DECIMAL_SEP = "{{ currency_decimal_sep|default:',' }}";
+        const CURRENCY_SYMBOL_POSITION = "{{ currency_symbol_position|default:'before_attached' }}";
+
+        function formatPrice(value) {
+            if (value == null || value === '') return '—';
+            const fixed = Number(value).toFixed(CURRENCY_DECIMAL_PLACES);
+            const [intPart, decPart] = fixed.split('.');
+            const intWithThousands = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, CURRENCY_THOUSANDS_SEP);
+            const numberStr = CURRENCY_DECIMAL_PLACES > 0
+                ? intWithThousands + CURRENCY_DECIMAL_SEP + decPart
+                : intWithThousands;
+
+            switch (CURRENCY_SYMBOL_POSITION) {
+                case 'before_spaced': return CURRENCY_SYMBOL + ' ' + numberStr;
+                case 'after_spaced': return numberStr + ' ' + CURRENCY_SYMBOL;
+                case 'before_attached':
+                default: return CURRENCY_SYMBOL + numberStr;
+            }
+        }
+
         function currentResultsFilterParams() {
             const params = new URLSearchParams();
             if (provinceSelect.value) params.set('province_id', provinceSelect.value);
@@ -817,12 +935,77 @@
             },
         });
 
+        /* Construye el contenido de cada fila como una tarjeta horizontal
+           (foto grande a la izquierda + datos a la derecha), reutilizando
+           el lenguaje visual de las .property-card originales. */
+        function buildResultCard(data) {
+            const card = document.createElement('div');
+            card.className = 'result-card';
+
+            const imgWrap = document.createElement('div');
+            imgWrap.className = 'result-card-img';
+            const img = document.createElement('img');
+            img.src = data.image_url;
+            img.alt = data.title || '';
+            img.loading = 'lazy';
+            imgWrap.append(img);
+            if (data.status) {
+                const badge = document.createElement('span');
+                badge.className = 'badge';
+                badge.textContent = data.status;
+                imgWrap.append(badge);
+            }
+            card.append(imgWrap);
+
+            const body = document.createElement('div');
+            body.className = 'result-card-body';
+
+            const top = document.createElement('div');
+            top.className = 'result-card-top';
+            const title = document.createElement('span');
+            title.className = 'result-card-title';
+            title.textContent = data.title || '';
+            const price = document.createElement('span');
+            price.className = 'result-card-price';
+            price.textContent = formatPrice(data.price);
+            top.append(title, price);
+            body.append(top);
+
+            const location = document.createElement('div');
+            location.className = 'result-card-location';
+            const locationIcon = document.createElement('i');
+            locationIcon.className = 'fas fa-map-pin';
+            location.append(locationIcon, ' ' + [data.city, data.province].filter(Boolean).join(', '));
+            body.append(location);
+
+            const details = document.createElement('div');
+            details.className = 'result-card-details';
+            const detailItems = [
+                ['fa-home', data.property_type || '—'],
+                ['fa-bed', data.rooms != null ? data.rooms : '—'],
+                ['fa-bath', data.bathrooms != null ? data.bathrooms : '—'],
+                ['fa-vector-square', (data.surface != null ? data.surface : '—') + ' m²'],
+            ];
+            detailItems.forEach(function(item) {
+                const span = document.createElement('span');
+                const icon = document.createElement('i');
+                icon.className = 'fas ' + item[0];
+                span.append(icon, ' ' + item[1]);
+                details.append(span);
+            });
+            body.append(details);
+
+            card.append(body);
+            return card;
+        }
+
         const resultsGrid = new DevExpress.ui.dxDataGrid(document.getElementById('resultsGrid'), {
             dataSource: resultsStore,
             remoteOperations: { paging: true },
             height: 'auto',
-            showBorders: true,
-            rowAlternationEnabled: true,
+            showBorders: false,
+            showColumnHeaders: false,
+            rowAlternationEnabled: false,
             columnAutoWidth: true,
             noDataText: "{% trans 'No hay propiedades que coincidan con los filtros seleccionados.' %}",
             loadPanel: { enabled: true },
@@ -833,62 +1016,27 @@
                 showInfo: true,
                 visible: true,
             },
+            /* Las columnas siguen declaradas (sin cellTemplate propio) solo
+               para que DevExtreme calcule el colSpan de la tarjeta en
+               rowTemplate; el renderizado real de cada fila lo controla
+               rowTemplate/buildResultCard, no estas definiciones. */
             columns: [
-                {
-                    dataField: 'image_url',
-                    caption: "{% trans 'Foto' %}",
-                    width: 100,
-                    allowSorting: false,
-                    allowFiltering: false,
-                    cellTemplate: function(container, options) {
-                        const img = document.createElement('img');
-                        img.src = options.value;
-                        img.alt = options.data.title || '';
-                        img.loading = 'lazy';
-                        img.className = 'grid-thumb';
-                        container.append(img);
-                    },
-                },
-                {
-                    dataField: 'price',
-                    caption: "{% trans 'Precio' %}",
-                    dataType: 'number',
-                    width: 130,
-                    cellTemplate: function(container, options) {
-                        container.classList.add('grid-price');
-                        container.textContent = options.value != null ? options.value + ' CUP' : '—';
-                    },
-                },
-                {
-                    caption: "{% trans 'Ubicación' %}",
-                    calculateCellValue: function(row) {
-                        return [row.city, row.province].filter(Boolean).join(', ');
-                    },
-                    allowSorting: false,
-                },
-                {
-                    dataField: 'property_type',
-                    caption: "{% trans 'Tipo' %}",
-                    width: 140,
-                    allowSorting: false,
-                },
-                {
-                    caption: "{% trans 'Hab. / Baños' %}",
-                    calculateCellValue: function(row) {
-                        const rooms = row.rooms != null ? row.rooms : '—';
-                        const baths = row.bathrooms != null ? row.bathrooms : '—';
-                        return rooms + ' / ' + baths;
-                    },
-                    width: 130,
-                    allowSorting: false,
-                },
-                {
-                    dataField: 'surface',
-                    caption: "{% trans 'm²' %}",
-                    dataType: 'number',
-                    width: 90,
-                },
+                { dataField: 'image_url' },
+                { dataField: 'price', dataType: 'number' },
+                { dataField: 'city' },
+                { dataField: 'property_type' },
+                { dataField: 'rooms' },
+                { dataField: 'surface', dataType: 'number' },
             ],
+            rowTemplate: function(container, item) {
+                const tr = document.createElement('tr');
+                tr.className = 'result-card-row';
+                const td = document.createElement('td');
+                td.colSpan = item.columns.length;
+                td.append(buildResultCard(item.data));
+                tr.append(td);
+                container.append(tr);
+            },
             onRowClick: function(e) {
                 if (e.data && e.data.detail_url) {
                     window.location.href = e.data.detail_url;

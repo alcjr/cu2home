@@ -341,15 +341,3 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 MAX_IMAGES_PER_PROPERTY = get_config_int('Properties', 'max_images_per_property', 10)
-
-# ==================== MONEDA (formato del precio en la grilla) ====================
-# Todo configurable desde config.ini, sin tocar código, para poder cambiar
-# moneda/formato entre entornos (ej. CUP en un despliegue, USD en otro) sin
-# redeploy de plantillas. 'symbol_position' admite: 'before_attached' ($1.234),
-# 'before_spaced' ($ 1.234), 'after_spaced' (1.234 $).
-CURRENCY_CODE = get_config('Currency', 'code', 'USD')
-CURRENCY_SYMBOL = get_config('Currency', 'symbol', '$')
-CURRENCY_DECIMAL_PLACES = get_config_int('Currency', 'decimal_places', 2)
-CURRENCY_THOUSANDS_SEP = get_config('Currency', 'thousands_separator', '.')
-CURRENCY_DECIMAL_SEP = get_config('Currency', 'decimal_separator', ',')
-CURRENCY_SYMBOL_POSITION = get_config('Currency', 'symbol_position', 'before_attached')
