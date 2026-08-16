@@ -1,8 +1,9 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import F, Q
+from django.urls import reverse
 from django.views.decorators.http import require_GET
 
 from .forms import PropertyFilterForm
@@ -10,7 +11,31 @@ from .models import Property, Province, Municipality
 from .constants import PROPERTY_TYPES
 
 
-def property_list(request):
+# Whitelist de ordenación compartida entre la vista HTML y el endpoint JSON.
+ALLOWED_SORT = {
+    'created_at': 'created_at',
+    '-created_at': '-created_at',
+    'price': 'price',
+    '-price': '-price',
+    'surface': 'surface',
+    '-surface': '-surface',
+    'views_count': 'views_count',
+    '-views_count': '-views_count',
+}
+
+
+def _filtered_properties(request):
+    """
+    Aplica los filtros de ``PropertyFilterForm`` y la ordenación permitida
+    sobre el queryset base de propiedades activas.
+
+    Centraliza la lógica de filtrado para que tanto ``property_list``
+    (resultados en HTML/HTMX) como ``property_results_json`` (grid
+    DevExtreme de la sección "Resultados" de la home) se comporten de
+    forma idéntica ante los mismos parámetros de querystring.
+
+    Devuelve: (queryset filtrado y ordenado, form, selected_province, sort_param)
+    """
     # Query base con optimización de relaciones
     properties = Property.objects.filter(is_active=True).select_related(
         'province', 'municipality'
@@ -67,18 +92,14 @@ def property_list(request):
 
     # Ordenación
     sort_param = request.GET.get('sort', '-created_at')
-    allowed_sort = {
-        'created_at': 'created_at',
-        '-created_at': '-created_at',
-        'price': 'price',
-        '-price': '-price',
-        'surface': 'surface',
-        '-surface': '-surface',
-        'views_count': 'views_count',
-        '-views_count': '-views_count',
-    }
-    sort = allowed_sort.get(sort_param, '-created_at')
+    sort = ALLOWED_SORT.get(sort_param, '-created_at')
     properties = properties.order_by(sort)
+
+    return properties, form, selected_province, sort_param
+
+
+def property_list(request):
+    properties, form, selected_province, sort_param = _filtered_properties(request)
 
     # Paginación
     paginator = Paginator(properties, settings.SEARCH_RESULTS_PER_PAGE)
@@ -99,7 +120,7 @@ def property_list(request):
     context = {
         'properties': page_obj,
         'form': form,
-        'current_sort': sort_param if sort_param in allowed_sort else '-created_at',
+        'current_sort': sort_param if sort_param in ALLOWED_SORT else '-created_at',
         'selected_province': selected_province,
         'querystring': querystring,
     }
@@ -115,6 +136,82 @@ def property_detail(request, pk, slug):
     Property.objects.filter(pk=obj.pk).update(views_count=F('views_count') + 1)
     obj.refresh_from_db(fields=['views_count'])
     return render(request, 'properties/detail.html', {'property': obj})
+
+
+def _serialize_property_for_grid(obj, request):
+    """
+    Representación JSON mínima de una propiedad para el ``dxDataGrid`` de
+    la sección "Resultados" de la home. No usa DRF (la app no lo trae
+    instalado); serialización manual, suficiente para este único endpoint.
+    """
+    cover = next((img for img in obj.images.all() if img.is_cover), None)
+    if cover is None:
+        cover = next(iter(obj.images.all()), None)
+
+    if cover:
+        image_url = request.build_absolute_uri(cover.image.url)
+    else:
+        # Fallback visual mientras la propiedad no tenga fotos reales
+        # (mismo criterio que ya usaba index.html con picsum.photos).
+        image_url = f"https://picsum.photos/seed/{obj.pk}/200/160"
+
+    return {
+        'id': obj.pk,
+        'title': obj.safe_translation_getter('title', any_language=True) or '',
+        'image_url': image_url,
+        'price': float(obj.price),
+        'city': obj.city,
+        'province': obj.province.name if obj.province else '',
+        'municipality': obj.municipality.name if obj.municipality else '',
+        'property_type': obj.get_property_type_display(),
+        'rooms': obj.rooms,
+        'bathrooms': obj.bathrooms,
+        'surface': obj.surface,
+        'status': obj.get_status_display(),
+        'detail_url': reverse('properties:detail', args=[obj.pk, obj.slug]),
+    }
+
+
+@require_GET
+def property_results_json(request):
+    """
+    Endpoint JSON consumido por el ``CustomStore`` del ``dxDataGrid`` de
+    la sección "Resultados" de la home (``index.html``).
+
+    Reutiliza el mismo filtrado que ``property_list`` (misma whitelist de
+    parámetros vía ``PropertyFilterForm``), así que acepta exactamente los
+    mismos query params (``province_id``, ``municipality_id``,
+    ``property_type``, ``max_price``, ``sort``, etc.).
+
+    Paginación en el formato que envía DevExtreme (``skip``/``take``) en
+    vez de ``page``/``page_size``, para poder pasarlos directamente desde
+    ``loadOptions`` sin conversión en el frontend.
+
+    Respuesta: ``{"data": [...], "totalCount": N}`` (formato que
+    ``DevExpress.data.CustomStore`` espera de un ``load()`` paginado).
+    """
+    properties, _form, _selected_province, _sort_param = _filtered_properties(request)
+
+    try:
+        skip = int(request.GET.get('skip', 0))
+    except (TypeError, ValueError):
+        skip = 0
+    skip = max(skip, 0)
+
+    try:
+        take = int(request.GET.get('take', 12))
+    except (TypeError, ValueError):
+        take = 12
+    # Límite defensivo: evita que un take arbitrariamente grande cargue
+    # de más el endpoint (el grid pagina en bloques de 12 por defecto).
+    take = max(min(take, 50), 1)
+
+    total_count = properties.count()
+    page = properties[skip:skip + take]
+
+    data = [_serialize_property_for_grid(obj, request) for obj in page]
+
+    return JsonResponse({'data': data, 'totalCount': total_count})
 
 
 @require_GET

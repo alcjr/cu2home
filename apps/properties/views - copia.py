@@ -17,9 +17,11 @@ def property_list(request):
     ).prefetch_related('images')
 
     form = PropertyFilterForm(request.GET or None)
+    selected_province = None
 
     if form.is_valid():
         data = form.cleaned_data
+        selected_province = data.get('province_id')
 
         # Búsqueda textual
         if data.get('q'):
@@ -88,10 +90,18 @@ def property_list(request):
     except EmptyPage:
         page_obj = paginator.page(paginator.num_pages)
 
+    # Querystring de los filtros activos sin 'page', para construir los
+    # enlaces de paginación sin duplicar el parámetro.
+    querystring_params = request.GET.copy()
+    querystring_params.pop('page', None)
+    querystring = querystring_params.urlencode()
+
     context = {
         'properties': page_obj,
         'form': form,
         'current_sort': sort_param if sort_param in allowed_sort else '-created_at',
+        'selected_province': selected_province,
+        'querystring': querystring,
     }
 
     if request.htmx:
