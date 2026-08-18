@@ -161,24 +161,6 @@
         color: var(--tinta);
         letter-spacing: -1px;
     }
-    .detail-head .price-block .price-label {
-        font-size: 0.78rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-        color: var(--texto-suave);
-        margin-top: 2px;
-    }
-    .detail-head .price-block .price-multi {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        align-items: flex-end;
-    }
-    .detail-head .price-block .price-line { line-height: 1.1; }
-    .detail-head .price-block .price-secondary {
-        font-size: 1.3rem;
-    }
 
     /* ============================================================
        GALERÍA - CARRUSEL CON IMAGEN GRANDE + MINIATURAS
@@ -855,14 +837,9 @@
     <section class="print-block">
         <h3>{% trans "Descripción" %}</h3>
         <div class="print-meta-row">
-            {% if property.offer_type == 'sale_or_rent' %}
-                {% if property.sale_price %}<span><strong>{% trans "Venta" %}:</strong> {{ property.sale_price }}</span>{% endif %}
-                {% if property.rent_price %}<span><strong>{% trans "Alquiler/mes" %}:</strong> {{ property.rent_price }}</span>{% endif %}
-            {% else %}
-                <span><strong>{{ property.display_price_label }}:</strong> {{ property.display_price|default:"—" }}</span>
-            {% endif %}
+            <span><strong>{% trans "Precio" %}:</strong> {{ property.price }}</span>
             <span><strong>{% trans "Tipo" %}:</strong> {{ property.get_property_type_display }}</span>
-            <span><strong>{% trans "Operación" %}:</strong> {{ property.get_offer_type_display }}</span>
+            <span><strong>{% trans "Operación" %}:</strong> {{ property.get_operation_type_display }}</span>
             <span><strong>{% trans "Habitaciones" %}:</strong> {{ property.bedrooms|default:property.rooms }}</span>
             <span><strong>{% trans "Baños" %}:</strong> {{ property.bathrooms }}</span>
             <span><strong>{% trans "Superficie" %}:</strong> {{ property.area|default:property.surface }} m²</span>
@@ -902,7 +879,7 @@
         <h3>{% trans "Datos del agente/promotor" %}</h3>
         {% with agent=property.agent profile=property.agent.profile %}
             <div class="print-agent-row">
-                <div><strong>{% trans "Nombre" %}:</strong> {% if agent %}{{ agent.get_full_name|default:agent.username }}{% else %}cu2home{% endif %}</div>
+                <div><strong>{% trans "Nombre" %}:</strong> {{ agent.get_full_name|default:agent.username|default:"cu2home" }}</div>
                 {% if profile and profile.agency_name %}
                     <div><strong>{% trans "Agencia" %}:</strong> {{ profile.agency_name }}</div>
                 {% endif %}
@@ -951,30 +928,12 @@
                 {% endif %}
             </div>
             <div class="status-tags">
-                <span class="tag op">{{ property.get_offer_type_display }}</span>
+                <span class="tag op">{{ property.get_operation_type_display }}</span>
                 {% if property.get_property_type_display %}<span class="tag type">{{ property.get_property_type_display }}</span>{% endif %}
             </div>
         </div>
         <div class="price-block">
-            {% if property.offer_type == 'sale_or_rent' %}
-                <div class="price-multi">
-                    {% if property.sale_price %}
-                        <div class="price-line">
-                            <div class="price js-price" data-price="{{ property.sale_price|stringformat:'f' }}">{{ property.sale_price }}</div>
-                            <div class="price-label">{% trans "Venta" %}</div>
-                        </div>
-                    {% endif %}
-                    {% if property.rent_price %}
-                        <div class="price-line">
-                            <div class="price price-secondary js-price" data-price="{{ property.rent_price|stringformat:'f' }}">{{ property.rent_price }}</div>
-                            <div class="price-label">{% trans "Alquiler/mes" %}</div>
-                        </div>
-                    {% endif %}
-                </div>
-            {% else %}
-                <div class="price js-price" id="propertyPrice" data-price="{{ property.display_price|default_if_none:''|stringformat:'f' }}">{{ property.display_price|default:"—" }}</div>
-                <div class="price-label">{{ property.display_price_label }}</div>
-            {% endif %}
+            <div class="price" id="propertyPrice">{{ property.price }}</div>
         </div>
     </div>
 </div>
@@ -1108,19 +1067,20 @@
         <aside>
             <div class="panel contact-card">
                 {% with agent=property.agent profile=property.agent.profile %}
-                    {% if agent %}
-                        {% with agent_name=agent.get_full_name|default:agent.username %}
                     <div class="agent">
                         <div class="avatar">
                             {% if profile and profile.avatar %}
-                                <img src="{{ profile.avatar.url }}" alt="{{ agent_name }}">
+                                <img src="{{ profile.avatar.url }}" alt="{{ agent.get_full_name|default:agent.username }}">
                             {% else %}
-                                {{ agent_name|slice:":2"|upper }}
+                                {{ agent.get_full_name|default:agent.username|default:"CU"|slice:":2"|upper }}
                             {% endif %}
                         </div>
                         <div class="who">
                             <div class="name">
-                                {{ agent_name }}
+                                {{ agent.get_full_name|default:agent.username|default:"cu2home" }}
+                                {% if profile and profile.is_verified %}
+                                    <span class="verified-badge"><i class="fas fa-check-circle"></i> {% trans "Verificado" %}</span>
+                                {% endif %}
                             </div>
                             <div class="role">
                                 {% if profile %}
@@ -1136,16 +1096,6 @@
                             {% endif %}
                         </div>
                     </div>
-                        {% endwith %}
-                    {% else %}
-                        <div class="agent">
-                            <div class="avatar">CU</div>
-                            <div class="who">
-                                <div class="name">cu2home</div>
-                                <div class="role">{% trans "Equipo cu2home" %}</div>
-                            </div>
-                        </div>
-                    {% endif %}
 
                     <!-- Biografía -->
                     {% if profile and profile.bio %}
@@ -1267,12 +1217,13 @@
             }
         }
 
-        document.querySelectorAll('.js-price').forEach(function(el) {
-            const rawPrice = parseFloat(el.dataset.price);
+        const priceEl = document.getElementById('propertyPrice');
+        if (priceEl) {
+            const rawPrice = parseFloat(priceEl.textContent.trim());
             if (!isNaN(rawPrice)) {
-                el.textContent = formatPrice(rawPrice);
+                priceEl.textContent = formatPrice(rawPrice);
             }
-        });
+        }
 
         /* ============================================================
            GALERÍA - CARRUSEL

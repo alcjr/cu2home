@@ -9,6 +9,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('favorites/', views.favorite_list, name='favorites'),
+    path('favorites/<int:property_id>/toggle/', views.toggle_favorite, name='toggle_favorite'),
     path('saved-searches/', views.saved_search_list, name='saved_search_list'),
     path('saved-searches/create/', views.create_saved_search, name='create_saved_search'),
     path('saved-searches/<int:pk>/toggle/', views.toggle_saved_search, name='toggle_saved_search'),

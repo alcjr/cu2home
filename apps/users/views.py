@@ -5,12 +5,14 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 # Importaciones corregidas
-from apps.properties.models import SavedSearch
+from apps.properties.models import SavedSearch, Property
 from .forms import ForgotUsernameForm, RegisterForm, SaveSearchForm
+from .models import Favorite
 
 User = get_user_model()
 
@@ -92,13 +94,56 @@ def logout_view(request):
 def favorite_list(request):
     """
     Muestra la lista de favoritos del usuario actual.
+
+    Antes devolvía 'favorites': [] hardcodeado como placeholder. El
+    modelo Favorite (apps/users/models.py) ya existe con
+    related_name='favorites' hacia el usuario, así que aquí se consulta
+    de verdad -- select_related/prefetch_related para no golpear la BBDD
+    una vez por cada tarjeta al renderizar el listado.
     """
-    # Aquí se debe obtener la lista de propiedades favoritas del usuario.
-    # Por ahora, devolvemos un template con un mensaje.
+    favorites = Favorite.objects.filter(user=request.user).select_related(
+        'property', 'property__province', 'property__municipality'
+    ).prefetch_related('property__images')
+
     return render(request, 'users/favorites.html', {
         'title': _('Mis favoritos'),
-        'favorites': [],  # Reemplazar con la lógica real
+        'favorites': favorites,
     })
+
+
+@login_required(login_url='users:login')
+@require_POST
+def toggle_favorite(request, property_id):
+    """
+    Alterna (añade/quita) el inmueble indicado en los favoritos del
+    usuario autenticado. Es la vista que faltaba: el botón "Guardar en
+    favoritos" de properties/detail.html ya apuntaba a
+    {% url 'users:toggle_favorite' property.id %} y el templatetag
+    is_favorited (favorites_tags) ya asumía su existencia, pero la vista
+    y la URL nunca se habían creado -- sin esto, la ficha de propiedad
+    rompía con NoReverseMatch para cualquier usuario autenticado.
+
+    get_or_create + delete si ya existía, igual que describe el
+    docstring de Favorite en models.py: evita duplicados ante doble
+    submit sin necesitar una comprobación previa aparte.
+    """
+    property_obj = get_object_or_404(Property, pk=property_id, is_active=True)
+
+    favorite, created = Favorite.objects.get_or_create(user=request.user, property=property_obj)
+    if not created:
+        favorite.delete()
+        messages.success(request, _('Removed from favorites.'))
+    else:
+        messages.success(request, _('Added to favorites.'))
+
+    # Vuelve a la ficha de la propiedad (única pantalla que usa este
+    # formulario por ahora). Si en el futuro se añade un botón de
+    # favorito también en el listado/quick view, request.POST.get('next')
+    # permite redirigir a otra URL sin tocar esta vista.
+    next_url = request.POST.get('next') or reverse(
+        'properties:detail', args=[property_obj.pk, property_obj.slug]
+    )
+    return redirect(next_url)
 
 
 @login_required(login_url='users:login')
