@@ -17,7 +17,7 @@ from .constants import PROPERTY_TYPES
 ALLOWED_SORT = {
     'created_at': 'created_at',
     '-created_at': '-created_at',
-    'price': 'sale_price',  # Ahora usa sale_price
+    'price': 'sale_price',
     '-price': '-sale_price',
     'surface': 'surface',
     '-surface': '-surface',
@@ -55,8 +55,8 @@ def _filtered_properties(request):
             properties = properties.filter(municipality=data['municipality_id'])
 
         # === OFERTA ===
-        if data.get('offer_type'):
-            offer_type = data['offer_type']
+        offer_type = data.get('offer_type')
+        if offer_type:
             if offer_type == 'sale':
                 properties = properties.filter(
                     Q(offer_type='sale') | Q(offer_type='sale_or_rent')
@@ -71,9 +71,20 @@ def _filtered_properties(request):
         # === PRECIO MÁXIMO (filtro rápido del buscador del home) ===
         if data.get('max_price') is not None:
             max_price = data['max_price']
-            properties = properties.filter(
-                Q(sale_price__lte=max_price) | Q(rent_price__lte=max_price)
-            )
+            current_offer_type = data.get('offer_type')
+            
+            if current_offer_type == 'sale':
+                properties = properties.filter(sale_price__lte=max_price)
+            elif current_offer_type == 'rent':
+                properties = properties.filter(rent_price__lte=max_price)
+            elif current_offer_type == 'swap':
+                # Para permuta no aplica filtro de precio
+                pass
+            else:
+                # Si no hay oferta específica, filtrar cualquiera
+                properties = properties.filter(
+                    Q(sale_price__lte=max_price) | Q(rent_price__lte=max_price)
+                )
 
         # === PRECIOS DE VENTA ===
         if data.get('min_sale_price') is not None:

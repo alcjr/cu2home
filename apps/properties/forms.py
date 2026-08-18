@@ -35,6 +35,15 @@ class PropertyFilterForm(forms.Form):
         ],
     )
 
+    # === PRECIO MÁXIMO (filtro rápido del home) ===
+    max_price = forms.DecimalField(
+        required=False,
+        label=_('Max price'),
+        decimal_places=2,
+        max_digits=12,
+        min_value=0,
+    )
+
     # === PRECIOS DE VENTA ===
     min_sale_price = forms.DecimalField(
         required=False, 

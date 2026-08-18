@@ -1025,11 +1025,7 @@
 
                 <div class="hero-stats">
                     <div class="stat">
-                        <b>{{ featured_properties|length|default:"—" }}</b>
-                        <span>{% trans "propiedades destacadas" %}</span>
-                    </div>
-                    <div class="stat">
-                        <b>{{ provinces|length|default:"16" }}</b>
+                        <b>15 +1</b>
                         <span>{% trans "provincias + Isla de la Juventud" %}</span>
                     </div>
                     <div class="stat">
@@ -1041,13 +1037,13 @@
 
             <div class="hero-form">
                 <div class="search-tabs" id="searchTabs" role="tablist">
-                    <button type="button" class="active" data-tab="comprar">{% trans "Comprar" %}</button>
-                    <button type="button" data-tab="alquilar">{% trans "Alquilar" %}</button>
-                    <button type="button" data-tab="permutar">{% trans "Permutar" %}</button>
+                    <button type="button" class="active" data-offer-type="sale">{% trans "Comprar" %}</button>
+                    <button type="button" data-offer-type="rent">{% trans "Alquilar" %}</button>
+                    <button type="button" data-offer-type="swap">{% trans "Permutar" %}</button>
                 </div>
 
                 <form class="search-form" method="get" action="{% url 'properties:list' %}">
-                    <input type="hidden" name="operation" id="operationField" value="comprar">
+                    <input type="hidden" name="offer_type" id="offerTypeField" value="sale">
                     <div class="fields-row">
                         <div class="field-group">
                             <label for="province">{% trans "Provincia" %}</label>
@@ -1163,12 +1159,13 @@
     (function() {
         /* ---- Tabs de operación ---- */
         const tabs = document.querySelectorAll('#searchTabs button');
-        const operationField = document.getElementById('operationField');
+        const offerTypeField = document.getElementById('offerTypeField');
         tabs.forEach(btn => {
             btn.addEventListener('click', function() {
                 tabs.forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                operationField.value = this.dataset.tab;
+                offerTypeField.value = this.dataset.offerType;
+                offerTypeField.dispatchEvent(new Event('change', { bubbles: true }));
             });
         });
 
@@ -1251,6 +1248,7 @@
             if (municipalitySelect.value) params.set('municipality_id', municipalitySelect.value);
             if (propertyTypeSelect.value) params.set('property_type', propertyTypeSelect.value);
             if (maxPriceInput.value) params.set('max_price', maxPriceInput.value);
+            if (offerTypeField.value) params.set('offer_type', offerTypeField.value);
             return params;
         }
 
@@ -1554,7 +1552,7 @@
 
             const price = document.createElement('div');
             price.className = 'qv-price';
-            price.textContent = formatPrice(data.price);
+            price.textContent = formatPrice(data.display_price || data.price);
             colProperty.append(price);
 
             const location = document.createElement('div');
@@ -1775,7 +1773,7 @@
             resultsGrid.getDataSource().reload();
         }
 
-        [provinceSelect, municipalitySelect, propertyTypeSelect, maxPriceInput].forEach(function(el) {
+        [provinceSelect, municipalitySelect, propertyTypeSelect, maxPriceInput, offerTypeField].forEach(function(el) {
             el.addEventListener('change', reloadResultsGrid);
         });
 

@@ -236,3 +236,85 @@ def forgot_username(request):
         form = ForgotUsernameForm()
 
     return render(request, 'users/forgot_username.html', {'form': form})
+
+
+
+# ============================================================================
+# DESTINO: apps/users/views.py
+# Copiar/pegar este contenido al final del archivo (junto a los imports
+# que correspondan, fusionándolos con los que ya tengas arriba del todo).
+# ============================================================================
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.http import require_POST
+
+# Import absoluto cross-app (Property vive en apps.properties). Es seguro
+# hacerlo aquí, a nivel de módulo, en views.py -- el problema de dependencia
+# circular que evita models.py (referencia 'properties.Property' como
+# string) es solo entre los models.py de ambas apps, no entre views.py.
+from apps.properties.models import Property
+from .models import Favorite
+
+
+@login_required
+@require_POST
+def toggle_favorite(request, property_id):
+    """
+    Activa/desactiva el favorito de una propiedad para el usuario logueado.
+    Solo accesible con sesión iniciada (login_required) -- si se llama sin
+    sesión, Django redirige a LOGIN_URL (302), que el JS del frontend
+    interpreta como "no autenticado".
+    """
+    property_obj = get_object_or_404(Property, pk=property_id)
+    favorite, created = Favorite.objects.get_or_create(user=request.user, property=property_obj)
+
+    if not created:
+        favorite.delete()
+        is_favorite = False
+    else:
+        is_favorite = True
+
+    return JsonResponse({'is_favorite': is_favorite, 'property_id': property_obj.pk})
+
+
+@login_required
+def favorites_page(request):
+    """Renderiza la página con la grilla DevExpress de favoritos."""
+    return render(request, 'users/favoritos.html')
+
+
+@login_required
+def favorites_data(request):
+    """
+    Endpoint JSON que alimenta el dataSource de la dxDataGrid.
+    IMPORTANTE: el queryset SIEMPRE se filtra por request.user -- nunca se
+    acepta un parámetro de usuario desde el cliente, para no exponer
+    favoritos de otras personas.
+    """
+    favorites = (
+        Favorite.objects
+        .filter(user=request.user)
+        .select_related('property', 'property__province', 'property__municipality')
+        .order_by('-created_at')
+    )
+
+    data = []
+    for fav in favorites:
+        prop = fav.property
+        data.append({
+            'favorite_id': fav.id,
+            'property_id': prop.id,
+            'codigo': prop.slug,
+            'tipo': prop.get_property_type_display(),
+            'tipo_raw': prop.property_type,
+            'ubicacion': f'{prop.city}, {prop.province.name if prop.province else ""}'.strip(', '),
+            'oferta': prop.get_offer_type_display(),
+            'precio': float(prop.display_price) if prop.display_price else None,
+            'superficie': prop.surface,
+            'estado': prop.get_status_display(),
+            'anadido': fav.created_at.strftime('%d/%m/%Y'),
+            'detail_url': prop.get_absolute_url() if hasattr(prop, 'get_absolute_url') else f'/propiedades/{prop.slug}/',
+        })
+
+    return JsonResponse(data, safe=False)

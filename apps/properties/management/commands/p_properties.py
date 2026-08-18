@@ -1,701 +1,486 @@
+# -*- coding: utf-8 -*-
+"""
+properties/management/commands/p_properties.py
+================================================
+
+Management command de Django para poblar la tabla `properties_property`
+con una muestra REPRESENTATIVA de inmuebles en todo el territorio nacional.
+
+Representatividad garantizada:
+    - Provincia:      las 16 provincias reciben inmuebles.
+    - Municipio:      TODOS los municipios reciben al menos 1 inmueble
+                       (por defecto, entre --min-per-municipio y --max-per-municipio).
+    - Agente:         cada agente activo (UserProfile.user_type == 'agent')
+                       recibe al menos 1 inmueble asignado.
+    - Oferta:         se generan inmuebles en venta, alquiler, venta_o_alquiler
+                       y permuta, respetando las reglas de Property.clean()
+                       (p.ej. una permuta no exige precio).
+    - Tipo de inmueble: se reparte uniformemente entre los tipos definidos en
+                       properties.constants.PROPERTY_TYPES (no se hardcodean
+                       los valores, se leen del proyecto real).
+
+UBICACIÓN DEL ARCHIVO (requerida por Django para que se reconozca como comando):
+    properties/
+        management/
+            __init__.py
+            commands/
+                __init__.py
+                p_properties.py   <-- este archivo
+
+USO:
+    python manage.py p_properties
+    python manage.py p_properties --dry-run
+    python manage.py p_properties --total 900
+    python manage.py p_properties --min-per-municipio 2 --max-per-municipio 6
+    python manage.py p_properties --seed 42
+    python manage.py p_properties --flush
+
+Este comando NO crea traducciones (Property_translation) ni imágenes
+(PropertyImage): esa es responsabilidad de otros comandos complementarios.
+"""
+
 import random
+from collections import Counter
 from decimal import Decimal
-from io import BytesIO
+from datetime import timedelta
 
-from django.conf import settings
 from django.contrib.gis.geos import Point
-from django.core.files.images import ImageFile
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+from django.utils import timezone
 from django.utils.text import slugify
-from PIL import Image, ImageDraw, ImageFont
 
-from apps.properties.constants import PROPERTY_TYPES
-from apps.properties.models import (
+# Imports RELATIVOS al propio app: funcionan sin importar si el app está
+# declarado en INSTALLED_APPS como "properties" o como "apps.properties",
+# porque este archivo vive dentro de ese mismo paquete
+# (apps/properties/management/commands/p_properties.py -> subir 3 niveles
+# para llegar a apps/properties/).
+from ...models import (
+    Province,
     Municipality,
     Property,
-    PropertyImage,
     PropertyOfferType,
     PropertyStatus,
-    Province,
 )
+from ...constants import PROPERTY_TYPES
+
+# UserProfile vive en OTRO app (users). Confirmado en settings.py
+# (INSTALLED_APPS incluye 'apps.properties' y 'apps.users'), el import
+# absoluto correcto es este:
+from apps.users.models import UserProfile
 
 
-MAX_IMAGES_PER_PROPERTY = settings.MAX_IMAGES_PER_PROPERTY
+# ---------------------------------------------------------------------------
+# CONFIGURACIÓN / DATOS DE APOYO PARA GENERAR CONTENIDO REALISTA
+# ---------------------------------------------------------------------------
 
+DEFAULT_MIN_PER_MUNICIPIO = 3
+DEFAULT_MAX_PER_MUNICIPIO = 7
+
+# Pesos de distribución por tipo de oferta (deben sumar 1.0).
+# Se mantiene un peso significativo para "swap" (permuta) porque es un caso
+# de negocio que interesa poder probar en el portal.
+OFFER_TYPE_WEIGHTS = {
+    PropertyOfferType.SALE: 0.40,
+    PropertyOfferType.RENT: 0.30,
+    PropertyOfferType.SALE_OR_RENT: 0.15,
+    PropertyOfferType.SWAP: 0.15,
+}
+
+# Multiplicador de precio según provincia (aproximación de mercado: la
+# capital y polos turísticos tienden a precios más altos).
+PROVINCE_PRICE_MULTIPLIER = {
+    "la-habana": 1.6,
+    "artemisa": 1.1,
+    "mayabeque": 1.05,
+    "matanzas": 1.15,       # Varadero
+    "cienfuegos": 1.0,
+    "villa-clara": 1.0,
+    "santiago-de-cuba": 1.1,
+    "isla-de-la-juventud": 0.75,
+}
+DEFAULT_PRICE_MULTIPLIER = 0.9
+
+# Probabilidad de cada amenidad booleana.
+AMENITY_PROBABILITIES = {
+    "has_elevator": 0.22,
+    "has_heating": 0.12,          # poco común en clima tropical
+    "has_air_conditioning": 0.62,
+}
+
+# Distribución de estados del inmueble.
+STATUS_WEIGHTS = {
+    PropertyStatus.AVAILABLE: 0.70,
+    PropertyStatus.RESERVED: 0.15,
+    PropertyStatus.SOLD: 0.15,
+}
+
+STREET_NAMES = [
+    "Calle 23", "Calle 42", "Avenida 5ta", "Calle Línea", "Calle San Rafael",
+    "Calle Neptuno", "Calle Obispo", "Avenida de los Presidentes",
+    "Calle Martí", "Calle Maceo", "Calle Céspedes", "Calle Independencia",
+    "Calzada de Diez de Octubre", "Calle Enramadas", "Avenida del Puerto",
+]
+REPARTOS = [
+    "Vedado", "Miramar", "Nuevo Vedado", "Playa", "Vista Alegre",
+    "Reparto Sueño", "El Cerro", "Santa Bárbara", "Punta Gorda",
+    "Reparto Camilo Cienfuegos", "Altahabana", "Versalles",
+]
+
+
+# ---------------------------------------------------------------------------
+# COMMAND
+# ---------------------------------------------------------------------------
 
 class Command(BaseCommand):
     help = (
-        "Populate the database with sample properties "
-        "for all Cuban provinces."
+        "Puebla la tabla properties con una muestra representativa de todo "
+        "el territorio (provincias/municipios), de los agentes existentes "
+        "y de los tipos de oferta (venta, alquiler, venta_o_alquiler, permuta)."
     )
 
-    CUBAN_DATA = {
-        "Pinar del Río": {
-            "municipios": [
-                ("Pinar del Río", 22.4175, -83.6981),
-                ("Viñales", 22.6185, -83.7512),
-                ("San Luis", 22.2830, -83.7570),
-            ],
-        },
-        "Artemisa": {
-            "municipios": [
-                ("Artemisa", 22.8137, -82.7619),
-                ("Güira de Melena", 22.8003, -82.5068),
-                ("Bauta", 22.9821, -82.5478),
-            ],
-        },
-        "La Habana": {
-            "municipios": [
-                ("Playa", 23.0944, -82.4482),
-                ("Centro Habana", 23.1336, -82.3638),
-                ("Vedado", 23.1172, -82.3970),
-                ("Miramar", 23.1106, -82.4298),
-            ],
-        },
-        "Mayabeque": {
-            "municipios": [
-                ("San José de las Lajas", 22.9683, -82.1559),
-                ("Jaruco", 23.0422, -82.0126),
-                ("Madruga", 22.9147, -81.8582),
-            ],
-        },
-        "Matanzas": {
-            "municipios": [
-                ("Matanzas", 23.0494, -81.5766),
-                ("Varadero", 23.1422, -81.2861),
-                ("Cárdenas", 23.0361, -81.2056),
-            ],
-        },
-        "Villa Clara": {
-            "municipios": [
-                ("Santa Clara", 22.4069, -79.9647),
-                ("Placetas", 22.3172, -79.6477),
-                ("Remedios", 22.4928, -79.5458),
-            ],
-        },
-        "Cienfuegos": {
-            "municipios": [
-                ("Cienfuegos", 22.1456, -80.4521),
-                ("Abreus", 22.2783, -80.5686),
-                ("Cruces", 22.3403, -80.2708),
-            ],
-        },
-        "Sancti Spíritus": {
-            "municipios": [
-                ("Sancti Spíritus", 21.9322, -79.4425),
-                ("Trinidad", 21.8067, -79.9847),
-                ("Yaguajay", 22.3311, -79.2367),
-            ],
-        },
-        "Ciego de Ávila": {
-            "municipios": [
-                ("Ciego de Ávila", 21.8400, -78.7619),
-                ("Morón", 22.1094, -78.6267),
-                ("Chambas", 22.1958, -78.4917),
-            ],
-        },
-        "Camagüey": {
-            "municipios": [
-                ("Camagüey", 21.3789, -77.9186),
-                ("Florida", 21.5256, -78.2272),
-                ("Nuevitas", 21.5461, -77.2644),
-            ],
-        },
-        "Las Tunas": {
-            "municipios": [
-                ("Las Tunas", 20.9608, -76.9511),
-                ("Puerto Padre", 21.1958, -76.5886),
-                ("Amancio", 20.8197, -77.5794),
-            ],
-        },
-        "Holguín": {
-            "municipios": [
-                ("Holguín", 20.8881, -76.2606),
-                ("Gibara", 21.1097, -76.1328),
-                ("Banes", 20.9694, -75.7186),
-            ],
-        },
-        "Granma": {
-            "municipios": [
-                ("Bayamo", 20.3769, -76.6436),
-                ("Manzanillo", 20.3403, -77.1167),
-                ("Jiguaní", 20.3775, -76.4250),
-            ],
-        },
-        "Santiago de Cuba": {
-            "municipios": [
-                ("Santiago de Cuba", 20.0247, -75.8219),
-                ("San Luis", 20.1883, -75.8508),
-                ("El Cobre", 20.0486, -75.9461),
-            ],
-        },
-        "Guantánamo": {
-            "municipios": [
-                ("Guantánamo", 20.1453, -75.2039),
-                ("Baracoa", 20.3478, -74.4961),
-                ("Maisí", 20.2469, -74.1517),
-            ],
-        },
-        "Isla de la Juventud": {
-            "municipios": [
-                ("Nueva Gerona", 21.8867, -82.8008),
-                ("San Fe", 21.7833, -82.8833),
-            ],
-        },
-    }
-
-    PROPERTY_TYPE_VALUES = [
-        value for value, _label in PROPERTY_TYPES
-    ]
-
-    OFFER_TYPES = [
-        PropertyOfferType.SALE,
-        PropertyOfferType.RENT,
-        PropertyOfferType.SWAP,
-        PropertyOfferType.SALE_OR_RENT,
-    ]
-
-    ADJECTIVES = [
-        "Cómodo",
-        "Luminoso",
-        "Amplio",
-        "Moderno",
-        "Acogedor",
-        "Exclusivo",
-        "Céntrico",
-        "Tranquilo",
-    ]
-
-    NOUNS = [
-        "apartamento",
-        "casa",
-        "villa",
-        "local",
-        "terreno",
-        "chalet",
-        "dúplex",
-        "ático",
-    ]
-
-    FEATURES = [
-        "con vistas al mar",
-        "cerca del centro",
-        "totalmente reformado",
-        "con piscina",
-        "con jardín",
-        "en urbanización privada",
-        "ideal para familias",
-        "rentabilidad asegurada",
-    ]
-
+    # ------------------------------------------------------------------ #
+    # CLI
+    # ------------------------------------------------------------------ #
     def add_arguments(self, parser):
         parser.add_argument(
-            "--total",
-            type=int,
-            default=50,
-            help=(
-                "Número total de propiedades a crear. "
-                "Se distribuyen entre todas las provincias."
-            ),
+            "--total", type=int, default=None,
+            help="Total aproximado de inmuebles a generar (opcional).",
         )
-
         parser.add_argument(
-            "--images-per-property",
-            type=int,
-            default=5,
-            help=(
-                "Número de imágenes por propiedad. "
-                f"Máximo permitido: {MAX_IMAGES_PER_PROPERTY}."
-            ),
+            "--min-per-municipio", type=int, default=DEFAULT_MIN_PER_MUNICIPIO,
+            help=f"Mínimo de inmuebles por municipio (default {DEFAULT_MIN_PER_MUNICIPIO}).",
         )
-
         parser.add_argument(
-            "--skip-existing",
-            action="store_true",
-            help=(
-                "Si existe alguna propiedad, no crea nuevas "
-                "para evitar duplicados."
-            ),
+            "--max-per-municipio", type=int, default=DEFAULT_MAX_PER_MUNICIPIO,
+            help=f"Máximo de inmuebles por municipio (default {DEFAULT_MAX_PER_MUNICIPIO}).",
         )
-
         parser.add_argument(
-            "--create-provinces",
-            action="store_true",
-            help=(
-                "Crea las provincias y municipios antes "
-                "de crear las propiedades."
-            ),
+            "--seed", type=int, default=None,
+            help="Semilla aleatoria para resultados reproducibles.",
+        )
+        parser.add_argument(
+            "--flush", action="store_true",
+            help="Elimina las propiedades existentes antes de poblar.",
+        )
+        parser.add_argument(
+            "--dry-run", action="store_true",
+            help="Solo muestra el plan de generación, no escribe en la BD.",
+        )
+        parser.add_argument(
+            "--batch-size", type=int, default=500,
+            help="Tamaño de lote para bulk_create (default 500).",
         )
 
-    @transaction.atomic
+    # ------------------------------------------------------------------ #
+    # ENTRY POINT
+    # ------------------------------------------------------------------ #
     def handle(self, *args, **options):
+        if options["seed"] is not None:
+            random.seed(options["seed"])
+
+        provinces, municipalities, agents, property_type_keys = self._load_reference_data()
+
+        self.stdout.write(
+            f"Provincias: {len(provinces)} | Municipios: {len(municipalities)} | "
+            f"Agentes: {len(agents)} | Tipos de inmueble: {len(property_type_keys)}"
+        )
+
+        counts_by_municipio = self._plan_counts_per_municipality(municipalities, options)
+        self._print_plan_summary(counts_by_municipio, municipalities)
+
+        if options["dry_run"]:
+            self.stdout.write(self.style.WARNING(
+                "\n[dry-run] No se ha escrito nada en la base de datos."
+            ))
+            return
+
+        if options["flush"]:
+            deleted, _ = Property.objects.all().delete()
+            self.stdout.write(self.style.WARNING(f"[flush] Se eliminaron {deleted} registros de properties."))
+
+        instances = self._build_property_instances(
+            municipalities, agents, property_type_keys, counts_by_municipio
+        )
+
+        self.stdout.write(f"\nGuardando {len(instances)} propiedades en la base de datos...")
+        with transaction.atomic():
+            Property.objects.bulk_create(instances, batch_size=options["batch_size"])
+
+        self._print_post_save_summary()
+        self.stdout.write(self.style.SUCCESS("\n¡Listo! Tabla properties poblada correctamente."))
+
+    # ------------------------------------------------------------------ #
+    # CARGA DE DATOS BASE (deben existir ya en la BD)
+    # ------------------------------------------------------------------ #
+    def _load_reference_data(self):
+        provinces = list(Province.objects.all())
+        if not provinces:
+            raise CommandError("No hay provincias en la BD. Puebla Province/Municipality primero.")
+
+        municipalities = list(Municipality.objects.select_related("province").all())
+        if not municipalities:
+            raise CommandError("No hay municipios en la BD. Puebla Municipality primero.")
+
+        agent_profiles = list(
+            UserProfile.objects.filter(user_type="agent").select_related("user")
+        )
+        if not agent_profiles:
+            raise CommandError("No hay agentes (UserProfile.user_type='agent') en la BD.")
+        agents = [p.user for p in agent_profiles]
+
+        property_type_keys = [choice[0] for choice in PROPERTY_TYPES]
+        if not property_type_keys:
+            raise CommandError("PROPERTY_TYPES está vacío en properties.constants.")
+
+        return provinces, municipalities, agents, property_type_keys
+
+    # ------------------------------------------------------------------ #
+    # PLANIFICACIÓN: cuántos inmuebles por municipio
+    # ------------------------------------------------------------------ #
+    def _plan_counts_per_municipality(self, municipalities, options) -> dict:
+        """
+        Devuelve {municipality_id: cantidad_de_inmuebles}, garantizando que
+        TODOS los municipios reciban al menos 1 inmueble.
+        """
+        counts = {}
         total = options["total"]
-        images_per_property = options["images_per_property"]
-        skip_existing = options["skip_existing"]
-        create_provinces = options["create_provinces"]
+        min_per = options["min_per_municipio"]
+        max_per = options["max_per_municipio"]
 
-        if total < 0:
-            self.stdout.write(
-                self.style.ERROR(
-                    "El número total de propiedades no puede ser negativo."
+        if min_per < 1:
+            raise CommandError("--min-per-municipio debe ser >= 1.")
+        if max_per < min_per:
+            raise CommandError("--max-per-municipio debe ser >= --min-per-municipio.")
+
+        if total:
+            n = len(municipalities)
+            if total < n:
+                raise CommandError(
+                    f"--total ({total}) es menor que el número de municipios ({n}); "
+                    "no se puede garantizar al menos 1 inmueble por municipio."
                 )
-            )
-            return
+            base = total // n
+            remainder = total - base * n
+            bonus_ids = set(random.sample(range(n), remainder)) if remainder > 0 else set()
+            for i, m in enumerate(municipalities):
+                counts[m.id] = base + (1 if i in bonus_ids else 0)
+        else:
+            for m in municipalities:
+                counts[m.id] = random.randint(min_per, max_per)
 
-        if images_per_property < 0:
-            self.stdout.write(
-                self.style.ERROR(
-                    "El número de imágenes no puede ser negativo."
+        return counts
+
+    # ------------------------------------------------------------------ #
+    # HELPERS DE GENERACIÓN DE CONTENIDO
+    # ------------------------------------------------------------------ #
+    @staticmethod
+    def _weighted_choice(weights: dict):
+        keys = list(weights.keys())
+        probs = list(weights.values())
+        return random.choices(keys, weights=probs, k=1)[0]
+
+    @staticmethod
+    def _build_unique_slug(base_text: str, existing_slugs: set) -> str:
+        base_slug = slugify(base_text)[:180] or "inmueble"
+        slug = base_slug
+        suffix = 1
+        while slug in existing_slugs:
+            suffix += 1
+            slug = f"{base_slug}-{suffix}"
+        existing_slugs.add(slug)
+        return slug
+
+    @staticmethod
+    def _jitter_point(municipality: Municipality):
+        """Ubicación dentro del municipio con un desplazamiento (~hasta 2 km)."""
+        if municipality.location is None:
+            return None
+        lon, lat = municipality.location.x, municipality.location.y
+        lon_jitter = random.uniform(-0.02, 0.02)
+        lat_jitter = random.uniform(-0.02, 0.02)
+        return Point(lon + lon_jitter, lat + lat_jitter, srid=4326)
+
+    @staticmethod
+    def _build_address() -> str:
+        calle = random.choice(STREET_NAMES)
+        reparto = random.choice(REPARTOS)
+        numero = random.randint(1, 250)
+        entre_a, entre_b = random.sample(range(1, 60), 2)
+        return f"{calle} #{numero} e/ {entre_a} y {entre_b}, {reparto}"
+
+    @staticmethod
+    def _price_multiplier_for(province: Province) -> float:
+        return PROVINCE_PRICE_MULTIPLIER.get(province.slug, DEFAULT_PRICE_MULTIPLIER)
+
+    @staticmethod
+    def _random_created_at():
+        days_ago = random.randint(0, 548)
+        seconds_ago = random.randint(0, 86400)
+        return timezone.now() - timedelta(days=days_ago, seconds=seconds_ago)
+
+    @staticmethod
+    def _build_prices(offer_type: str, multiplier: float):
+        """
+        Genera precios coherentes con las reglas de Property.clean():
+            - SALE / SALE_OR_RENT -> sale_price obligatorio
+            - RENT / SALE_OR_RENT -> rent_price obligatorio
+            - SWAP                -> ningún precio es obligatorio
+        """
+        sale_price = rent_price = seasonal_rent_price = deposit_amount = None
+
+        needs_sale = offer_type in (PropertyOfferType.SALE, PropertyOfferType.SALE_OR_RENT)
+        needs_rent = offer_type in (PropertyOfferType.RENT, PropertyOfferType.SALE_OR_RENT)
+
+        if needs_sale:
+            base = random.randint(15_000, 380_000)
+            sale_price = Decimal(str(round(base * multiplier, 2)))
+
+        if needs_rent:
+            base = random.randint(3_000, 55_000)
+            rent_price = Decimal(str(round(base * multiplier, 2)))
+
+            if random.random() < 0.5:
+                deposit_amount = (rent_price * Decimal(random.choice([1, 2]))).quantize(Decimal("0.01"))
+
+            if random.random() < 0.25:
+                daily_base = random.randint(800, 6_000)
+                seasonal_rent_price = Decimal(str(round(daily_base * multiplier, 2)))
+
+        return sale_price, rent_price, seasonal_rent_price, deposit_amount
+
+    @staticmethod
+    def _build_views_count(created_at) -> int:
+        age_days = max((timezone.now() - created_at).days, 0)
+        base = int(abs(random.gauss(80, 120)))
+        age_bonus = min(age_days * random.randint(0, 2), 900)
+        return min(base + age_bonus, 3000)
+
+    # ------------------------------------------------------------------ #
+    # CONSTRUCCIÓN DE INSTANCIAS Property
+    # ------------------------------------------------------------------ #
+    def _build_property_instances(self, municipalities, agents, property_type_keys, counts_by_municipio):
+        existing_slugs = set(Property.objects.values_list("slug", flat=True))
+        instances = []
+
+        # Aseguramos representatividad de agentes: cada agente aparece al
+        # menos una vez (round-robin) antes de repartir el resto al azar.
+        total_planned = sum(counts_by_municipio.values())
+        agent_cycle = [agents[i % len(agents)] for i in range(total_planned)]
+        random.shuffle(agent_cycle)
+        agent_iter = iter(agent_cycle)
+
+        for municipality in municipalities:
+            n = counts_by_municipio.get(municipality.id, 0)
+            province = municipality.province
+
+            for _ in range(n):
+                property_type = random.choice(property_type_keys)
+                offer_type = self._weighted_choice(OFFER_TYPE_WEIGHTS)
+                multiplier = self._price_multiplier_for(province)
+
+                sale_price, rent_price, seasonal_rent_price, deposit_amount = self._build_prices(
+                    offer_type, multiplier
                 )
-            )
-            return
 
-        images_per_property = min(
-            images_per_property,
-            MAX_IMAGES_PER_PROPERTY,
-        )
+                created_at = self._random_created_at()
+                updated_at = created_at + timedelta(days=random.randint(0, 45))
+                if updated_at > timezone.now():
+                    updated_at = timezone.now()
 
-        if skip_existing and Property.objects.exists():
-            self.stdout.write(
-                self.style.WARNING(
-                    "Ya existen propiedades. Saltando creación."
-                )
-            )
-            return
-
-        if create_provinces:
-            self._create_provinces_and_municipalities()
-
-        province_cache = {}
-        municipality_cache = {}
-
-        for province_name, data in self.CUBAN_DATA.items():
-            province, _ = Province.objects.get_or_create(
-                name=province_name,
-                defaults={
-                    "slug": slugify(province_name),
-                },
-            )
-
-            province_cache[province_name] = province
-
-            for mun_name, lat, lng in data["municipios"]:
-                municipality = self._get_or_update_municipality(
-                    province=province,
-                    name=mun_name,
-                    latitude=lat,
-                    longitude=lng,
+                status = self._weighted_choice(STATUS_WEIGHTS)
+                # Un inmueble vendido tiene más probabilidad de estar inactivo.
+                is_active = (
+                    random.random() < 0.30 if status == PropertyStatus.SOLD
+                    else random.random() < 0.92
                 )
 
-                municipality_cache[
-                    f"{province_name}_{mun_name}"
-                ] = municipality
+                # 3% de inmuebles sin agente asignado (datos legacy simulados).
+                agent = None if random.random() < 0.03 else next(agent_iter)
 
-        num_provinces = len(self.CUBAN_DATA)
-        base_count, extra = divmod(total, num_provinces)
-        created_properties = 0
+                slug_base = f"{property_type}-en-{municipality.slug}-{province.slug}"
+                slug = self._build_unique_slug(slug_base, existing_slugs)
 
-        for index, (province_name, data) in enumerate(
-            self.CUBAN_DATA.items()
-        ):
-            count = base_count + (1 if index < extra else 0)
-
-            if count == 0:
-                continue
-
-            self.stdout.write(
-                f"Creando {count} propiedades en {province_name}..."
-            )
-
-            province = province_cache[province_name]
-
-            for _ in range(count):
-                mun_name, lat, lng = random.choice(
-                    data["municipios"]
-                )
-
-                municipality = municipality_cache[
-                    f"{province_name}_{mun_name}"
-                ]
-
-                property_obj = self._create_property(
-                    province=province,
-                    municipality=municipality,
-                    city=mun_name,
-                    latitude=lat,
-                    longitude=lng,
-                )
-
-                for image_index in range(images_per_property):
-                    self._create_image(
-                        property_obj,
-                        image_index,
-                    )
-
-                created_properties += 1
-
-        self.stdout.write(
-            self.style.SUCCESS(
-                f"Se crearon {created_properties} propiedades "
-                f"con {images_per_property} imágenes cada una."
-            )
-        )
-
-    def _create_provinces_and_municipalities(self):
-        """Crea o actualiza todas las provincias y municipios."""
-        self.stdout.write(
-            "Creando o actualizando provincias y municipios..."
-        )
-
-        created_provinces = 0
-        updated_municipalities = 0
-        created_municipalities = 0
-
-        for province_name, data in self.CUBAN_DATA.items():
-            province, province_created = Province.objects.get_or_create(
-                name=province_name,
-                defaults={
-                    "slug": slugify(province_name),
-                },
-            )
-
-            if province_created:
-                created_provinces += 1
-
-            for mun_name, lat, lng in data["municipios"]:
-                municipality, municipality_created = (
-                    Municipality.objects.get_or_create(
+                instances.append(
+                    Property(
+                        property_type=property_type,
+                        offer_type=offer_type,
+                        sale_price=sale_price,
+                        rent_price=rent_price,
+                        seasonal_rent_price=seasonal_rent_price,
+                        deposit_amount=deposit_amount,
+                        city=municipality.name,
                         province=province,
-                        name=mun_name,
-                        defaults={
-                            "slug": slugify(mun_name),
-                            "latitude": lat,
-                            "longitude": lng,
-                        },
+                        municipality=municipality,
+                        address=self._build_address(),
+                        location=self._jitter_point(municipality),
+                        surface=random.randint(35, 620),
+                        rooms=random.randint(1, 6),
+                        bathrooms=random.randint(1, 4),
+                        has_elevator=random.random() < AMENITY_PROBABILITIES["has_elevator"],
+                        has_heating=random.random() < AMENITY_PROBABILITIES["has_heating"],
+                        has_air_conditioning=random.random() < AMENITY_PROBABILITIES["has_air_conditioning"],
+                        slug=slug,
+                        is_active=is_active,
+                        views_count=self._build_views_count(created_at),
+                        agent=agent,
+                        status=status,
+                        created_at=created_at,
+                        updated_at=updated_at,
                     )
                 )
 
-                if municipality_created:
-                    created_municipalities += 1
-                    continue
+        return instances
 
-                changed = False
+    # ------------------------------------------------------------------ #
+    # REPORTES DE REPRESENTATIVIDAD
+    # ------------------------------------------------------------------ #
+    def _print_plan_summary(self, counts_by_municipio, municipalities):
+        total = sum(counts_by_municipio.values())
+        by_province = {}
+        for m in municipalities:
+            by_province.setdefault(m.province.name, 0)
+            by_province[m.province.name] += counts_by_municipio.get(m.id, 0)
 
-                if municipality.slug != slugify(mun_name):
-                    municipality.slug = slugify(mun_name)
-                    changed = True
+        self.stdout.write("=" * 60)
+        self.stdout.write(f"PLAN: {total} inmuebles a generar en {len(municipalities)} municipios")
+        self.stdout.write("=" * 60)
+        for province_name, n in sorted(by_province.items(), key=lambda x: -x[1]):
+            self.stdout.write(f"  {province_name:<25} {n:>5}")
+        self.stdout.write("-" * 60)
 
-                lat_decimal = Decimal(str(lat))
-                lng_decimal = Decimal(str(lng))
+    def _print_post_save_summary(self):
+        qs = Property.objects.select_related("province", "agent")
+        total = qs.count()
+        self.stdout.write("=" * 60)
+        self.stdout.write(f"RESULTADO: {total} propiedades creadas")
+        self.stdout.write("=" * 60)
 
-                if municipality.latitude != lat_decimal:
-                    municipality.latitude = lat_decimal
-                    changed = True
+        by_offer = Counter(qs.values_list("offer_type", flat=True))
+        self.stdout.write("\nPor tipo de oferta:")
+        for offer_type, n in by_offer.items():
+            pct = (n / total * 100) if total else 0
+            self.stdout.write(f"  {offer_type:<15} {n:>5}  ({pct:5.1f}%)")
 
-                if municipality.longitude != lng_decimal:
-                    municipality.longitude = lng_decimal
-                    changed = True
+        by_province = Counter(qs.values_list("province__name", flat=True))
+        self.stdout.write("\nPor provincia:")
+        for province_name, n in sorted(by_province.items(), key=lambda x: -x[1]):
+            self.stdout.write(f"  {str(province_name):<25} {n:>5}")
 
-                if changed:
-                    municipality.save()
-                    updated_municipalities += 1
+        by_type = Counter(qs.values_list("property_type", flat=True))
+        self.stdout.write("\nPor tipo de inmueble:")
+        for ptype, n in sorted(by_type.items(), key=lambda x: -x[1]):
+            self.stdout.write(f"  {ptype:<20} {n:>5}")
 
+        agents_with_properties = qs.exclude(agent__isnull=True).values("agent").distinct().count()
+        total_agents = UserProfile.objects.filter(user_type="agent").count()
         self.stdout.write(
-            self.style.SUCCESS(
-                f"Provincias nuevas: {created_provinces}; "
-                f"municipios nuevos: {created_municipalities}; "
-                f"municipios actualizados: {updated_municipalities}."
-            )
+            f"\nAgentes con al menos un inmueble asignado: {agents_with_properties} / {total_agents}"
         )
 
-    def _get_or_update_municipality(
-        self,
-        province,
-        name,
-        latitude,
-        longitude,
-    ):
-        """Obtiene un municipio y mantiene sus coordenadas actualizadas."""
-        municipality, _ = Municipality.objects.get_or_create(
-            province=province,
-            name=name,
-            defaults={
-                "slug": slugify(name),
-                "latitude": latitude,
-                "longitude": longitude,
-            },
+        municipios_with_properties = qs.values("municipality").distinct().count()
+        total_municipios = Municipality.objects.count()
+        self.stdout.write(
+            f"Municipios con al menos un inmueble: {municipios_with_properties} / {total_municipios}"
         )
-
-        changed = False
-
-        if municipality.slug != slugify(name):
-            municipality.slug = slugify(name)
-            changed = True
-
-        latitude = Decimal(str(latitude))
-        longitude = Decimal(str(longitude))
-
-        if municipality.latitude != latitude:
-            municipality.latitude = latitude
-            changed = True
-
-        if municipality.longitude != longitude:
-            municipality.longitude = longitude
-            changed = True
-
-        if changed:
-            municipality.save()
-
-        return municipality
-
-    def _create_property(
-        self,
-        province,
-        municipality,
-        city,
-        latitude,
-        longitude,
-    ):
-        """Crea una propiedad con datos realistas."""
-        property_type = random.choice(self.PROPERTY_TYPE_VALUES)
-        offer_type = random.choice(self.OFFER_TYPES)
-
-        adjective = random.choice(self.ADJECTIVES)
-        noun = random.choice(self.NOUNS)
-        feature = random.choice(self.FEATURES)
-
-        title = (
-            f"{adjective} {noun} en {city}, "
-            f"{province.name} - {feature}"
-        )
-
-        base_slug = slugify(title)[:80]
-        property_slug = base_slug
-        counter = 1
-
-        while Property.objects.filter(
-            slug=property_slug
-        ).exists():
-            property_slug = f"{base_slug}-{counter}"
-            counter += 1
-
-        sale_price = None
-        rent_price = None
-        seasonal_rent_price = None
-        deposit_amount = None
-
-        if offer_type in (
-            PropertyOfferType.SALE,
-            PropertyOfferType.SALE_OR_RENT,
-        ):
-            sale_price = Decimal(random.randint(5000, 500000))
-
-        if offer_type in (
-            PropertyOfferType.RENT,
-            PropertyOfferType.SALE_OR_RENT,
-        ):
-            rent_price = Decimal(random.randint(200, 5000))
-            deposit_amount = rent_price * Decimal(
-                random.randint(1, 3)
-            )
-
-            if random.choice([True, False]):
-                seasonal_rent_price = Decimal(
-                    random.randint(50, 500)
-                )
-
-        surface = random.randint(40, 400)
-        rooms = random.randint(1, 5)
-        bathrooms = random.randint(1, 3)
-
-        has_elevator = random.choice([True, False])
-        has_heating = random.choice([True, False])
-        has_air_conditioning = random.choice([True, False])
-
-        status = random.choices(
-            [
-                PropertyStatus.AVAILABLE,
-                PropertyStatus.RESERVED,
-                PropertyStatus.SOLD,
-            ],
-            weights=[0.8, 0.1, 0.1],
-        )[0]
-
-        description = (
-            f"Excelente {noun} en {city}, "
-            f"provincia de {province.name}. "
-            f"Superficie de {surface} m², "
-            f"{rooms} habitaciones y {bathrooms} baños. "
-            f"{'Cuenta con ascensor. ' if has_elevator else ''}"
-            f"{'Calefacción central. ' if has_heating else ''}"
-            f"{'Aire acondicionado en todas las estancias. ' if has_air_conditioning else ''}"
-        ) + self._get_price_description(
-            offer_type,
-            sale_price,
-            rent_price,
-            seasonal_rent_price,
-        ) + (
-            f"{feature}. "
-            "Ideal para inversión o residencia familiar."
-        )
-
-        property_obj = Property(
-            property_type=property_type,
-            offer_type=offer_type,
-            sale_price=sale_price,
-            rent_price=rent_price,
-            seasonal_rent_price=seasonal_rent_price,
-            deposit_amount=deposit_amount,
-            city=city,
-            province=province,
-            municipality=municipality,
-            address=(
-                f"Calle {random.randint(1, 100)} "
-                f"#{random.randint(1, 50)}"
-            ),
-            location=Point(
-                longitude,
-                latitude,
-                srid=4326,
-            ),
-            surface=surface,
-            rooms=rooms,
-            bathrooms=bathrooms,
-            has_elevator=has_elevator,
-            has_heating=has_heating,
-            has_air_conditioning=has_air_conditioning,
-            slug=property_slug,
-            is_active=True,
-            views_count=random.randint(0, 500),
-            status=status,
-        )
-
-        property_obj.set_current_language("es")
-        property_obj.title = title
-        property_obj.description = description
-
-        property_obj.full_clean()
-        property_obj.save()
-
-        return property_obj
-
-    def _get_price_description(
-        self,
-        offer_type,
-        sale_price,
-        rent_price,
-        seasonal_rent_price,
-    ):
-        """Genera una descripción según el tipo de oferta."""
-        if offer_type == PropertyOfferType.SALE:
-            return f"Precio de venta: {sale_price} CUP. "
-
-        if offer_type == PropertyOfferType.RENT:
-            description = (
-                f"Precio de alquiler: {rent_price} CUP/mes. "
-            )
-
-            if seasonal_rent_price is not None:
-                description += (
-                    f"Alquiler por temporada: "
-                    f"{seasonal_rent_price} CUP/día. "
-                )
-
-            return description
-
-        if offer_type == PropertyOfferType.SALE_OR_RENT:
-            description = (
-                f"Precio de venta: {sale_price} CUP. "
-                f"Alquiler: {rent_price} CUP/mes. "
-            )
-
-            if seasonal_rent_price is not None:
-                description += (
-                    f"Alquiler por temporada: "
-                    f"{seasonal_rent_price} CUP/día. "
-                )
-
-            return description
-
-        return "Propiedad en permuta. Consultar condiciones. "
-
-    def _create_image(self, property_obj, index):
-        """Genera una imagen ficticia asociada a la propiedad."""
-        width, height = 800, 600
-
-        color = (
-            random.randint(50, 200),
-            random.randint(50, 200),
-            random.randint(50, 200),
-        )
-
-        image = Image.new(
-            "RGB",
-            (width, height),
-            color=color,
-        )
-
-        draw = ImageDraw.Draw(image)
-        text = (
-            f"Propiedad #{property_obj.pk} - "
-            f"Imagen {index + 1}"
-        )
-
-        try:
-            font = ImageFont.truetype("arial.ttf", 36)
-        except OSError:
-            font = ImageFont.load_default()
-
-        bbox = draw.textbbox(
-            (0, 0),
-            text,
-            font=font,
-        )
-
-        text_width = bbox[2] - bbox[0]
-        text_height = bbox[3] - bbox[1]
-
-        x = (width - text_width) // 2
-        y = (height - text_height) // 2
-
-        draw.text(
-            (x + 2, y + 2),
-            text,
-            fill=(255, 255, 255),
-            font=font,
-        )
-
-        draw.text(
-            (x, y),
-            text,
-            fill=(0, 0, 0),
-            font=font,
-        )
-
-        image_io = BytesIO()
-        image.save(
-            image_io,
-            format="JPEG",
-            quality=90,
-        )
-        image_io.seek(0)
-
-        filename = (
-            f"property_{property_obj.pk}_"
-            f"img_{index + 1}.jpg"
-        )
-
-        image_file = ImageFile(
-            image_io,
-            name=filename,
-        )
-
-        PropertyImage.objects.create(
-            property=property_obj,
-            image=image_file,
-            order=index,
-            is_cover=(index == 0),
-        )
-
-        image_io.close()
+        self.stdout.write("=" * 60)

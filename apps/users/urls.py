@@ -10,12 +10,15 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('favorites/', views.favorite_list, name='favorites'),
     path('favorites/<int:property_id>/toggle/', views.toggle_favorite, name='toggle_favorite'),
+    path('favorites/', views.favorites_page, name='favorites_page'),
+    path('favorites/data/', views.favorites_data, name='favorites_data'),
+    path('favorites/toggle/<int:property_id>/', views.toggle_favorite, name='toggle_favorite'),
     path('saved-searches/', views.saved_search_list, name='saved_search_list'),
     path('saved-searches/create/', views.create_saved_search, name='create_saved_search'),
     path('saved-searches/<int:pk>/toggle/', views.toggle_saved_search, name='toggle_saved_search'),
     path('saved-searches/<int:pk>/delete/', views.delete_saved_search, name='delete_saved_search'),
     path('my-properties/', views.my_properties, name='my_properties'),
-
+    
     # ===== Recuperación de contraseña =====
     # Vistas built-in de Django (django.contrib.auth.views) -- solo se
     # personalizan template_name (para mantener el estilo del portal) y

@@ -770,6 +770,7 @@
         }
 
         .print-block { margin-bottom: 16px; page-break-inside: avoid; }
+        .print-block-photos { page-break-inside: auto; }
         .print-block h3 {
             font-size: 0.95rem;
             text-transform: uppercase;
@@ -801,6 +802,8 @@
             height: 34mm;
             object-fit: cover;
             border: 1px solid #E3D9C4;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .print-agent-row {
@@ -882,12 +885,12 @@
     </section>
 
     <!-- 3.2 Fotos -->
-    <section class="print-block">
+    <section class="print-block print-block-photos">
         <h3>{% trans "Fotos" %}</h3>
         <div class="print-photo-grid">
             {% with images=property.images.all %}
                 {% if images %}
-                    {% for image in images|slice:":6" %}
+                    {% for image in images %}
                         <img src="{{ image.image.url }}" alt="{{ property.title }}">
                     {% endfor %}
                 {% else %}

@@ -17,6 +17,7 @@ urlpatterns += i18n_patterns(
     path('auth/', include('apps.authentication.urls')),
     path('dashboard/', include('apps.dashboard.urls')),
     path('users/', include('apps.users.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
     prefix_default_language=False,
 )
 
