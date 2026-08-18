@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.gis.db import models as gis_models
+from django.contrib.gis.geos import Point
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
@@ -7,6 +8,7 @@ from parler.models import TranslatableModel, TranslatedFields
 
 from .constants import PROPERTY_TYPES
 
+# MAX_IMAGES_PER_PROPERTY se importa directamente desde settings
 MAX_IMAGES_PER_PROPERTY = settings.MAX_IMAGES_PER_PROPERTY
 
 
@@ -34,7 +36,6 @@ class Municipality(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('Municipality'))
     slug = models.SlugField(max_length=100, blank=True, verbose_name=_('Slug'))
     
-    # ===== NUEVOS CAMPOS PARA COORDENADAS =====
     latitude = models.DecimalField(
         max_digits=10, 
         decimal_places=7, 
@@ -66,9 +67,8 @@ class Municipality(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         
-        # Actualizar PointField si hay latitud y longitud
         if self.latitude is not None and self.longitude is not None:
-            self.location = gis_models.Point(self.longitude, self.latitude, srid=4326)
+            self.location = Point(float(self.longitude), float(self.latitude), srid=4326)
         
         super().save(*args, **kwargs)
 
@@ -87,6 +87,13 @@ class PropertyStatus(models.TextChoices):
     SOLD = 'sold', _('Sold')
 
 
+class PropertyOfferType(models.TextChoices):
+    SALE = 'sale', _('Sale')
+    RENT = 'rent', _('Rent')
+    SWAP = 'swap', _('Swap')
+    SALE_OR_RENT = 'sale_or_rent', _('Sale or Rent')
+
+
 class Property(TranslatableModel):
     translations = TranslatedFields(
         title=models.CharField(max_length=200, verbose_name=_('Title')),
@@ -99,6 +106,55 @@ class Property(TranslatableModel):
         verbose_name=_('Property type'),
         db_index=True,
     )
+    
+    # === OFERTA ===
+    offer_type = models.CharField(
+        max_length=20,
+        choices=PropertyOfferType.choices,
+        default=PropertyOfferType.SALE,
+        verbose_name=_('Offer type'),
+        db_index=True,
+    )
+    
+    # === PRECIOS ===
+    sale_price = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2, 
+        null=True, 
+        blank=True, 
+        verbose_name=_('Sale price'),
+        db_index=True,
+        help_text=_('Required if offering for sale')
+    )
+    
+    rent_price = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2, 
+        null=True, 
+        blank=True, 
+        verbose_name=_('Rent price (monthly)'),
+        db_index=True,
+        help_text=_('Required if offering for rent')
+    )
+    
+    seasonal_rent_price = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2, 
+        null=True, 
+        blank=True, 
+        verbose_name=_('Seasonal rent price (daily)'),
+        help_text=_('Price per day for seasonal rentals')
+    )
+    
+    deposit_amount = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2, 
+        null=True, 
+        blank=True, 
+        verbose_name=_('Deposit amount'),
+        help_text=_('Security deposit for rentals')
+    )
+    
     city = models.CharField(max_length=100, verbose_name=_('City'), db_index=True)
     province = models.ForeignKey(
         Province,
@@ -120,7 +176,6 @@ class Property(TranslatableModel):
     )
     address = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Address'))
     location = gis_models.PointField(srid=4326, verbose_name=_('Location'), null=True, blank=True)
-    price = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Price'), db_index=True)
     surface = models.PositiveIntegerField(null=True, blank=True, verbose_name=_('Surface (m²)'), db_index=True)
     rooms = models.PositiveIntegerField(null=True, blank=True, verbose_name=_('Rooms'), db_index=True)
     bathrooms = models.PositiveIntegerField(null=True, blank=True, verbose_name=_('Bathrooms'), db_index=True)
@@ -154,7 +209,7 @@ class Property(TranslatableModel):
         ordering = ['-created_at']
         indexes = [
             models.Index(fields=['province', 'municipality']),
-            models.Index(fields=['price', 'surface']),
+            models.Index(fields=['sale_price', 'rent_price']),
         ]
 
     def __str__(self):
@@ -167,10 +222,67 @@ class Property(TranslatableModel):
     def image_count(self):
         return self.images.count()
 
+    @property
+    def display_price(self):
+        """Devuelve el precio principal según la oferta"""
+        if self.offer_type == PropertyOfferType.SALE:
+            return self.sale_price
+        elif self.offer_type == PropertyOfferType.RENT:
+            return self.rent_price
+        elif self.offer_type == PropertyOfferType.SALE_OR_RENT:
+            return self.sale_price or self.rent_price
+        return self.sale_price or self.rent_price
+
+    @property
+    def display_price_label(self):
+        """Etiqueta del precio mostrado"""
+        if self.offer_type == PropertyOfferType.SALE:
+            return _('Sale price')
+        elif self.offer_type == PropertyOfferType.RENT:
+            return _('Rent price (monthly)')
+        elif self.offer_type == PropertyOfferType.SALE_OR_RENT:
+            return _('Sale / Rent')
+        return _('Price')
+
+    @property
+    def price_range_display(self):
+        """Muestra el rango de precios si aplica"""
+        if self.offer_type == PropertyOfferType.SALE_OR_RENT:
+            parts = []
+            if self.sale_price:
+                parts.append(f"{_('Sale')}: {self.sale_price}")
+            if self.rent_price:
+                parts.append(f"{_('Rent')}: {self.rent_price}/mes")
+            return " | ".join(parts)
+        return str(self.display_price)
+
+    def get_price_for_offer_type(self, offer_type):
+        """Obtiene el precio según el tipo de oferta"""
+        if offer_type == 'sale':
+            return self.sale_price
+        elif offer_type == 'rent':
+            return self.rent_price
+        return None
+
+    def clean(self):
+        """Validación personalizada del modelo"""
+        from django.core.exceptions import ValidationError
+        
+        if self.offer_type in ['sale', 'sale_or_rent'] and not self.sale_price:
+            raise ValidationError({
+                'sale_price': _('Sale price is required for sale offers')
+            })
+        if self.offer_type in ['rent', 'sale_or_rent'] and not self.rent_price:
+            raise ValidationError({
+                'rent_price': _('Rent price is required for rent offers')
+            })
+
     @classmethod
     def get_featured(cls, limit=6):
         """Retorna propiedades destacadas (las más recientes activas)"""
-        return cls.objects.filter(is_active=True).select_related('province', 'municipality')[:limit]
+        return cls.objects.filter(is_active=True).select_related(
+            'province', 'municipality'
+        )[:limit]
 
 
 class PropertyImage(models.Model):

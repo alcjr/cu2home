@@ -9,4 +9,11 @@ PROPERTY_TYPES = [
     ('other', _('Other')),
 ]
 
+OFFER_TYPES = [
+    ('sale', _('Sale')),
+    ('rent', _('Rent')),
+    ('swap', _('Swap')),
+    ('sale_or_rent', _('Sale or Rent')),
+]
+
 DEFAULT_FAVORITE_LIST_NAME = _('My favorites')

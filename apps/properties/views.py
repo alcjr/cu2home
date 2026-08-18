@@ -1,21 +1,24 @@
 from django.http import HttpResponse, JsonResponse
+from django.utils.html import escape
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import F, Q
 from django.urls import reverse
 from django.views.decorators.http import require_GET
+from django.utils.translation import gettext_lazy as _
 
 from .forms import PropertyFilterForm
-from .models import Property, Province, Municipality
+from .models import Property, Province, Municipality, PropertyOfferType
+
 from .constants import PROPERTY_TYPES
 
 
 ALLOWED_SORT = {
     'created_at': 'created_at',
     '-created_at': '-created_at',
-    'price': 'price',
-    '-price': '-price',
+    'price': 'sale_price',  # Ahora usa sale_price
+    '-price': '-sale_price',
     'surface': 'surface',
     '-surface': '-surface',
     'views_count': 'views_count',
@@ -35,6 +38,7 @@ def _filtered_properties(request):
         data = form.cleaned_data
         selected_province = data.get('province_id')
 
+        # === BÚSQUEDA POR TEXTO ===
         if data.get('q'):
             q = data['q']
             properties = properties.filter(
@@ -42,33 +46,60 @@ def _filtered_properties(request):
                 Q(translations__description__icontains=q)
             ).distinct()
 
+        # === UBICACIÓN ===
         if data.get('city'):
             properties = properties.filter(city__icontains=data['city'])
-
         if data.get('province_id'):
             properties = properties.filter(province=data['province_id'])
-
         if data.get('municipality_id'):
             properties = properties.filter(municipality=data['municipality_id'])
 
-        if data.get('min_price') is not None:
-            properties = properties.filter(price__gte=data['min_price'])
-        if data.get('max_price') is not None:
-            properties = properties.filter(price__lte=data['max_price'])
+        # === OFERTA ===
+        if data.get('offer_type'):
+            offer_type = data['offer_type']
+            if offer_type == 'sale':
+                properties = properties.filter(
+                    Q(offer_type='sale') | Q(offer_type='sale_or_rent')
+                )
+            elif offer_type == 'rent':
+                properties = properties.filter(
+                    Q(offer_type='rent') | Q(offer_type='sale_or_rent')
+                )
+            else:
+                properties = properties.filter(offer_type=offer_type)
 
+        # === PRECIO MÁXIMO (filtro rápido del buscador del home) ===
+        if data.get('max_price') is not None:
+            max_price = data['max_price']
+            properties = properties.filter(
+                Q(sale_price__lte=max_price) | Q(rent_price__lte=max_price)
+            )
+
+        # === PRECIOS DE VENTA ===
+        if data.get('min_sale_price') is not None:
+            properties = properties.filter(sale_price__gte=data['min_sale_price'])
+        if data.get('max_sale_price') is not None:
+            properties = properties.filter(sale_price__lte=data['max_sale_price'])
+
+        # === PRECIOS DE ALQUILER ===
+        if data.get('min_rent_price') is not None:
+            properties = properties.filter(rent_price__gte=data['min_rent_price'])
+        if data.get('max_rent_price') is not None:
+            properties = properties.filter(rent_price__lte=data['max_rent_price'])
+
+        # === SUPERFICIE ===
         if data.get('min_surface') is not None:
             properties = properties.filter(surface__gte=data['min_surface'])
         if data.get('max_surface') is not None:
             properties = properties.filter(surface__lte=data['max_surface'])
 
+        # === CARACTERÍSTICAS ===
         if data.get('rooms') is not None:
             properties = properties.filter(rooms__gte=data['rooms'])
         if data.get('bathrooms') is not None:
             properties = properties.filter(bathrooms__gte=data['bathrooms'])
-
         if data.get('property_type'):
             properties = properties.filter(property_type=data['property_type'])
-
         if data.get('has_elevator'):
             properties = properties.filter(has_elevator=True)
         if data.get('has_heating'):
@@ -130,11 +161,33 @@ def _serialize_property_for_grid(obj, request):
     else:
         image_url = f"https://picsum.photos/seed/{obj.pk}/200/160"
 
+    # Determinar qué precio mostrar según la oferta
+    if obj.offer_type == PropertyOfferType.SALE:
+        price = float(obj.sale_price) if obj.sale_price else None
+        price_label = _('Sale')
+    elif obj.offer_type == PropertyOfferType.RENT:
+        price = float(obj.rent_price) if obj.rent_price else None
+        price_label = _('Rent / month')
+    elif obj.offer_type == PropertyOfferType.SALE_OR_RENT:
+        price = {
+            'sale': float(obj.sale_price) if obj.sale_price else None,
+            'rent': float(obj.rent_price) if obj.rent_price else None,
+        }
+        price_label = _('Sale / Rent')
+    else:
+        price = float(obj.sale_price) if obj.sale_price else None
+        price_label = ''
+
     return {
         'id': obj.pk,
         'title': obj.safe_translation_getter('title', any_language=True) or '',
         'image_url': image_url,
-        'price': float(obj.price),
+        'price': price,
+        'price_label': price_label,
+        'sale_price': float(obj.sale_price) if obj.sale_price else None,
+        'rent_price': float(obj.rent_price) if obj.rent_price else None,
+        'offer_type': obj.offer_type,
+        'offer_type_display': obj.get_offer_type_display(),
         'city': obj.city,
         'province': obj.province.name if obj.province else '',
         'municipality': obj.municipality.name if obj.municipality else '',
@@ -179,7 +232,7 @@ def get_municipalities(request):
             province = Province.objects.get(id=province_id)
             municipalities = province.municipalities.all().order_by('name')
             options = ''.join([
-                f'<option value="{m.id}">{m.name}</option>' for m in municipalities
+                f'<option value="{m.id}">{escape(m.name)}</option>' for m in municipalities
             ])
             return HttpResponse(f'<option value="">---</option>{options}')
         except Province.DoesNotExist:
@@ -218,12 +271,25 @@ def _serialize_property_detail(obj, request):
     if not images:
         images = [{'url': f"https://picsum.photos/seed/{obj.pk}/800/600", 'is_cover': True}]
 
+    # Determinar precios para el detail
+    sale_price = float(obj.sale_price) if obj.sale_price else None
+    rent_price = float(obj.rent_price) if obj.rent_price else None
+    seasonal_rent_price = float(obj.seasonal_rent_price) if obj.seasonal_rent_price else None
+    deposit_amount = float(obj.deposit_amount) if obj.deposit_amount else None
+
     return {
         'id': obj.pk,
         'title': obj.safe_translation_getter('title', any_language=True) or '',
         'description': obj.safe_translation_getter('description', any_language=True) or '',
         'images': images,
-        'price': float(obj.price),
+        'offer_type': obj.offer_type,
+        'offer_type_display': obj.get_offer_type_display(),
+        'sale_price': sale_price,
+        'rent_price': rent_price,
+        'seasonal_rent_price': seasonal_rent_price,
+        'deposit_amount': deposit_amount,
+        'display_price': float(obj.display_price) if obj.display_price else None,
+        'display_price_label': str(obj.display_price_label),
         'city': obj.city,
         'address': obj.address or '',
         'province': obj.province.name if obj.province else '',

@@ -69,3 +69,42 @@ class UserProfile(models.Model):
     @property
     def is_agent(self):
         return self.user_type == self.UserType.AGENT
+
+
+class Favorite(models.Model):
+    """
+    Relación de favoritos usuario-inmueble. Un registro por par
+    (user, property) -- unique_together evita duplicados si el usuario
+    pulsa "guardar en favoritos" dos veces sobre el mismo inmueble
+    (doble clic, doble submit, etc.), así toggle_favorite() en views.py
+    puede confiar en get_or_create sin preocuparse de índices repetidos.
+
+    Referencia a 'properties.Property' como string (no import directo)
+    para evitar dependencia circular entre apps.users y apps.properties
+    a nivel de módulo -- mismo motivo por el que apps.py importa
+    signals dentro de ready() y no arriba del todo.
+    """
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='favorites',
+        verbose_name=_('User'),
+    )
+
+    property = models.ForeignKey(
+        'properties.Property',
+        on_delete=models.CASCADE,
+        related_name='favorited_by',
+        verbose_name=_('Property'),
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _('Favorite')
+        verbose_name_plural = _('Favorites')
+        unique_together = ('user', 'property')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.user} → {self.property}'

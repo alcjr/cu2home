@@ -16,15 +16,11 @@
     a { text-decoration: none; color: inherit; }
     ul { list-style: none; }
 
+    /* Cabecera con degradado verde oscuro a verde pastel */
     header {
-        background: #0A2E2A !important;
+        background: linear-gradient(135deg, #0A2E2A 0%, #A8D5BA 100%) !important;
         border-bottom: 1px solid rgba(225,91,51,0.22) !important;
         box-shadow: 0 6px 18px rgba(0,0,0,0.18) !important;
-    }
-    footer {
-        background: #0A2E2A !important;
-        border-top: 1px solid rgba(225,91,51,0.22) !important;
-        box-shadow: none !important;
     }
 
     html, body {
@@ -451,6 +447,11 @@
         border-color: var(--turquoise);
         background: #fff;
     }
+    .muni-panel .muni-list button.muni-chip.is-active {
+        border-color: var(--terracotta);
+        background: var(--terracotta);
+        color: #fff;
+    }
     .muni-panel .muni-empty {
         color: var(--muted);
         font-size: 0.85rem;
@@ -614,7 +615,7 @@
     }
 
     /* =========================================================
-       QUICK VIEW - NUEVA ESTRUCTURA DE 3 COLUMNAS
+       QUICK VIEW
        ========================================================= */
     .quickview-popup .dx-popup-content {
         padding: 0 !important;
@@ -640,7 +641,6 @@
         border-right: 1px solid var(--linea, #e2e8f0);
     }
 
-    /* Columna 1: Datos del inmueble */
     .quickview-col-property {
         background: #fff;
     }
@@ -801,7 +801,6 @@
         background: var(--terracotta-dark, #a84326);
     }
 
-    /* Columna 2: Mapa */
     .quickview-col-map {
         background: #f8f9fa;
         padding: 0;
@@ -813,13 +812,6 @@
         height: 100%;
         min-height: 500px;
         position: relative;
-    }
-
-    .quickview-col-map #qvMap {
-        width: 100%;
-        height: 100%;
-        min-height: 500px;
-        border-radius: 0;
     }
 
     .quickview-col-map .map-loading {
@@ -839,7 +831,6 @@
         font-size: 1.5rem;
     }
 
-    /* Columna 3: Agente */
     .quickview-col-agent {
         background: #fafaf8;
     }
@@ -951,7 +942,6 @@
         color: var(--muted, #6b7280);
     }
 
-    /* Responsive para el Quick View */
     @media (max-width: 1024px) {
         .quickview-grid {
             grid-template-columns: 1fr 1fr;
@@ -1544,7 +1534,6 @@
             const grid = document.createElement('div');
             grid.className = 'quickview-grid';
 
-            // Columna 1: Datos del inmueble
             const colProperty = document.createElement('div');
             colProperty.className = 'quickview-col quickview-col-property';
 
@@ -1611,7 +1600,6 @@
 
             grid.append(colProperty);
 
-            // Columna 2: Mapa
             const colMap = document.createElement('div');
             colMap.className = 'quickview-col quickview-col-map';
 
@@ -1636,7 +1624,6 @@
             colMap.append(mapContainer);
             grid.append(colMap);
 
-            // Columna 3: Agente
             const colAgent = document.createElement('div');
             colAgent.className = 'quickview-col quickview-col-agent';
             colAgent.append(renderAgentCard(data.agent));
@@ -1773,7 +1760,7 @@
                 { dataField: 'rooms' },
                 { dataField: 'surface', dataType: 'number' },
             ],
-            rowTemplate: function(container, item) {
+            dataRowTemplate: function(container, item) {
                 const tr = document.createElement('tr');
                 tr.className = 'result-card-row';
                 const td = document.createElement('td');
@@ -1794,11 +1781,40 @@
 
         function selectOnHeroForm(name, id) {
             if (id === null) return;
+            if (provinceSelect.value === String(id)) return;
             provinceSelect.value = String(id);
             provinceSelect.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
+        function syncMuniChipActiveState() {
+            const current = municipalitySelect.value;
+            panelMuniList.querySelectorAll('.muni-chip').forEach(function(chip) {
+                chip.classList.toggle('is-active', chip.dataset.muniId === current);
+            });
+        }
+        municipalitySelect.addEventListener('change', syncMuniChipActiveState);
+
+        function selectMunicipioEverywhere(id, name) {
+            const idStr = String(id);
+            if (!municipalitySelect.querySelector('option[value="' + idStr + '"]')) {
+                const opt = document.createElement('option');
+                opt.value = idStr;
+                opt.textContent = name || idStr;
+                municipalitySelect.appendChild(opt);
+            }
+            if (municipalitySelect.value === idStr) {
+                syncMuniChipActiveState();
+                return;
+            }
+            municipalitySelect.value = idStr;
+            municipalitySelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
         function loadMunicipiosPanel(name) {
+            if (muniPanel.classList.contains('is-visible') && panelName.textContent === name) {
+                return; // ya está mostrando esta provincia, evita fetch duplicado
+            }
+
             const id = resolveProvinceId(name);
             const count = resolveCount(name);
 
@@ -1831,10 +1847,10 @@
                         const chip = document.createElement('button');
                         chip.type = 'button';
                         chip.className = 'muni-chip';
+                        chip.dataset.muniId = opt.value;
                         chip.textContent = opt.textContent.trim();
-                        chip.addEventListener('click', () => {
-                            window.location.href = "{% url 'properties:list' %}?province_id=" + encodeURIComponent(id) + "&municipality_id=" + encodeURIComponent(opt.value);
-                        });
+                        chip.classList.toggle('is-active', municipalitySelect.value === opt.value);
+                        chip.addEventListener('click', () => selectMunicipioEverywhere(opt.value, opt.textContent.trim()));
                         panelMuniList.appendChild(chip);
                     });
                 })
@@ -1951,6 +1967,10 @@
             const name = selected ? selected.dataset.name : null;
             if (name) {
                 setActiveEverywhere(name);
+                loadMunicipiosPanel(name);
+            } else {
+                activeName = null;
+                muniPanel.classList.remove('is-visible');
             }
         });
     })();
@@ -1958,7 +1978,7 @@
 {% endblock %}
 
 {% block footer %}
-<footer style="background: #0A2E2A; color: rgba(255,255,255,0.65); padding: 14px 24px; flex-shrink: 0; border-top: 1px solid rgba(225,91,51,0.22); box-shadow: none;">
+<footer style="background: linear-gradient(135deg, #0A2E2A 0%, #A8D5BA 100%); color: rgba(255,255,255,0.65); padding: 14px 24px; flex-shrink: 0; border-top: 1px solid rgba(225,91,51,0.22); box-shadow: none;">
     <div style="max-width:1280px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
         <div style="display:flex; align-items:center; gap:6px;">
             <span style="font-family:var(--font-display); font-size:1.1rem; font-weight:700; color:#fff;">cu2home<span style="color:var(--terracotta);">.</span></span>

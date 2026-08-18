@@ -1,0 +1,16 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Mis inmuebles" %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{% trans "Mis inmuebles" %}</h1>
+    {% if properties %}
+        <p>{% trans "Inmuebles publicados por ti:" %}</p>
+        <!-- TODO: grid DevExtreme con acciones (editar / imprimir / borrar) -->
+    {% else %}
+        <p>{% trans "Todavía no has publicado ningún inmueble." %}</p>
+    {% endif %}
+</div>
+{% endblock %}
