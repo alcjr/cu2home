@@ -156,16 +156,38 @@ def property_list(request):
 
 
 def property_detail(request, pk, slug):
-    obj = get_object_or_404(Property, pk=pk, is_active=True)
+    obj = get_object_or_404(
+        Property.objects.select_related(
+            'province', 'municipality', 'agent', 'agent__profile'
+        ).prefetch_related('images'),
+        pk=pk,
+        is_active=True,
+    )
     Property.objects.filter(pk=obj.pk).update(views_count=F('views_count') + 1)
     obj.refresh_from_db(fields=['views_count'])
-    return render(request, 'properties/detail.html', {'property': obj})
+
+    # property.images.all() ya viene precargado por prefetch_related, así
+    # que esto no dispara una consulta adicional. Se antepone la portada
+    # (is_cover) al resto, independientemente de su 'order': así la
+    # imagen grande de la galería, la miniatura marcada como activa por
+    # defecto y el bloque de fotos de la maqueta de impresión son siempre
+    # coherentes entre sí, aunque alguien cambie la portada desde el
+    # admin sin reordenar las imágenes.
+    property_images = list(obj.images.all())
+    cover_image = obj.cover_image
+    if cover_image and property_images and property_images[0] != cover_image:
+        property_images.remove(cover_image)
+        property_images.insert(0, cover_image)
+
+    return render(request, 'properties/detail.html', {
+        'property': obj,
+        'property_images': property_images,
+        'cover_image': cover_image,
+    })
 
 
 def _serialize_property_for_grid(obj, request):
-    cover = next((img for img in obj.images.all() if img.is_cover), None)
-    if cover is None:
-        cover = next(iter(obj.images.all()), None)
+    cover = obj.cover_image
 
     if cover:
         image_url = request.build_absolute_uri(cover.image.url)
@@ -272,12 +294,23 @@ def _serialize_agent(agent, request):
 
 
 def _serialize_property_detail(obj, request):
+    # Misma convención que la vista HTML (property_detail): la portada va
+    # siempre primero en la lista, independientemente de su 'order', para
+    # que el quick view de index.html no dependa de que el JS cliente
+    # vuelva a buscarla por is_cover (que hoy hace como salvaguarda, pero
+    # así ambos caminos quedan alineados en el origen).
+    property_images = list(obj.images.all())
+    cover = obj.cover_image
+    if cover and property_images and property_images[0] != cover:
+        property_images.remove(cover)
+        property_images.insert(0, cover)
+
     images = [
         {
             'url': request.build_absolute_uri(img.image.url),
             'is_cover': img.is_cover,
         }
-        for img in obj.images.all()
+        for img in property_images
     ]
     if not images:
         images = [{'url': f"https://picsum.photos/seed/{obj.pk}/800/600", 'is_cover': True}]

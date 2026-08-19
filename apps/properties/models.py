@@ -61,7 +61,9 @@ class Municipality(models.Model):
         verbose_name = _('Municipality')
         verbose_name_plural = _('Municipalities')
         ordering = ['province__name', 'name']
-        unique_together = ('province', 'name')
+        constraints = [
+            models.UniqueConstraint(fields=['province', 'name'], name='unique_province_municipality_name'),
+        ]
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -221,6 +223,27 @@ class Property(TranslatableModel):
     @property
     def image_count(self):
         return self.images.count()
+
+    @property
+    def cover_image(self):
+        """
+        Devuelve la PropertyImage marcada como portada (is_cover=True); si
+        ninguna lo está, cae a la primera según Meta.ordering (`order`).
+        None si el inmueble no tiene ninguna imagen.
+
+        Fuente única de verdad para "qué imagen se muestra como portada":
+        la usan tanto los templates (ficha de detalle) como los
+        serializadores JSON (grid/quick-view) para no duplicar este
+        criterio en varios sitios y evitar que diverjan.
+
+        Si la relación 'images' ya fue precargada con prefetch_related,
+        list(self.images.all()) reutiliza esa caché y no dispara consulta
+        adicional.
+        """
+        images = list(self.images.all())
+        if not images:
+            return None
+        return next((img for img in images if img.is_cover), images[0])
 
     @property
     def display_price(self):

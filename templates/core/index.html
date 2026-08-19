@@ -476,6 +476,21 @@
         color: var(--ink);
     }
     .section-header p { color: var(--muted); margin-top: 4px; font-size: 0.95rem; }
+    .results-counters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 18px;
+        margin-top: 8px;
+        font-size: 0.88rem;
+        color: var(--muted);
+    }
+    .results-counters .counter-item { display: inline-flex; align-items: baseline; gap: 5px; }
+    .results-counters .counter-label { font-weight: 600; color: var(--ink); }
+    .results-counters .counter-value {
+        font-family: var(--font-mono);
+        color: var(--turquoise-dark);
+        font-weight: 600;
+    }
     .section-header .link {
         color: var(--turquoise-dark);
         font-weight: 600;
@@ -557,11 +572,11 @@
     .result-card-body {
         flex: 1;
         min-width: 0;
-        padding: 18px 22px;
+        padding: 20px 24px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 8px;
+        gap: 10px;
     }
     .result-card-top {
         display: flex;
@@ -573,7 +588,7 @@
     .result-card-title {
         font-family: var(--font-display);
         font-weight: 700;
-        font-size: 1.1rem;
+        font-size: 1.4rem;
         color: var(--ink);
         overflow: hidden;
         text-overflow: ellipsis;
@@ -588,25 +603,39 @@
         white-space: nowrap;
     }
     .result-card-location {
-        font-size: 0.88rem;
+        font-size: 1.05rem;
         color: var(--muted);
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: 6px;
     }
     .result-card-location i { color: var(--terracotta); }
+    .result-card-offer {
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: 0.3px;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        width: fit-content;
+    }
+    .result-card-offer i { font-size: 0.92rem; }
+    .result-card-offer.offer-sale { color: var(--terracotta-dark); }
+    .result-card-offer.offer-rent { color: var(--turquoise-dark); }
+    .result-card-offer.offer-swap { color: var(--gold); }
+    .result-card-offer.offer-sale_or_rent { color: #6B4FA0; }
     .result-card-details {
         display: flex;
-        gap: 18px;
+        gap: 22px;
         flex-wrap: wrap;
-        font-size: 0.85rem;
+        font-size: 1rem;
         color: var(--muted);
-        margin-top: 6px;
+        margin-top: 8px;
         border-top: 1px solid var(--line);
-        padding-top: 12px;
+        padding-top: 14px;
     }
-    .result-card-details span { display: flex; align-items: center; gap: 6px; }
-    .result-card-details i { color: #94a3b8; }
+    .result-card-details span { display: flex; align-items: center; gap: 7px; }
+    .result-card-details i { color: #94a3b8; font-size: 0.95rem; }
     .empty-state { color: var(--muted); font-size: 0.95rem; }
 
     @media (max-width: 640px) {
@@ -1140,6 +1169,13 @@
         <div class="section-header">
             <div>
                 <h2>{% trans "Resultados" %}</h2>
+                <p class="results-counters">
+                    <span class="counter-item"><span class="counter-label">{% trans "Venta:" %}</span> <span class="counter-value" id="counterSale">{{ sale_count|default:0 }}</span></span>
+                    <span class="counter-item"><span class="counter-label">{% trans "Alquiler:" %}</span> <span class="counter-value" id="counterRent">{{ rent_count|default:0 }}</span></span>
+                    <span class="counter-item"><span class="counter-label">{% trans "Permuta:" %}</span> <span class="counter-value" id="counterSwap">{{ swap_count|default:0 }}</span></span>
+                    <span class="counter-item"><span class="counter-label">{% trans "Provincia:" %}</span> <span class="counter-value" id="counterProvince">{% trans "Toda Cuba" %}</span></span>
+                    <span class="counter-item"><span class="counter-label">{% trans "Municipio:" %}</span> <span class="counter-value" id="counterMunicipality">{% trans "Todos" %}</span></span>
+                </p>
             </div>
             <a href="{% url 'properties:list' %}" class="link">{% trans "Ver todas" %} <i class="fas fa-arrow-right"></i></a>
         </div>
@@ -1240,6 +1276,29 @@
                 case 'before_attached':
                 default: return CURRENCY_SYMBOL + numberStr;
             }
+        }
+
+        // El campo 'price' que devuelve property_results_json es un número
+        // para 'sale'/'rent'/'swap', pero un objeto {sale, rent} cuando la
+        // modalidad es 'sale_or_rent'. Usamos sale_price/rent_price
+        // (siempre presentes y siempre numéricos) para evitar mostrar
+        // "$NaN" cuando el precio combinado no es un número simple.
+        function resultCardPriceText(data) {
+            if (data.offer_type === 'sale_or_rent') {
+                const parts = [];
+                if (data.sale_price != null) parts.push(formatPrice(data.sale_price));
+                if (data.rent_price != null) parts.push(formatPrice(data.rent_price) + '{% trans "/mes" %}');
+                return parts.length ? parts.join('  ·  ') : '—';
+            }
+            if (data.offer_type === 'rent') {
+                return data.rent_price != null
+                    ? formatPrice(data.rent_price) + '{% trans "/mes" %}'
+                    : formatPrice(data.price);
+            }
+            if (data.offer_type === 'swap') {
+                return data.sale_price != null ? formatPrice(data.sale_price) : '{% trans "A convenir" %}';
+            }
+            return formatPrice(data.sale_price != null ? data.sale_price : data.price);
         }
 
         function currentResultsFilterParams() {
@@ -1698,7 +1757,7 @@
             title.textContent = data.title || '';
             const price = document.createElement('span');
             price.className = 'result-card-price';
-            price.textContent = formatPrice(data.price);
+            price.textContent = resultCardPriceText(data);
             top.append(title, price);
             body.append(top);
 
@@ -1708,6 +1767,21 @@
             locationIcon.className = 'fas fa-map-pin';
             location.append(locationIcon, ' ' + [data.city, data.province].filter(Boolean).join(', '));
             body.append(location);
+
+            if (data.offer_type) {
+                const OFFER_ICONS = {
+                    sale: 'fa-tag',
+                    rent: 'fa-key',
+                    swap: 'fa-repeat',
+                    sale_or_rent: 'fa-handshake',
+                };
+                const offerLabel = document.createElement('div');
+                offerLabel.className = 'result-card-offer offer-' + data.offer_type;
+                const offerIcon = document.createElement('i');
+                offerIcon.className = 'fas ' + (OFFER_ICONS[data.offer_type] || 'fa-tag');
+                offerLabel.append(offerIcon, ' ' + (data.offer_type_display || ''));
+                body.append(offerLabel);
+            }
 
             const details = document.createElement('div');
             details.className = 'result-card-details';
@@ -1773,9 +1847,67 @@
             resultsGrid.getDataSource().reload();
         }
 
+        /* ---- Contadores de Resultados (Venta / Alquiler / Permuta / Provincia / Municipio) ---- */
+        function fetchOfferTypeCount(offerType) {
+            const params = currentResultsFilterParams();
+            params.set('offer_type', offerType);
+            params.set('take', 1);
+            return fetch(RESULTS_JSON_URL + '?' + params.toString())
+                .then(function(response) { return response.json(); })
+                .then(function(json) { return json.totalCount || 0; })
+                .catch(function() { return 0; });
+        }
+
+        function refreshOfferTypeCounters() {
+            const counterSale = document.getElementById('counterSale');
+            const counterRent = document.getElementById('counterRent');
+            const counterSwap = document.getElementById('counterSwap');
+            if (!counterSale || !counterRent || !counterSwap) return;
+
+            Promise.all([
+                fetchOfferTypeCount('sale'),
+                fetchOfferTypeCount('rent'),
+                fetchOfferTypeCount('swap'),
+            ]).then(function(counts) {
+                counterSale.textContent = counts[0];
+                counterRent.textContent = counts[1];
+                counterSwap.textContent = counts[2];
+            });
+        }
+
+        // Mantiene 'Provincia:' y 'Municipio:' junto a "Resultados" siempre
+        // en sincronía con lo seleccionado en el buscador del hero.
+        function syncLocationCounters() {
+            const counterProvince = document.getElementById('counterProvince');
+            const counterMunicipality = document.getElementById('counterMunicipality');
+            if (counterProvince && provinceSelect.selectedIndex >= 0) {
+                counterProvince.textContent = provinceSelect.options[provinceSelect.selectedIndex].text;
+            }
+            if (counterMunicipality && municipalitySelect.selectedIndex >= 0) {
+                counterMunicipality.textContent = municipalitySelect.options[municipalitySelect.selectedIndex].text;
+            }
+        }
+
+        function refreshResultsCounters() {
+            refreshOfferTypeCounters();
+            syncLocationCounters();
+        }
+
         [provinceSelect, municipalitySelect, propertyTypeSelect, maxPriceInput, offerTypeField].forEach(function(el) {
             el.addEventListener('change', reloadResultsGrid);
+            el.addEventListener('change', refreshResultsCounters);
         });
+
+        // El select de municipio se repuebla vía htmx cuando cambia la
+        // provincia; re-sincronizamos tras el swap para no quedarnos con
+        // el texto de la opción anterior.
+        document.body.addEventListener('htmx:afterSwap', function(evt) {
+            if (evt.target && evt.target.id === 'municipality') {
+                syncLocationCounters();
+            }
+        });
+
+        refreshResultsCounters();
 
         function selectOnHeroForm(name, id) {
             if (id === null) return;

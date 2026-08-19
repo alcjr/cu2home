@@ -151,7 +151,19 @@
         border-radius: 40px;
         font-family: 'Inter', sans-serif;
     }
-    .tag.op { background: var(--terracota); color: #fff; }
+    
+
+    .tag.op { 
+    background: transparent; 
+    color: var(--terracota); 
+    border: 1.5px solid var(--terracota);
+    }
+
+
+
+
+
+
     .tag.type { background: #eef2f0; color: var(--azul-malecon); }
     .detail-head .price-block { text-align: right; }
     .detail-head .price-block .price {
@@ -888,15 +900,13 @@
     <section class="print-block print-block-photos">
         <h3>{% trans "Fotos" %}</h3>
         <div class="print-photo-grid">
-            {% with images=property.images.all %}
-                {% if images %}
-                    {% for image in images %}
-                        <img src="{{ image.image.url }}" alt="{{ property.title }}">
-                    {% endfor %}
-                {% else %}
-                    <img src="https://picsum.photos/seed/{{ property.id }}/400/300" alt="{{ property.title }}">
-                {% endif %}
-            {% endwith %}
+            {% if property_images %}
+                {% for image in property_images %}
+                    <img src="{{ image.image.url }}" alt="{{ property.title }}">
+                {% endfor %}
+            {% else %}
+                <img src="https://picsum.photos/seed/{{ property.id }}/400/300" alt="{{ property.title }}">
+            {% endif %}
         </div>
     </section>
 
@@ -987,56 +997,52 @@
     <div class="gallery-wrapper">
         <!-- Imagen grande -->
         <div class="gallery-main" id="galleryMain">
-            {% with images=property.images.all %}
-                {% if images %}
-                    <img id="galleryMainImg" src="{{ images.first.image.url }}" alt="{{ property.title }}">
-                {% else %}
-                    <img id="galleryMainImg" src="https://picsum.photos/seed/{{ property.id }}/1200/600" alt="{{ property.title }}">
-                {% endif %}
-                <div class="gallery-counter" id="galleryCounter">
-                    {% if images %}<span id="currentIndex">1</span> / {{ images|length }}{% else %}1 / 1{% endif %}
-                </div>
-                
-                <!-- Botones de navegación -->
-                <button class="gallery-nav prev" id="galleryPrev" aria-label="Anterior">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="gallery-nav next" id="galleryNext" aria-label="Siguiente">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            {% endwith %}
+            {% if cover_image %}
+                <img id="galleryMainImg" src="{{ cover_image.image.url }}" alt="{{ property.title }}">
+            {% else %}
+                <img id="galleryMainImg" src="https://picsum.photos/seed/{{ property.id }}/1200/600" alt="{{ property.title }}">
+            {% endif %}
+            <div class="gallery-counter" id="galleryCounter">
+                {% if property_images %}<span id="currentIndex">1</span> / {{ property_images|length }}{% else %}1 / 1{% endif %}
+            </div>
+
+            <!-- Botones de navegación -->
+            <button class="gallery-nav prev" id="galleryPrev" aria-label="Anterior">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="gallery-nav next" id="galleryNext" aria-label="Siguiente">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
 
         <!-- Miniaturas -->
         <div class="gallery-thumbs">
-            {% with images=property.images.all %}
-                <button class="thumb-scroll-btn left" id="thumbScrollLeft" aria-label="Desplazar miniaturas izquierda">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <div class="gallery-thumbs-wrapper" id="galleryThumbs">
-                    {% if images %}
-                        {% for image in images %}
-                            <div class="gallery-thumb {% if forloop.first %}is-active{% endif %}" data-index="{{ forloop.counter0 }}">
-                                <img src="{{ image.image.url }}" alt="{{ property.title }} - Foto {{ forloop.counter }}" loading="lazy">
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <!-- Imagen de placeholder si no hay fotos -->
-                        <div class="gallery-thumb is-active" data-index="0">
-                            <img src="https://picsum.photos/seed/{{ property.id }}/200/150" alt="{{ property.title }}" loading="lazy">
+            <button class="thumb-scroll-btn left" id="thumbScrollLeft" aria-label="Desplazar miniaturas izquierda">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="gallery-thumbs-wrapper" id="galleryThumbs">
+                {% if property_images %}
+                    {% for image in property_images %}
+                        <div class="gallery-thumb {% if forloop.first %}is-active{% endif %}" data-index="{{ forloop.counter0 }}">
+                            <img src="{{ image.image.url }}" alt="{{ property.title }} - Foto {{ forloop.counter }}" loading="lazy">
                         </div>
-                        <div class="gallery-thumb" data-index="1">
-                            <img src="https://picsum.photos/seed/{{ property.id }}a/200/150" alt="{{ property.title }}" loading="lazy">
-                        </div>
-                        <div class="gallery-thumb" data-index="2">
-                            <img src="https://picsum.photos/seed/{{ property.id }}b/200/150" alt="{{ property.title }}" loading="lazy">
-                        </div>
-                    {% endif %}
-                </div>
-                <button class="thumb-scroll-btn right" id="thumbScrollRight" aria-label="Desplazar miniaturas derecha">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            {% endwith %}
+                    {% endfor %}
+                {% else %}
+                    <!-- Imagen de placeholder si no hay fotos -->
+                    <div class="gallery-thumb is-active" data-index="0">
+                        <img src="https://picsum.photos/seed/{{ property.id }}/200/150" alt="{{ property.title }}" loading="lazy">
+                    </div>
+                    <div class="gallery-thumb" data-index="1">
+                        <img src="https://picsum.photos/seed/{{ property.id }}a/200/150" alt="{{ property.title }}" loading="lazy">
+                    </div>
+                    <div class="gallery-thumb" data-index="2">
+                        <img src="https://picsum.photos/seed/{{ property.id }}b/200/150" alt="{{ property.title }}" loading="lazy">
+                    </div>
+                {% endif %}
+            </div>
+            <button class="thumb-scroll-btn right" id="thumbScrollRight" aria-label="Desplazar miniaturas derecha">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
     </div>
 </div>

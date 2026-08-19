@@ -1,0 +1,2119 @@
+{% extends "core/base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Portal inmobiliario de Cuba" %} - {{ block.super }}{% endblock %}
+
+{% block extra_css %}
+<!-- Leaflet: solo para las siluetas vectoriales de provincias -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<!-- DevExtreme: grid dinámico de resultados filtrados -->
+<link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/22.1.7/css/dx.light.css" />
+<style>
+    /* =========================================================
+       HOME — hereda tokens definidos en core/base.html
+       ========================================================= */
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    /* Cabecera con degradado verde oscuro a verde pastel */
+    header {
+        background: linear-gradient(135deg, #0A2E2A 0%, #A8D5BA 100%) !important;
+        border-bottom: 1px solid rgba(225,91,51,0.22) !important;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.18) !important;
+    }
+
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    header, .header, #header, nav.navbar, .navbar {
+        flex-shrink: 0;
+    }
+    footer, .footer, #footer {
+        flex-shrink: 0;
+    }
+    main, .main, #main, .content, #content, .page-content {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+    .eyebrow {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--turquoise);
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+        background:
+            radial-gradient(1100px 480px at 85% -10%, rgba(225,91,51,0.18), transparent 60%),
+            linear-gradient(160deg, var(--night) 0%, var(--night-deep) 100%);
+        padding: 28px 0 0;
+        color: #fff;
+        overflow: hidden;
+    }
+
+    .hero-top-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        padding-bottom: 24px;
+        align-items: start;
+    }
+    .hero-copy { max-width: 100%; }
+    .hero-copy .eyebrow { color: var(--turquoise); margin-bottom: 14px; display: block; }
+    .hero h1 {
+        font-family: var(--font-display);
+        font-size: 3.1rem;
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -1px;
+        margin-bottom: 16px;
+    }
+    .hero h1 .accent {
+        font-style: normal;
+        color: var(--terracotta);
+    }
+    .hero p.lead {
+        font-size: 1.08rem;
+        color: rgba(255,255,255,0.72);
+        max-width: 46ch;
+        margin-bottom: 32px;
+    }
+
+    .hero-form {
+        display: flex;
+        flex-direction: column;
+    }
+    .search-tabs {
+        display: inline-flex;
+        gap: 4px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 40px;
+        padding: 5px;
+        margin-bottom: 18px;
+        align-self: flex-start;
+    }
+    .search-tabs button {
+        border: none;
+        background: transparent;
+        color: rgba(255,255,255,0.65);
+        padding: 9px 24px;
+        border-radius: 40px;
+        font-family: var(--font-body);
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .search-tabs button.active {
+        background: var(--terracotta);
+        color: #fff;
+    }
+    .search-tabs button:hover:not(.active) { color: #fff; }
+
+    .search-form {
+        background: var(--paper);
+        border-radius: var(--radius-lg);
+        padding: 18px;
+        box-shadow: var(--shadow-lift);
+    }
+    .search-form .fields-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+    .search-form .field-group { position: relative; min-width: 0; }
+    .search-form .field-group label {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--muted);
+        margin-bottom: 5px;
+        padding-left: 4px;
+    }
+    .search-form .field-group i {
+        position: absolute;
+        left: 14px;
+        top: 39px;
+        color: #94a3b8;
+        font-size: 0.9rem;
+        pointer-events: none;
+    }
+    .search-form select,
+    .search-form input {
+        width: 100%;
+        padding: 14px 40px 14px 40px;
+        border: 1px solid var(--line);
+        background: var(--sand);
+        border-radius: var(--radius-sm);
+        font-size: 1rem;
+        font-family: var(--font-body);
+        color: var(--ink);
+        outline: none;
+        transition: border-color 0.2s, background 0.2s;
+        appearance: none;
+        -webkit-appearance: none;
+        text-overflow: ellipsis;
+    }
+    .search-form select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+    }
+    .search-form input { padding-right: 16px; }
+    .search-form select:focus,
+    .search-form input:focus { border-color: var(--turquoise); background: #fff; }
+
+    .search-form .btn-search {
+        width: 100%;
+        background: var(--terracotta);
+        border: none;
+        border-radius: var(--radius-sm);
+        padding: 14px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.98rem;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .search-form .btn-search:hover { background: var(--terracotta-dark); }
+
+    .hero-stats {
+        display: flex;
+        gap: 28px;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255,255,255,0.12);
+    }
+    .hero-stats .stat b {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #fff;
+    }
+    .hero-stats .stat span {
+        font-size: 0.78rem;
+        color: rgba(255,255,255,0.55);
+    }
+
+    /* ---- Mapa dentro de una tarjeta ---- */
+    .map-card {
+        background: var(--paper);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lift);
+        padding: 20px 20px 16px;
+        margin: 0 0 24px 0;
+        width: 100%;
+    }
+    .map-card .province-map-canvas {
+        width: 100%;
+        height: 480px;
+        background: var(--paper);
+        border-radius: var(--radius-md);
+        outline: none;
+        cursor: default;
+    }
+    .map-card .map-hint {
+        text-align: center;
+        font-size: 0.92rem;
+        color: var(--muted);
+        padding: 14px 0 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-top: 1px solid var(--line);
+        margin-top: 14px;
+    }
+    .map-card .map-hint i {
+        color: var(--terracotta);
+        font-size: 1.1rem;
+    }
+
+    .province-map-canvas.leaflet-container {
+        background: var(--paper);
+        cursor: default;
+        font-family: var(--font-body);
+    }
+    .province-map-canvas .leaflet-pane,
+    .province-map-canvas .leaflet-control-container { pointer-events: none; }
+    .province-map-canvas path.province-shape {
+        pointer-events: auto;
+        cursor: pointer;
+        transition: fill 0.15s, fill-opacity 0.15s;
+    }
+    .province-map-canvas path.province-shape:focus-visible {
+        outline: 2px solid var(--turquoise);
+        outline-offset: 1px;
+    }
+    .province-map-canvas path.province-shape {
+        fill: #DCEAE8;
+        stroke: var(--paper);
+        stroke-width: 2;
+    }
+    .province-map-canvas path.province-shape:hover {
+        fill: rgba(47,156,149,0.55);
+    }
+    .province-map-canvas path.province-shape.is-active {
+        fill: var(--terracotta);
+        stroke: #fff;
+        stroke-width: 2.5;
+    }
+    .province-tooltip {
+        font-family: var(--font-display);
+        font-weight: 600;
+        background: var(--night-header);
+        color: #fff;
+        border: 1px solid var(--terracotta);
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.85rem;
+        box-shadow: var(--shadow-soft);
+    }
+    .province-tooltip::before { border-top-color: var(--night-header) !important; }
+
+    .explore-bottom-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        padding: 16px 0 40px;
+    }
+
+    .province-list {
+        background: var(--paper);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--line);
+        padding: 10px;
+        max-height: 480px;
+        display: flex;
+        flex-direction: column;
+    }
+    .province-list-head {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--ink);
+        padding: 10px 12px 12px;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+    .province-list-head i { color: var(--terracotta); }
+    .province-list-items {
+        flex: 1;
+        overflow-y: auto;
+    }
+    .province-list-items::-webkit-scrollbar { width: 6px; }
+    .province-list-items::-webkit-scrollbar-thumb { background: var(--turquoise); border-radius: 8px; }
+
+    button.province-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background 0.18s, border-color 0.18s;
+        margin-bottom: 2px;
+        border: 1px solid transparent;
+        background: none;
+        font-family: var(--font-body);
+        text-align: left;
+    }
+    button.province-item:hover { background: var(--sand); }
+    button.province-item.is-active {
+        background: rgba(225,91,51,0.1);
+        border-color: rgba(225,91,51,0.35);
+    }
+    button.province-item .icon {
+        font-size: 1.05rem;
+        color: var(--turquoise-dark);
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--sand);
+        border-radius: 10px;
+        flex-shrink: 0;
+        transition: background 0.18s, color 0.18s;
+    }
+    button.province-item.is-active .icon {
+        background: var(--terracotta);
+        color: #fff;
+    }
+    button.province-item .info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+    button.province-item .info .name {
+        font-weight: 600;
+        font-size: 0.94rem;
+        font-family: var(--font-display);
+        color: var(--ink);
+    }
+    button.province-item .info .count {
+        font-size: 0.78rem;
+        color: var(--muted);
+    }
+    button.province-item .badge-count {
+        background: var(--sand-deep);
+        color: var(--turquoise-dark);
+        border-radius: 40px;
+        padding: 3px 12px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+        flex-shrink: 0;
+    }
+    button.province-item.is-active .badge-count {
+        background: var(--terracotta);
+        color: #fff;
+    }
+
+    .muni-panel {
+        background: var(--paper);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--line);
+        padding: 20px 24px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        transition: border-color 0.2s;
+        min-height: 200px;
+    }
+    .muni-panel.is-visible { border-color: var(--terracotta); }
+    .muni-panel .panel-title {
+        font-family: var(--font-display);
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 2px;
+        color: var(--ink);
+    }
+    .muni-panel .panel-sub {
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin-bottom: 14px;
+    }
+    .muni-panel .muni-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        flex: 1;
+        align-content: flex-start;
+    }
+    .muni-panel .muni-list button.muni-chip {
+        border: 1px solid var(--line);
+        background: var(--sand);
+        color: var(--ink);
+        padding: 8px 14px;
+        border-radius: 40px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        font-family: var(--font-body);
+        transition: border-color 0.2s, background 0.2s;
+    }
+    .muni-panel .muni-list button.muni-chip:hover {
+        border-color: var(--turquoise);
+        background: #fff;
+    }
+    .muni-panel .muni-list button.muni-chip.is-active {
+        border-color: var(--terracotta);
+        background: var(--terracotta);
+        color: #fff;
+    }
+    .muni-panel .muni-empty {
+        color: var(--muted);
+        font-size: 0.85rem;
+        width: 100%;
+    }
+
+    /* ===== SECCIÓN RESULTADOS ===== */
+    .section { padding: 64px 0; }
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .section-header h2 {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--ink);
+    }
+    .section-header p { color: var(--muted); margin-top: 4px; font-size: 0.95rem; }
+    .results-counters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 18px;
+        margin-top: 8px;
+        font-size: 0.88rem;
+        color: var(--muted);
+    }
+    .results-counters .counter-item { display: inline-flex; align-items: baseline; gap: 5px; }
+    .results-counters .counter-label { font-weight: 600; color: var(--ink); }
+    .results-counters .counter-value {
+        font-family: var(--font-mono);
+        color: var(--turquoise-dark);
+        font-weight: 600;
+    }
+    .section-header .link {
+        color: var(--turquoise-dark);
+        font-weight: 600;
+        font-size: 0.92rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: gap 0.2s;
+    }
+    .section-header .link:hover { gap: 12px; }
+
+    .results-grid-wrap {
+        background: transparent;
+        padding: 4px 0 0;
+    }
+    .results-grid-wrap .dx-datagrid {
+        font-family: var(--font-body);
+        color: var(--ink);
+        background: transparent;
+    }
+    .results-grid-wrap .dx-datagrid-rowsview {
+        background: transparent;
+    }
+    .results-grid-wrap .dx-datagrid-rowsview .dx-row.result-card-row > td {
+        padding: 0;
+        border: none !important;
+        background: transparent !important;
+    }
+    .results-grid-wrap .dx-pager {
+        font-family: var(--font-mono);
+        margin-top: 8px;
+    }
+    .results-grid-wrap .dx-pager .dx-selection {
+        background-color: var(--terracotta);
+    }
+
+    .result-card {
+        display: flex;
+        align-items: stretch;
+        gap: 20px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        margin: 0 0 14px;
+        cursor: pointer;
+        transition: transform 0.22s, box-shadow 0.22s;
+    }
+    .result-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lift);
+    }
+    .result-card-img {
+        position: relative;
+        flex-shrink: 0;
+        width: 240px;
+        min-height: 160px;
+        background: var(--sand-deep);
+    }
+    .result-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .result-card-img .badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: var(--night);
+        color: #fff;
+        padding: 4px 12px;
+        border-radius: 40px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+    .result-card-body {
+        flex: 1;
+        min-width: 0;
+        padding: 18px 22px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+    }
+    .result-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .result-card-title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--ink);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 60ch;
+    }
+    .result-card-price {
+        font-family: var(--font-mono);
+        font-size: 1.35rem;
+        font-weight: 600;
+        color: var(--ink);
+        white-space: nowrap;
+    }
+    .result-card-location {
+        font-size: 0.88rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .result-card-location i { color: var(--terracotta); }
+    .result-card-offer {
+        font-weight: 700;
+        font-size: 0.92rem;
+        letter-spacing: 0.3px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        width: fit-content;
+    }
+    .result-card-offer i { font-size: 0.8rem; }
+    .result-card-offer.offer-sale { color: var(--terracotta-dark); }
+    .result-card-offer.offer-rent { color: var(--turquoise-dark); }
+    .result-card-offer.offer-swap { color: var(--gold); }
+    .result-card-offer.offer-sale_or_rent { color: #6B4FA0; }
+    .result-card-details {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-top: 6px;
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+    }
+    .result-card-details span { display: flex; align-items: center; gap: 6px; }
+    .result-card-details i { color: #94a3b8; }
+    .empty-state { color: var(--muted); font-size: 0.95rem; }
+
+    @media (max-width: 640px) {
+        .result-card { flex-direction: column; }
+        .result-card-img { width: 100%; min-height: 200px; }
+    }
+
+    /* =========================================================
+       QUICK VIEW
+       ========================================================= */
+    .quickview-popup .dx-popup-content {
+        padding: 0 !important;
+    }
+
+    .quickview-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0;
+        min-height: 500px;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .quickview-col {
+        padding: 24px;
+        overflow-y: auto;
+        max-height: 80vh;
+    }
+
+    .quickview-col:not(:last-child) {
+        border-right: 1px solid var(--linea, #e2e8f0);
+    }
+
+    .quickview-col-property {
+        background: #fff;
+    }
+
+    .quickview-col-property .qv-gallery-main {
+        height: 220px;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #f0f2f5;
+        margin-bottom: 12px;
+    }
+
+    .quickview-col-property .qv-gallery-main img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .quickview-col-property .qv-gallery-thumbs {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        margin-bottom: 14px;
+    }
+
+    .quickview-col-property .qv-gallery-thumbs img {
+        width: 56px;
+        height: 44px;
+        object-fit: cover;
+        border-radius: 6px;
+        cursor: pointer;
+        flex-shrink: 0;
+        border: 2px solid transparent;
+        opacity: 0.6;
+        transition: all 0.2s;
+    }
+
+    .quickview-col-property .qv-gallery-thumbs img:hover,
+    .quickview-col-property .qv-gallery-thumbs img.is-active {
+        opacity: 1;
+        border-color: var(--terracotta, #C1512D);
+    }
+
+    .quickview-col-property .qv-title {
+        font-family: var(--font-display, 'Fraunces', serif);
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--tinta, #1a1a1a);
+        margin-bottom: 4px;
+        line-height: 1.2;
+    }
+
+    .quickview-col-property .qv-price {
+        font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--tinta, #1a1a1a);
+        margin-bottom: 8px;
+    }
+
+    .quickview-col-property .qv-location {
+        font-size: 0.85rem;
+        color: var(--muted, #6b7280);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+
+    .quickview-col-property .qv-location i {
+        color: var(--terracotta, #C1512D);
+    }
+
+    .quickview-col-property .qv-status {
+        display: inline-block;
+        background: var(--night, #0A2E2A);
+        color: #fff;
+        padding: 3px 12px;
+        border-radius: 40px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        margin-bottom: 10px;
+    }
+
+    .quickview-col-property .qv-details {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        font-size: 0.82rem;
+        color: var(--muted, #6b7280);
+        border-top: 1px solid var(--linea, #e2e8f0);
+        border-bottom: 1px solid var(--linea, #e2e8f0);
+        padding: 10px 0;
+        margin-bottom: 12px;
+    }
+
+    .quickview-col-property .qv-details span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .quickview-col-property .qv-details i {
+        color: #94a3b8;
+    }
+
+    .quickview-col-property .qv-amenities {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+    }
+
+    .quickview-col-property .qv-amenities span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.75rem;
+        color: var(--turquoise-dark, #1a7a6e);
+        background: var(--sand, #f5f0ea);
+        border-radius: 40px;
+        padding: 4px 10px;
+    }
+
+    .quickview-col-property .qv-description {
+        font-size: 0.88rem;
+        line-height: 1.5;
+        color: var(--tinta, #1a1a1a);
+        margin-bottom: 14px;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .quickview-col-property .qv-footer {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .quickview-col-property .qv-footer a.btn-full {
+        background: var(--terracotta, #C1512D);
+        color: #fff;
+        border-radius: 8px;
+        padding: 8px 18px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.2s;
+    }
+
+    .quickview-col-property .qv-footer a.btn-full:hover {
+        background: var(--terracotta-dark, #a84326);
+    }
+
+    .quickview-col-map {
+        background: #f8f9fa;
+        padding: 0;
+        position: relative;
+    }
+
+    .quickview-col-map .map-container {
+        width: 100%;
+        height: 100%;
+        min-height: 500px;
+        position: relative;
+    }
+
+    .quickview-col-map .map-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        min-height: 500px;
+        color: var(--muted, #6b7280);
+        font-size: 0.9rem;
+        background: #f8f9fa;
+    }
+
+    .quickview-col-map .map-loading i {
+        margin-right: 10px;
+        color: var(--terracotta, #C1512D);
+        font-size: 1.5rem;
+    }
+
+    .quickview-col-agent {
+        background: #fafaf8;
+    }
+
+    .quickview-col-agent .qv-card-heading {
+        font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--muted, #6b7280);
+        margin-bottom: 14px;
+    }
+
+    .quickview-col-agent .qv-agent-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .quickview-col-agent .qv-agent-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        background: var(--sand-deep, #e8e0d8);
+    }
+
+    .quickview-col-agent .qv-agent-avatar.placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display, 'Fraunces', serif);
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--turquoise-dark, #1a7a6e);
+        background: var(--sand, #f5f0ea);
+    }
+
+    .quickview-col-agent .qv-agent-name {
+        font-family: var(--font-display, 'Fraunces', serif);
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--tinta, #1a1a1a);
+        line-height: 1.2;
+    }
+
+    .quickview-col-agent .qv-agent-type {
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: var(--turquoise-dark, #1a7a6e);
+    }
+
+    .quickview-col-agent .qv-agent-agency {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.82rem;
+        color: var(--muted, #6b7280);
+        margin-bottom: 10px;
+    }
+
+    .quickview-col-agent .qv-agent-agency i {
+        color: var(--terracotta, #C1512D);
+    }
+
+    .quickview-col-agent .qv-agent-bio {
+        font-size: 0.82rem;
+        line-height: 1.5;
+        color: var(--tinta, #1a1a1a);
+        margin-bottom: 12px;
+        white-space: pre-line;
+    }
+
+    .quickview-col-agent .qv-agent-contact {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border-top: 1px solid var(--linea, #e2e8f0);
+        padding-top: 12px;
+    }
+
+    .quickview-col-agent .qv-agent-contact a {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.82rem;
+        color: var(--tinta, #1a1a1a);
+        transition: color 0.15s;
+        word-break: break-word;
+    }
+
+    .quickview-col-agent .qv-agent-contact a:hover {
+        color: var(--terracotta, #C1512D);
+    }
+
+    .quickview-col-agent .qv-agent-contact i {
+        color: var(--terracotta, #C1512D);
+        width: 14px;
+        flex-shrink: 0;
+    }
+
+    .quickview-col-agent .qv-agent-empty {
+        font-size: 0.82rem;
+        color: var(--muted, #6b7280);
+    }
+
+    @media (max-width: 1024px) {
+        .quickview-grid {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+        }
+        .quickview-col-map {
+            grid-column: 1 / 3;
+            grid-row: 2;
+            min-height: 300px;
+        }
+        .quickview-col-map .map-container,
+        .quickview-col-map #qvMap {
+            min-height: 300px;
+        }
+        .quickview-col-map .map-loading {
+            min-height: 300px;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .quickview-grid {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto;
+        }
+        .quickview-col:not(:last-child) {
+            border-right: none;
+            border-bottom: 1px solid var(--linea, #e2e8f0);
+        }
+        .quickview-col-map {
+            grid-column: 1;
+            grid-row: 2;
+            min-height: 250px;
+        }
+        .quickview-col-map .map-container,
+        .quickview-col-map #qvMap {
+            min-height: 250px;
+        }
+        .quickview-col-map .map-loading {
+            min-height: 250px;
+        }
+        .quickview-col-property .qv-gallery-main {
+            height: 180px;
+        }
+    }
+
+    /* ===== RESPONSIVE GENERAL ===== */
+    @media (max-width: 980px) {
+        .hero-top-row { grid-template-columns: 1fr; gap: 20px; }
+        .map-card .province-map-canvas { height: 360px; }
+        .explore-bottom-row { grid-template-columns: 1fr; }
+        .province-list { max-height: 300px; }
+        .muni-panel { min-height: 160px; }
+        .hero h1 { font-size: 2.6rem; }
+    }
+    @media (max-width: 768px) {
+        .hero { padding-top: 20px; }
+        .hero h1 { font-size: 2.2rem; }
+        .hero p.lead { font-size: 1rem; }
+        .hero-stats { flex-wrap: wrap; gap: 20px; }
+        .section { padding: 44px 0; }
+        .section-header h2 { font-size: 1.6rem; }
+        .search-form .fields-row { grid-template-columns: 1fr; }
+        .map-card .province-map-canvas { height: 280px; }
+    }
+    @media (max-width: 480px) {
+        .map-card .province-map-canvas { height: 220px; }
+        .search-tabs button { padding: 6px 14px; font-size: 0.8rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- ===== HERO ===== -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-top-row">
+            <div class="hero-copy">
+                <span class="eyebrow">{% trans "Portal inmobiliario · Cuba" %}</span>
+                <h1>{% trans "Encuentra tu" %} <span class="accent">{% trans "hogar" %}</span> {% trans "en cualquier rincón de la isla" %}</h1>
+                <p class="lead">{% trans "Compra, alquila o permuta propiedades en las 15 provincias cubanas y la Isla de la Juventud. Busca por mapa, filtra por municipio y contacta directo con el propietario." %}</p>
+
+                <div class="hero-stats">
+                    <div class="stat">
+                        <b>15 +1</b>
+                        <span>{% trans "provincias + Isla de la Juventud" %}</span>
+                    </div>
+                    <div class="stat">
+                        <b>168</b>
+                        <span>{% trans "municipios" %}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-form">
+                <div class="search-tabs" id="searchTabs" role="tablist">
+                    <button type="button" class="active" data-offer-type="sale">{% trans "Comprar" %}</button>
+                    <button type="button" data-offer-type="rent">{% trans "Alquilar" %}</button>
+                    <button type="button" data-offer-type="swap">{% trans "Permutar" %}</button>
+                </div>
+
+                <form class="search-form" method="get" action="{% url 'properties:list' %}">
+                    <input type="hidden" name="offer_type" id="offerTypeField" value="sale">
+                    <div class="fields-row">
+                        <div class="field-group">
+                            <label for="province">{% trans "Provincia" %}</label>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <select name="province_id" id="province"
+                                    hx-get="{% url 'properties:get_municipalities' %}"
+                                    hx-target="#municipality"
+                                    hx-trigger="change">
+                                <option value="">{% trans "Toda Cuba" %}</option>
+                                {% for province in provinces %}
+                                    <option value="{{ province.id }}" data-name="{{ province.name }}">{{ province.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label for="municipality">{% trans "Municipio" %}</label>
+                            <i class="fas fa-city"></i>
+                            <select name="municipality_id" id="municipality">
+                                <option value="">{% trans "Todos" %}</option>
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label for="propertyType">{% trans "Tipo" %}</label>
+                            <i class="fas fa-home"></i>
+                            <select name="property_type" id="propertyType">
+                                <option value="">{% trans "Cualquiera" %}</option>
+                                {% for type in property_types %}
+                                    <option value="{{ type.0 }}">{{ type.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label for="maxPrice">{% trans "Precio máx." %}</label>
+                            <i class="fas fa-dollar-sign"></i>
+                            <input type="number" name="max_price" placeholder="{% trans 'Sin límite' %}" id="maxPrice" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-search">
+                        <i class="fas fa-search"></i> {% trans "Buscar propiedades" %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="map-card">
+            <div class="province-map" data-map-id="cubaMapLarge">
+                <div id="cubaMapLarge" class="province-map-canvas"></div>
+            </div>
+            <div class="map-hint">
+                <i class="fas fa-hand-pointer"></i>
+                {% trans "Selecciona una provincia en el mapa para ver sus municipios y propiedades disponibles" %}
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="explore-bottom-row">
+            <div class="province-list" id="cubaMapLargeList">
+                <div class="province-list-head">
+                    <i class="fas fa-map"></i> {% trans "Provincias" %}
+                </div>
+                <div class="province-list-items">
+                    {% for province in provinces_with_counts %}
+                        <button class="province-item" data-province-name="{{ province.name }}" type="button">
+                            <span class="icon"><i class="fas fa-map-pin"></i></span>
+                            <span class="info">
+                                <span class="name">{{ province.name }}</span>
+                                <span class="count">{{ province.count|default:0 }} {% trans "propiedades" %}</span>
+                            </span>
+                            <span class="badge-count">{{ province.count|default:0 }}</span>
+                        </button>
+                    {% empty %}
+                        <p class="muni-empty" style="padding:12px;">{% trans "No hay provincias disponibles." %}</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="muni-panel" id="muniPanel">
+                <div class="panel-title" id="panelProvinceName">—</div>
+                <p class="panel-sub" id="panelProvinceCount">—</p>
+                <div class="muni-list" id="panelMuniList">
+                    <span class="muni-empty">{% trans "Selecciona una provincia para ver sus municipios" %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== PROPIEDADES DESTACADAS ===== -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <div>
+                <h2>{% trans "Resultados" %}</h2>
+                <p class="results-counters">
+                    <span class="counter-item"><span class="counter-label">{% trans "Venta:" %}</span> <span class="counter-value" id="counterSale">{{ sale_count|default:0 }}</span></span>
+                    <span class="counter-item"><span class="counter-label">{% trans "Alquiler:" %}</span> <span class="counter-value" id="counterRent">{{ rent_count|default:0 }}</span></span>
+                    <span class="counter-item"><span class="counter-label">{% trans "Permuta:" %}</span> <span class="counter-value" id="counterSwap">{{ swap_count|default:0 }}</span></span>
+                    <span class="counter-item"><span class="counter-label">{% trans "Provincia:" %}</span> <span class="counter-value" id="counterProvince">{% trans "Toda Cuba" %}</span></span>
+                    <span class="counter-item"><span class="counter-label">{% trans "Municipio:" %}</span> <span class="counter-value" id="counterMunicipality">{% trans "Todos" %}</span></span>
+                </p>
+            </div>
+            <a href="{% url 'properties:list' %}" class="link">{% trans "Ver todas" %} <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="results-grid-wrap">
+            <div id="resultsGrid"></div>
+        </div>
+
+        <div id="propertyQuickView"></div>
+    </div>
+</section>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdn3.devexpress.com/jslib/22.1.7/js/dx.all.js"></script>
+<script>
+    (function() {
+        /* ---- Tabs de operación ---- */
+        const tabs = document.querySelectorAll('#searchTabs button');
+        const offerTypeField = document.getElementById('offerTypeField');
+        tabs.forEach(btn => {
+            btn.addEventListener('click', function() {
+                tabs.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                offerTypeField.value = this.dataset.offerType;
+                offerTypeField.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        });
+
+        /* ---- Datos de provincias ---- */
+        window.CU2HOME_PROVINCES = {
+            {% for province in provinces %}"{{ province.name|escapejs }}": {{ province.id }}{% if not forloop.last %},{% endif %}{% endfor %}
+        };
+        window.CU2HOME_COUNTS = {
+            {% for province in provinces_with_counts %}"{{ province.name|escapejs }}": {{ province.count|default:0 }}{% if not forloop.last %},{% endif %}{% endfor %}
+        };
+        const MUNICIPALITIES_URL = "{% url 'properties:get_municipalities' %}";
+
+        function normalize(str) {
+            return (str || '')
+                .toString()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .trim();
+        }
+
+        function resolveProvinceId(name) {
+            const target = normalize(name);
+            for (const key in window.CU2HOME_PROVINCES) {
+                if (normalize(key) === target) return window.CU2HOME_PROVINCES[key];
+            }
+            return null;
+        }
+
+        function resolveCount(name) {
+            const target = normalize(name);
+            for (const key in window.CU2HOME_COUNTS) {
+                if (normalize(key) === target) return window.CU2HOME_COUNTS[key];
+            }
+            return null;
+        }
+
+        const provinceSelect = document.getElementById('province');
+        const muniPanel = document.getElementById('muniPanel');
+        const panelName = document.getElementById('panelProvinceName');
+        const panelCount = document.getElementById('panelProvinceCount');
+        const panelMuniList = document.getElementById('panelMuniList');
+
+        /* ---- Grid de resultados ---- */
+        const RESULTS_JSON_URL = "{% url 'properties:results_json' %}";
+        const QUICK_VIEW_JSON_URL_TEMPLATE = "{% url 'properties:quick_view_json' pk=0 %}";
+        function propertyQuickViewJsonUrl(pk) {
+            return QUICK_VIEW_JSON_URL_TEMPLATE.replace('/0/', '/' + encodeURIComponent(pk) + '/');
+        }
+        const municipalitySelect = document.getElementById('municipality');
+        const propertyTypeSelect = document.getElementById('propertyType');
+        const maxPriceInput = document.getElementById('maxPrice');
+
+        const CURRENCY_SYMBOL = "{{ currency_symbol|default:'$' }}";
+        const CURRENCY_DECIMAL_PLACES = {{ currency_decimal_places|default:2 }};
+        const CURRENCY_THOUSANDS_SEP = "{{ currency_thousands_sep|default:'.' }}";
+        const CURRENCY_DECIMAL_SEP = "{{ currency_decimal_sep|default:',' }}";
+        const CURRENCY_SYMBOL_POSITION = "{{ currency_symbol_position|default:'before_attached' }}";
+
+        function formatPrice(value) {
+            if (value == null || value === '') return '—';
+            const fixed = Number(value).toFixed(CURRENCY_DECIMAL_PLACES);
+            const [intPart, decPart] = fixed.split('.');
+            const intWithThousands = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, CURRENCY_THOUSANDS_SEP);
+            const numberStr = CURRENCY_DECIMAL_PLACES > 0
+                ? intWithThousands + CURRENCY_DECIMAL_SEP + decPart
+                : intWithThousands;
+
+            switch (CURRENCY_SYMBOL_POSITION) {
+                case 'before_spaced': return CURRENCY_SYMBOL + ' ' + numberStr;
+                case 'after_spaced': return numberStr + ' ' + CURRENCY_SYMBOL;
+                case 'before_attached':
+                default: return CURRENCY_SYMBOL + numberStr;
+            }
+        }
+
+        // El campo 'price' que devuelve property_results_json es un número
+        // para 'sale'/'rent'/'swap', pero un objeto {sale, rent} cuando la
+        // modalidad es 'sale_or_rent'. Usamos sale_price/rent_price
+        // (siempre presentes y siempre numéricos) para evitar mostrar
+        // "$NaN" cuando el precio combinado no es un número simple.
+        function resultCardPriceText(data) {
+            if (data.offer_type === 'sale_or_rent') {
+                const parts = [];
+                if (data.sale_price != null) parts.push(formatPrice(data.sale_price));
+                if (data.rent_price != null) parts.push(formatPrice(data.rent_price) + '{% trans "/mes" %}');
+                return parts.length ? parts.join('  ·  ') : '—';
+            }
+            if (data.offer_type === 'rent') {
+                return data.rent_price != null
+                    ? formatPrice(data.rent_price) + '{% trans "/mes" %}'
+                    : formatPrice(data.price);
+            }
+            if (data.offer_type === 'swap') {
+                return data.sale_price != null ? formatPrice(data.sale_price) : '{% trans "A convenir" %}';
+            }
+            return formatPrice(data.sale_price != null ? data.sale_price : data.price);
+        }
+
+        function currentResultsFilterParams() {
+            const params = new URLSearchParams();
+            if (provinceSelect.value) params.set('province_id', provinceSelect.value);
+            if (municipalitySelect.value) params.set('municipality_id', municipalitySelect.value);
+            if (propertyTypeSelect.value) params.set('property_type', propertyTypeSelect.value);
+            if (maxPriceInput.value) params.set('max_price', maxPriceInput.value);
+            if (offerTypeField.value) params.set('offer_type', offerTypeField.value);
+            return params;
+        }
+
+        const resultsStore = new DevExpress.data.CustomStore({
+            key: 'id',
+            load: function(loadOptions) {
+                const params = currentResultsFilterParams();
+                params.set('skip', loadOptions.skip || 0);
+                params.set('take', loadOptions.take || 12);
+                return fetch(RESULTS_JSON_URL + '?' + params.toString())
+                    .then(function(response) { return response.json(); })
+                    .then(function(json) {
+                        return { data: json.data, totalCount: json.totalCount };
+                    })
+                    .catch(function() {
+                        return { data: [], totalCount: 0 };
+                    });
+            },
+        });
+
+        /* ---- Quick View ---- */
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str == null ? '' : String(str);
+            return div.innerHTML;
+        }
+
+        const quickViewPopup = new DevExpress.ui.dxPopup(document.getElementById('propertyQuickView'), {
+            width: 'min(1200px, 95vw)',
+            height: 'auto',
+            maxHeight: '90vh',
+            showTitle: true,
+            title: '',
+            dragEnabled: false,
+            hideOnOutsideClick: true,
+            showCloseButton: true,
+            contentTemplate: function() {
+                const el = document.createElement('div');
+                el.id = 'qvContent';
+                el.className = 'qv-loading';
+                el.textContent = "{% trans 'Cargando detalle…' %}";
+                return el;
+            },
+        });
+
+        function initQuickViewMap(container) {
+            if (!container || typeof L === 'undefined') {
+                console.warn('Leaflet no disponible');
+                return;
+            }
+
+            const lat = parseFloat(container.dataset.lat) || 21.5;
+            const lng = parseFloat(container.dataset.lng) || -79.5;
+            const municipio = container.dataset.municipio || '';
+            const provincia = container.dataset.provincia || '';
+
+            if (isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) {
+                container.innerHTML = '<div class="map-loading"><i class="fas fa-map-marker-alt"></i> Ubicación no disponible</div>';
+                return;
+            }
+
+            try {
+                container.innerHTML = '';
+                const map = L.map(container, {
+                    center: [lat, lng],
+                    zoom: 9,
+                    zoomControl: true,
+                    attributionControl: false,
+                    scrollWheelZoom: true,
+                    doubleClickZoom: true,
+                    boxZoom: true,
+                    touchZoom: true,
+                    fadeAnimation: true,
+                    zoomAnimation: true
+                });
+
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; CartoDB',
+                    maxZoom: 19,
+                    minZoom: 6
+                }).addTo(map);
+
+                const fallbackLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                    maxZoom: 19,
+                    minZoom: 6
+                });
+
+                setTimeout(function() {
+                    map.addLayer(fallbackLayer);
+                }, 1000);
+
+                const cubaBounds = L.latLngBounds(
+                    L.latLng(19.5, -85.5),
+                    L.latLng(23.5, -73.5)
+                );
+                map.setMaxBounds(cubaBounds);
+                map.setMinZoom(6);
+                map.setMaxZoom(18);
+
+                const icon = L.divIcon({
+                    className: 'popup-pin',
+                    html: `<div style="background:#C1512D;width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 4px 15px rgba(193,81,45,0.5);display:flex;align-items:center;justify-content:center;"><span style="transform:rotate(45deg);font-size:14px;color:white;">🏠</span></div>`,
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 32]
+                });
+
+                const marker = L.marker([lat, lng], { icon: icon }).addTo(map);
+
+                let popupText = '';
+                if (municipio) {
+                    popupText += `<strong style="color:#C1512D;">📍 ${municipio}</strong>`;
+                    if (provincia) {
+                        popupText += `<br><span style="font-size:0.85rem;color:#666;">${provincia}</span>`;
+                    }
+                } else if (provincia) {
+                    popupText += `<strong style="color:#C1512D;">📍 ${provincia}</strong>`;
+                }
+                
+                if (popupText) {
+                    marker.bindPopup(popupText, { maxWidth: 200, className: 'custom-popup' }).openPopup();
+                }
+
+                L.circle([lat, lng], {
+                    color: '#C1512D',
+                    fillColor: '#C1512D',
+                    fillOpacity: 0.08,
+                    weight: 2,
+                    opacity: 0.3,
+                    radius: 8000
+                }).addTo(map);
+
+                setTimeout(function() {
+                    map.invalidateSize();
+                    map.setView([lat, lng], 9);
+                }, 300);
+
+                let resizeTimeout;
+                window.addEventListener('resize', function() {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(function() {
+                        map.invalidateSize();
+                    }, 200);
+                });
+
+                container._leafletMap = map;
+                console.log('✅ Mapa del quick view inicializado para:', municipio || provincia);
+
+            } catch (error) {
+                console.error('❌ Error:', error);
+                container.innerHTML = '<div class="map-loading"><i class="fas fa-exclamation-triangle"></i> Error al cargar el mapa</div>';
+            }
+        }
+
+        function renderQuickViewGallery(images) {
+            const wrap = document.createElement('div');
+            const main = document.createElement('div');
+            main.className = 'qv-gallery-main';
+            const mainImg = document.createElement('img');
+            const cover = images.find(function(img) { return img.is_cover; }) || images[0];
+            mainImg.src = cover.url;
+            mainImg.alt = '';
+            main.append(mainImg);
+            wrap.append(main);
+
+            if (images.length > 1) {
+                const thumbs = document.createElement('div');
+                thumbs.className = 'qv-gallery-thumbs';
+                images.forEach(function(img, idx) {
+                    const t = document.createElement('img');
+                    t.src = img.url;
+                    if (img === cover) t.classList.add('is-active');
+                    t.addEventListener('click', function() {
+                        mainImg.src = img.url;
+                        thumbs.querySelectorAll('img').forEach(function(x) { x.classList.remove('is-active'); });
+                        t.classList.add('is-active');
+                    });
+                    thumbs.append(t);
+                });
+                wrap.append(thumbs);
+            }
+            return wrap;
+        }
+
+        function renderQuickViewAmenities(data) {
+            const amenities = [
+                [data.has_elevator, 'fa-arrow-up-long', "Ascensor"],
+                [data.has_heating, 'fa-fire', "Calefacción"],
+                [data.has_air_conditioning, 'fa-snowflake', "Aire acondicionado"],
+            ].filter(function(item) { return item[0]; });
+
+            if (!amenities.length) return null;
+            const wrap = document.createElement('div');
+            wrap.className = 'qv-amenities';
+            amenities.forEach(function(item) {
+                const span = document.createElement('span');
+                span.innerHTML = '<i class="fas ' + item[1] + '"></i> ' + escapeHtml(item[2]);
+                wrap.append(span);
+            });
+            return wrap;
+        }
+
+        function renderAgentCard(agent) {
+            const card = document.createElement('div');
+
+            const heading = document.createElement('div');
+            heading.className = 'qv-card-heading';
+            heading.textContent = "Publicado por";
+            card.append(heading);
+
+            if (!agent) {
+                const empty = document.createElement('p');
+                empty.className = 'qv-agent-empty';
+                empty.textContent = "Anuncio publicado por el equipo de cu2home.";
+                card.append(empty);
+                return card;
+            }
+
+            const header = document.createElement('div');
+            header.className = 'qv-agent-header';
+
+            const avatar = document.createElement(agent.avatar_url ? 'img' : 'div');
+            if (agent.avatar_url) {
+                avatar.className = 'qv-agent-avatar';
+                avatar.src = agent.avatar_url;
+                avatar.alt = agent.name || '';
+            } else {
+                avatar.className = 'qv-agent-avatar placeholder';
+                avatar.textContent = (agent.name || '?').trim().charAt(0).toUpperCase();
+            }
+            header.append(avatar);
+
+            const identity = document.createElement('div');
+            const name = document.createElement('div');
+            name.className = 'qv-agent-name';
+            name.textContent = agent.name || "Usuario de cu2home";
+            identity.append(name);
+            if (agent.user_type_display) {
+                const type = document.createElement('div');
+                type.className = 'qv-agent-type';
+                type.textContent = agent.user_type_display;
+                identity.append(type);
+            }
+            header.append(identity);
+            card.append(header);
+
+            if (agent.agency_name) {
+                const agency = document.createElement('div');
+                agency.className = 'qv-agent-agency';
+                agency.innerHTML = '<i class="fas fa-building"></i> ' + escapeHtml(agent.agency_name);
+                card.append(agency);
+            }
+
+            if (agent.bio) {
+                const bio = document.createElement('p');
+                bio.className = 'qv-agent-bio';
+                bio.textContent = agent.bio;
+                card.append(bio);
+            }
+
+            const contact = document.createElement('div');
+            contact.className = 'qv-agent-contact';
+            if (agent.phone) {
+                const tel = document.createElement('a');
+                tel.href = 'tel:' + agent.phone.replace(/\s+/g, '');
+                tel.innerHTML = '<i class="fas fa-phone"></i> ' + escapeHtml(agent.phone);
+                contact.append(tel);
+            }
+            if (agent.email) {
+                const mail = document.createElement('a');
+                mail.href = 'mailto:' + agent.email;
+                mail.innerHTML = '<i class="fas fa-envelope"></i> ' + escapeHtml(agent.email);
+                contact.append(mail);
+            }
+            if (contact.children.length) card.append(contact);
+
+            return card;
+        }
+
+        function buildQuickViewContent(data) {
+            const grid = document.createElement('div');
+            grid.className = 'quickview-grid';
+
+            const colProperty = document.createElement('div');
+            colProperty.className = 'quickview-col quickview-col-property';
+
+            const gallery = renderQuickViewGallery(data.images);
+            colProperty.append(gallery);
+
+            if (data.status) {
+                const status = document.createElement('span');
+                status.className = 'qv-status';
+                status.textContent = data.status;
+                colProperty.append(status);
+            }
+
+            const title = document.createElement('div');
+            title.className = 'qv-title';
+            title.textContent = data.title || '';
+            colProperty.append(title);
+
+            const price = document.createElement('div');
+            price.className = 'qv-price';
+            price.textContent = formatPrice(data.display_price || data.price);
+            colProperty.append(price);
+
+            const location = document.createElement('div');
+            location.className = 'qv-location';
+            const locParts = [data.address, data.city, data.municipality, data.province].filter(Boolean);
+            location.innerHTML = '<i class="fas fa-map-pin"></i> ' + escapeHtml(locParts.join(', '));
+            colProperty.append(location);
+
+            const details = document.createElement('div');
+            details.className = 'qv-details';
+            const detailItems = [
+                ['fa-home', data.property_type || '—'],
+                ['fa-bed', (data.rooms != null ? data.rooms : '—') + ' hab.'],
+                ['fa-bath', (data.bathrooms != null ? data.bathrooms : '—') + ' baños'],
+                ['fa-vector-square', (data.surface != null ? data.surface : '—') + ' m²'],
+                ['fa-eye', (data.views_count != null ? data.views_count : 0) + ' vistas'],
+            ];
+            detailItems.forEach(function(item) {
+                const span = document.createElement('span');
+                span.innerHTML = '<i class="fas ' + item[0] + '"></i> ' + escapeHtml(item[1]);
+                details.append(span);
+            });
+            colProperty.append(details);
+
+            const amenities = renderQuickViewAmenities(data);
+            if (amenities) colProperty.append(amenities);
+
+            if (data.description) {
+                const desc = document.createElement('p');
+                desc.className = 'qv-description';
+                desc.textContent = data.description;
+                colProperty.append(desc);
+            }
+
+            const footer = document.createElement('div');
+            footer.className = 'qv-footer';
+            const link = document.createElement('a');
+            link.className = 'btn-full';
+            link.href = data.detail_url;
+            link.innerHTML = '<i class="fas fa-arrow-right"></i> Ver ficha completa';
+            footer.append(link);
+            colProperty.append(footer);
+
+            grid.append(colProperty);
+
+            const colMap = document.createElement('div');
+            colMap.className = 'quickview-col quickview-col-map';
+
+            const mapContainer = document.createElement('div');
+            mapContainer.className = 'map-container';
+            mapContainer.id = 'qvMap-' + data.id;
+
+            if (data.municipality_latitude && data.municipality_longitude) {
+                mapContainer.dataset.lat = data.municipality_latitude;
+                mapContainer.dataset.lng = data.municipality_longitude;
+                mapContainer.dataset.municipio = data.municipality || '';
+                mapContainer.dataset.provincia = data.province || '';
+                mapContainer.innerHTML = '<div class="map-loading"><i class="fas fa-spinner fa-spin"></i> Cargando mapa...</div>';
+                
+                setTimeout(function() {
+                    initQuickViewMap(mapContainer);
+                }, 200);
+            } else {
+                mapContainer.innerHTML = '<div class="map-loading"><i class="fas fa-map-marker-alt"></i> Ubicación no disponible</div>';
+            }
+
+            colMap.append(mapContainer);
+            grid.append(colMap);
+
+            const colAgent = document.createElement('div');
+            colAgent.className = 'quickview-col quickview-col-agent';
+            colAgent.append(renderAgentCard(data.agent));
+            grid.append(colAgent);
+
+            return grid;
+        }
+
+        function openPropertyQuickView(cardData) {
+            quickViewPopup.option('title', cardData.title || '');
+            quickViewPopup.show();
+
+            fetch(propertyQuickViewJsonUrl(cardData.id))
+                .then(function(response) {
+                    if (!response.ok) throw new Error('quick view fetch failed');
+                    return response.json();
+                })
+                .then(function(data) {
+                    const content = quickViewPopup.content();
+                    content.innerHTML = '';
+                    content.append(buildQuickViewContent(data));
+                })
+                .catch(function() {
+                    const content = quickViewPopup.content();
+                    content.innerHTML = '';
+                    const err = document.createElement('div');
+                    err.className = 'qv-error';
+                    err.textContent = "No se pudo cargar el detalle de esta propiedad.";
+                    content.append(err);
+                });
+        }
+
+        let cardClickTimer = null;
+        const CARD_CLICK_DELAY_MS = 250;
+        function handleCardActivation(data) {
+            if (cardClickTimer) {
+                clearTimeout(cardClickTimer);
+                cardClickTimer = null;
+                openPropertyQuickView(data);
+                return;
+            }
+            cardClickTimer = setTimeout(function() {
+                cardClickTimer = null;
+                if (data.detail_url) window.location.href = data.detail_url;
+            }, CARD_CLICK_DELAY_MS);
+        }
+
+        function buildResultCard(data) {
+            const card = document.createElement('div');
+            card.className = 'result-card';
+
+            const imgWrap = document.createElement('div');
+            imgWrap.className = 'result-card-img';
+            const img = document.createElement('img');
+            img.src = data.image_url;
+            img.alt = data.title || '';
+            img.loading = 'lazy';
+            imgWrap.append(img);
+            if (data.status) {
+                const badge = document.createElement('span');
+                badge.className = 'badge';
+                badge.textContent = data.status;
+                imgWrap.append(badge);
+            }
+            card.append(imgWrap);
+
+            const body = document.createElement('div');
+            body.className = 'result-card-body';
+
+            const top = document.createElement('div');
+            top.className = 'result-card-top';
+            const title = document.createElement('span');
+            title.className = 'result-card-title';
+            title.textContent = data.title || '';
+            const price = document.createElement('span');
+            price.className = 'result-card-price';
+            price.textContent = resultCardPriceText(data);
+            top.append(title, price);
+            body.append(top);
+
+            const location = document.createElement('div');
+            location.className = 'result-card-location';
+            const locationIcon = document.createElement('i');
+            locationIcon.className = 'fas fa-map-pin';
+            location.append(locationIcon, ' ' + [data.city, data.province].filter(Boolean).join(', '));
+            body.append(location);
+
+            if (data.offer_type) {
+                const OFFER_ICONS = {
+                    sale: 'fa-tag',
+                    rent: 'fa-key',
+                    swap: 'fa-repeat',
+                    sale_or_rent: 'fa-handshake',
+                };
+                const offerLabel = document.createElement('div');
+                offerLabel.className = 'result-card-offer offer-' + data.offer_type;
+                const offerIcon = document.createElement('i');
+                offerIcon.className = 'fas ' + (OFFER_ICONS[data.offer_type] || 'fa-tag');
+                offerLabel.append(offerIcon, ' ' + (data.offer_type_display || ''));
+                body.append(offerLabel);
+            }
+
+            const details = document.createElement('div');
+            details.className = 'result-card-details';
+            const detailItems = [
+                ['fa-home', data.property_type || '—'],
+                ['fa-bed', data.rooms != null ? data.rooms : '—'],
+                ['fa-bath', data.bathrooms != null ? data.bathrooms : '—'],
+                ['fa-vector-square', (data.surface != null ? data.surface : '—') + ' m²'],
+            ];
+            detailItems.forEach(function(item) {
+                const span = document.createElement('span');
+                const icon = document.createElement('i');
+                icon.className = 'fas ' + item[0];
+                span.append(icon, ' ' + item[1]);
+                details.append(span);
+            });
+            body.append(details);
+
+            card.append(body);
+            card.addEventListener('click', function() {
+                handleCardActivation(data);
+            });
+            return card;
+        }
+
+        const resultsGrid = new DevExpress.ui.dxDataGrid(document.getElementById('resultsGrid'), {
+            dataSource: resultsStore,
+            remoteOperations: { paging: true },
+            height: 'auto',
+            showBorders: false,
+            showColumnHeaders: false,
+            rowAlternationEnabled: false,
+            columnAutoWidth: true,
+            noDataText: "No hay propiedades que coincidan con los filtros seleccionados.",
+            loadPanel: { enabled: true },
+            paging: { pageSize: 12 },
+            pager: {
+                showPageSizeSelector: false,
+                showNavigationButtons: true,
+                showInfo: true,
+                visible: true,
+            },
+            columns: [
+                { dataField: 'image_url' },
+                { dataField: 'price', dataType: 'number' },
+                { dataField: 'city' },
+                { dataField: 'property_type' },
+                { dataField: 'rooms' },
+                { dataField: 'surface', dataType: 'number' },
+            ],
+            dataRowTemplate: function(container, item) {
+                const tr = document.createElement('tr');
+                tr.className = 'result-card-row';
+                const td = document.createElement('td');
+                td.colSpan = item.columns.length;
+                td.append(buildResultCard(item.data));
+                tr.append(td);
+                container.append(tr);
+            },
+        });
+
+        function reloadResultsGrid() {
+            resultsGrid.getDataSource().reload();
+        }
+
+        /* ---- Contadores de Resultados (Venta / Alquiler / Permuta / Provincia / Municipio) ---- */
+        function fetchOfferTypeCount(offerType) {
+            const params = currentResultsFilterParams();
+            params.set('offer_type', offerType);
+            params.set('take', 1);
+            return fetch(RESULTS_JSON_URL + '?' + params.toString())
+                .then(function(response) { return response.json(); })
+                .then(function(json) { return json.totalCount || 0; })
+                .catch(function() { return 0; });
+        }
+
+        function refreshOfferTypeCounters() {
+            const counterSale = document.getElementById('counterSale');
+            const counterRent = document.getElementById('counterRent');
+            const counterSwap = document.getElementById('counterSwap');
+            if (!counterSale || !counterRent || !counterSwap) return;
+
+            Promise.all([
+                fetchOfferTypeCount('sale'),
+                fetchOfferTypeCount('rent'),
+                fetchOfferTypeCount('swap'),
+            ]).then(function(counts) {
+                counterSale.textContent = counts[0];
+                counterRent.textContent = counts[1];
+                counterSwap.textContent = counts[2];
+            });
+        }
+
+        // Mantiene 'Provincia:' y 'Municipio:' junto a "Resultados" siempre
+        // en sincronía con lo seleccionado en el buscador del hero.
+        function syncLocationCounters() {
+            const counterProvince = document.getElementById('counterProvince');
+            const counterMunicipality = document.getElementById('counterMunicipality');
+            if (counterProvince && provinceSelect.selectedIndex >= 0) {
+                counterProvince.textContent = provinceSelect.options[provinceSelect.selectedIndex].text;
+            }
+            if (counterMunicipality && municipalitySelect.selectedIndex >= 0) {
+                counterMunicipality.textContent = municipalitySelect.options[municipalitySelect.selectedIndex].text;
+            }
+        }
+
+        function refreshResultsCounters() {
+            refreshOfferTypeCounters();
+            syncLocationCounters();
+        }
+
+        [provinceSelect, municipalitySelect, propertyTypeSelect, maxPriceInput, offerTypeField].forEach(function(el) {
+            el.addEventListener('change', reloadResultsGrid);
+            el.addEventListener('change', refreshResultsCounters);
+        });
+
+        // El select de municipio se repuebla vía htmx cuando cambia la
+        // provincia; re-sincronizamos tras el swap para no quedarnos con
+        // el texto de la opción anterior.
+        document.body.addEventListener('htmx:afterSwap', function(evt) {
+            if (evt.target && evt.target.id === 'municipality') {
+                syncLocationCounters();
+            }
+        });
+
+        refreshResultsCounters();
+
+        function selectOnHeroForm(name, id) {
+            if (id === null) return;
+            if (provinceSelect.value === String(id)) return;
+            provinceSelect.value = String(id);
+            provinceSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        function syncMuniChipActiveState() {
+            const current = municipalitySelect.value;
+            panelMuniList.querySelectorAll('.muni-chip').forEach(function(chip) {
+                chip.classList.toggle('is-active', chip.dataset.muniId === current);
+            });
+        }
+        municipalitySelect.addEventListener('change', syncMuniChipActiveState);
+
+        function selectMunicipioEverywhere(id, name) {
+            const idStr = String(id);
+            if (!municipalitySelect.querySelector('option[value="' + idStr + '"]')) {
+                const opt = document.createElement('option');
+                opt.value = idStr;
+                opt.textContent = name || idStr;
+                municipalitySelect.appendChild(opt);
+            }
+            if (municipalitySelect.value === idStr) {
+                syncMuniChipActiveState();
+                return;
+            }
+            municipalitySelect.value = idStr;
+            municipalitySelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        function loadMunicipiosPanel(name) {
+            if (muniPanel.classList.contains('is-visible') && panelName.textContent === name) {
+                return; // ya está mostrando esta provincia, evita fetch duplicado
+            }
+
+            const id = resolveProvinceId(name);
+            const count = resolveCount(name);
+
+            muniPanel.classList.add('is-visible');
+            panelName.textContent = name;
+            panelCount.textContent = (count !== null)
+                ? count + " propiedades disponibles"
+                : "Sin datos de propiedades todavía";
+            panelMuniList.innerHTML = '<span class="muni-empty">Cargando municipios…</span>';
+
+            if (id === null) {
+                panelMuniList.innerHTML = '<span class="muni-empty">Esta provincia todavía no tiene municipios cargados.</span>';
+                return;
+            }
+
+            fetch(MUNICIPALITIES_URL + '?province_id=' + encodeURIComponent(id), {
+                headers: { 'HX-Request': 'true' }
+            })
+                .then(r => r.text())
+                .then(html => {
+                    const tmp = document.createElement('div');
+                    tmp.innerHTML = html;
+                    const options = tmp.querySelectorAll('option[value]:not([value=""])');
+                    if (!options.length) {
+                        panelMuniList.innerHTML = '<span class="muni-empty">No hay municipios registrados para esta provincia.</span>';
+                        return;
+                    }
+                    panelMuniList.innerHTML = '';
+                    options.forEach(opt => {
+                        const chip = document.createElement('button');
+                        chip.type = 'button';
+                        chip.className = 'muni-chip';
+                        chip.dataset.muniId = opt.value;
+                        chip.textContent = opt.textContent.trim();
+                        chip.classList.toggle('is-active', municipalitySelect.value === opt.value);
+                        chip.addEventListener('click', () => selectMunicipioEverywhere(opt.value, opt.textContent.trim()));
+                        panelMuniList.appendChild(chip);
+                    });
+                })
+                .catch(() => {
+                    panelMuniList.innerHTML = '<span class="muni-empty">No se pudieron cargar los municipios.</span>';
+                });
+        }
+
+        /* ---- Mapa de provincias ---- */
+        const GEOJSON_URL = "{% static 'core/data/cuba_provincias.geojson' %}";
+        const mapInstances = [];
+        let activeName = null;
+
+        function setActiveEverywhere(name) {
+            activeName = name;
+            mapInstances.forEach(inst => {
+                Object.entries(inst.layers).forEach(([key, layer]) => {
+                    const isActive = key === normalize(name);
+                    const el = layer.getElement && layer.getElement();
+                    if (el) el.classList.toggle('is-active', isActive);
+                    if (isActive && layer.bringToFront) layer.bringToFront();
+                });
+                if (inst.listEl) {
+                    inst.listEl.querySelectorAll('.province-item').forEach(item => {
+                        item.classList.toggle('is-active', normalize(item.dataset.provinceName) === normalize(name));
+                    });
+                }
+                if (inst.captionEl) inst.captionEl.textContent = name;
+            });
+        }
+
+        function activateProvince(name) {
+            if (!name) return;
+            setActiveEverywhere(name);
+            selectOnHeroForm(name, resolveProvinceId(name));
+            loadMunicipiosPanel(name);
+        }
+
+        function buildProvinceMap(container, geojson) {
+            const canvasId = container.dataset.mapId;
+            const canvas = document.getElementById(canvasId);
+            if (!canvas || typeof L === 'undefined') return;
+
+            const map = L.map(canvas, {
+                zoomControl: false,
+                attributionControl: false,
+                dragging: false,
+                scrollWheelZoom: false,
+                doubleClickZoom: false,
+                boxZoom: false,
+                touchZoom: false,
+                keyboard: false,
+            });
+
+            const layers = {};
+            const geoLayer = L.geoJSON(geojson, {
+                className: 'province-shape',
+                style: () => ({ className: 'province-shape', weight: 1.5, fillOpacity: 1, opacity: 1 }),
+                onEachFeature: (feature, layer) => {
+                    const name = feature.properties.name;
+                    layers[normalize(name)] = layer;
+                    layer.bindTooltip(name, { sticky: true, direction: 'top', className: 'province-tooltip' });
+                    layer.on('click', () => activateProvince(name));
+                    layer.on('add', () => {
+                        const el = layer.getElement();
+                        if (!el) return;
+                        el.classList.add('province-shape');
+                        el.setAttribute('tabindex', '0');
+                        el.setAttribute('role', 'button');
+                        el.setAttribute('aria-label', name);
+                        el.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                activateProvince(name);
+                            }
+                        });
+                    });
+                }
+            }).addTo(map);
+
+            const bounds = geoLayer.getBounds();
+            map.fitBounds(bounds, { padding: [6, 6] });
+            map.setMaxBounds(bounds.pad(0.08));
+
+            const listEl = document.getElementById(canvasId + 'List');
+            if (listEl) {
+                listEl.querySelectorAll('.province-item').forEach(item => {
+                    item.addEventListener('click', () => activateProvince(item.dataset.provinceName));
+                });
+            }
+
+            mapInstances.push({
+                layers,
+                listEl,
+                captionEl: document.getElementById(canvasId + 'Selection'),
+                container,
+            });
+        }
+
+        fetch(GEOJSON_URL)
+            .then(r => r.json())
+            .then(geojson => {
+                document.querySelectorAll('.province-map').forEach(container => buildProvinceMap(container, geojson));
+                if (activeName) setActiveEverywhere(activeName);
+            })
+            .catch(() => {
+                document.querySelectorAll('.province-map-canvas').forEach(canvas => {
+                    canvas.insertAdjacentHTML('afterbegin', '<p class="muni-empty" style="padding:16px;">No se pudo cargar el mapa.</p>');
+                });
+            });
+
+        provinceSelect.addEventListener('change', function() {
+            const selected = this.options[this.selectedIndex];
+            const name = selected ? selected.dataset.name : null;
+            if (name) {
+                setActiveEverywhere(name);
+                loadMunicipiosPanel(name);
+            } else {
+                activeName = null;
+                muniPanel.classList.remove('is-visible');
+            }
+        });
+    })();
+</script>
+{% endblock %}
+
+{% block footer %}
+<footer style="background: linear-gradient(135deg, #0A2E2A 0%, #A8D5BA 100%); color: rgba(255,255,255,0.65); padding: 14px 24px; flex-shrink: 0; border-top: 1px solid rgba(225,91,51,0.22); box-shadow: none;">
+    <div style="max-width:1280px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-family:var(--font-display); font-size:1.1rem; font-weight:700; color:#fff;">cu2home<span style="color:var(--terracotta);">.</span></span>
+        </div>
+        <p style="font-size:0.7rem; color:rgba(255,255,255,0.4);">&copy; {% now "Y" %} {{ site_name|default:"cu2home" }}</p>
+    </div>
+</footer>
+{% endblock %}
