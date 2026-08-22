@@ -47,8 +47,6 @@ def _filtered_properties(request):
             ).distinct()
 
         # === UBICACIÓN ===
-        if data.get('city'):
-            properties = properties.filter(city__icontains=data['city'])
         if data.get('province_id'):
             properties = properties.filter(province=data['province_id'])
         if data.get('municipality_id'):
@@ -192,7 +190,12 @@ def _serialize_property_for_grid(obj, request):
     if cover:
         image_url = request.build_absolute_uri(cover.image.url)
     else:
-        image_url = f"https://picsum.photos/seed/{obj.pk}/200/160"
+        # Sin fotos reales todavía: no inventamos una imagen de stock
+        # externa (picsum.photos) que el usuario nunca subió y que el
+        # frontend acababa mostrando como si fuera la portada real del
+        # inmueble. Se manda None y es el frontend quien decide cómo
+        # representar "sin foto" (ver buildResultCard en index.html).
+        image_url = None
 
     # Determinar qué precio mostrar según la oferta
     if obj.offer_type == PropertyOfferType.SALE:
@@ -221,7 +224,6 @@ def _serialize_property_for_grid(obj, request):
         'rent_price': float(obj.rent_price) if obj.rent_price else None,
         'offer_type': obj.offer_type,
         'offer_type_display': obj.get_offer_type_display(),
-        'city': obj.city,
         'province': obj.province.name if obj.province else '',
         'municipality': obj.municipality.name if obj.municipality else '',
         'property_type': obj.get_property_type_display(),
@@ -312,8 +314,11 @@ def _serialize_property_detail(obj, request):
         }
         for img in property_images
     ]
-    if not images:
-        images = [{'url': f"https://picsum.photos/seed/{obj.pk}/800/600", 'is_cover': True}]
+    # Si el inmueble todavía no tiene ninguna foto real, se deja la lista
+    # vacía en vez de rellenarla con una imagen de stock de picsum.photos:
+    # esa imagen no la subió nadie y el frontend la mostraba como si
+    # fuera una foto real del inmueble (ver renderQuickViewGallery en
+    # index.html, que ahora sabe pintar el estado "sin fotos").
 
     # Determinar precios para el detail
     sale_price = float(obj.sale_price) if obj.sale_price else None
@@ -334,7 +339,6 @@ def _serialize_property_detail(obj, request):
         'deposit_amount': deposit_amount,
         'display_price': float(obj.display_price) if obj.display_price else None,
         'display_price_label': str(obj.display_price_label),
-        'city': obj.city,
         'address': obj.address or '',
         'province': obj.province.name if obj.province else '',
         'municipality': obj.municipality.name if obj.municipality else '',

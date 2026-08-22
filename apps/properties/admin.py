@@ -58,7 +58,6 @@ class PropertyAdmin(admin.ModelAdmin):
         '__str__', 
         'property_type', 
         'offer_type',
-        'city', 
         'municipality', 
         'sale_price',
         'rent_price',
@@ -70,14 +69,13 @@ class PropertyAdmin(admin.ModelAdmin):
         'property_type', 
         'offer_type',
         'is_active', 
-        'city', 
         'province', 
         'municipality', 
         'has_elevator', 
         'has_heating', 
         'has_air_conditioning'
     )
-    search_fields = ('translations__title', 'city', 'province__name', 'municipality__name', 'slug')
+    search_fields = ('translations__title', 'province__name', 'municipality__name', 'slug')
     readonly_fields = ('views_count', 'created_at', 'updated_at')
     inlines = [PropertyImageInline]
     autocomplete_fields = ('province', 'municipality', 'agent')
@@ -91,7 +89,7 @@ class PropertyAdmin(admin.ModelAdmin):
             'classes': ('wide',),
         }),
         (_('Location'), {
-            'fields': ('city', 'province', 'municipality', 'address', 'location')
+            'fields': ('province', 'municipality', 'address', 'location')
         }),
         (_('Details'), {
             'fields': ('surface', 'rooms', 'bathrooms', 'has_elevator', 'has_heating', 'has_air_conditioning')

@@ -202,7 +202,6 @@ class Command(BaseCommand):
                 "has_elevator": to_bool(row["has_elevator"]),
                 "has_heating": to_bool(row["has_heating"]),
                 "has_air_conditioning": to_bool(row["has_air_conditioning"]),
-                "city": row["city"],
                 "is_active": to_bool(row["is_active"]),
                 "views_count": int(row["views_count"]),
                 "created_at": to_datetime(row["created_at"]),

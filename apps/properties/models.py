@@ -157,7 +157,6 @@ class Property(TranslatableModel):
         help_text=_('Security deposit for rentals')
     )
     
-    city = models.CharField(max_length=100, verbose_name=_('City'), db_index=True)
     province = models.ForeignKey(
         Province,
         on_delete=models.SET_NULL,
@@ -177,6 +176,14 @@ class Property(TranslatableModel):
         db_index=True,
     )
     address = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Address'))
+    postal_code = models.CharField(
+        max_length=10,
+        null=True,
+        blank=True,
+        verbose_name=_('Postal code'),
+        db_index=True,
+        help_text=_('Postal code where the property is located'),
+    )
     location = gis_models.PointField(srid=4326, verbose_name=_('Location'), null=True, blank=True)
     surface = models.PositiveIntegerField(null=True, blank=True, verbose_name=_('Surface (m²)'), db_index=True)
     rooms = models.PositiveIntegerField(null=True, blank=True, verbose_name=_('Rooms'), db_index=True)
@@ -353,7 +360,7 @@ class SavedSearch(models.Model):
         default=Frequency.DAILY,
         verbose_name=_('Frequency'),
     )
-    last_sent_at = models.DateTimeField(null=True, blank=True, verbose_name=_('Last sent'))
+    last_notified_at = models.DateTimeField(null=True, blank=True, verbose_name=_('Last notified'))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

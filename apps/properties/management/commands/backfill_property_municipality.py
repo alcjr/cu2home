@@ -19,19 +19,6 @@ from django.core.management.base import BaseCommand
 
 from apps.properties.models import Municipality, Property
 
-# Barrios / localidades conocidas -> municipio real que las contiene.
-# Se usa SOLO cuando la coincidencia exacta (city == municipality.name en
-# la misma provincia) no aparece. Hechos geográficos estables, no requieren
-# validación adicional.
-CITY_ALIASES = {
-    "miramar": "Playa",
-    "vedado": "Plaza de la Revolución",
-    "el cobre": "Santiago de Cuba",
-    "san fe": "Isla de la Juventud",       # typo habitual de "Santa Fe"
-    "santa fe": "Isla de la Juventud",
-    "varadero": "Cárdenas",                 # municipio de Varadero eliminado en 2010
-}
-
 
 class Command(BaseCommand):
     help = (
@@ -64,7 +51,7 @@ class Command(BaseCommand):
                 unresolved.append(prop)
                 continue
 
-            city_key = prop.city.strip().lower()
+            
 
             municipality = Municipality.objects.filter(
                 province_id=prop.province_id, name__iexact=prop.city.strip()

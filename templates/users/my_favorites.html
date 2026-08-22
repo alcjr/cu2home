@@ -5,39 +5,40 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/22.1.7/css/dx.light.css">
-<link rel="stylesheet" href="{% static 'users/css/my_properties.css' %}">
+<link rel="stylesheet" href="{% static 'users/css/my_favorites.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="list-page">
     <div class="list-page-head">
-        <h1>{{ title }}</h1>
+        <h1><i class="fas fa-heart"></i>{% trans "Mis favoritos" %}</h1>
         <a href="{% url 'properties:list' %}" class="back-link">
             <i class="fas fa-arrow-left"></i> {% trans "Volver al portal" %}
         </a>
     </div>
 
     <div class="grid-wrapper">
-        <div id="myPropertiesGrid"></div>
+        <div id="myFavoritesGrid"></div>
     </div>
 </div>
 
-{{ property_types|json_script:"property-types-data" }}
-{{ offer_types|json_script:"offer-types-data" }}
-{{ provinces|json_script:"provinces-data" }}
-{{ municipalities|json_script:"municipalities-data" }}
-{{ max_images_per_property|json_script:"max-images-data" }}
-
+<!--
+    Contrato esperado del backend (ver comentario ampliado al inicio de
+    my_favorites.js):
+      - URLS.data:   GET  -> lista de inmuebles favoritos del usuario
+                             autenticado (un objeto por fila, con "id"
+                             = id del INMUEBLE, no del registro Favorite).
+      - URLS.remove: POST -> misma vista/URL que 'users:toggle_favorite'
+                             usada en detail.html; togglear un favorito
+                             ya existente lo elimina, así que se reutiliza
+                             tal cual para "quitar de favoritos".
+-->
 <script id="urls-config" type="application/json">
 {
-    "data": "{% url 'users:my_properties_data' %}",
-    "detail": "{% url 'users:my_properties_detail' 0 %}",
-    "images": "{% url 'users:my_property_image_upload' 0 %}",
-    "image_delete": "{% url 'users:my_property_image_delete' 0 0 %}",
-    "image_cover": "{% url 'users:my_property_image_set_cover' 0 0 %}"
+    "data": "{% url 'users:my_favorites_data' %}",
+    "remove": "{% url 'users:toggle_favorite' 0 %}"
 }
 </script>
-
 <script>
     window.csrfToken = '{{ csrf_token }}';
 </script>
@@ -49,6 +50,5 @@
 <script src="https://cdn3.devexpress.com/jslib/22.1.7/js/localization/dx.messages.es.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
-<script src="{% static 'users/js/my_properties.js' %}"></script>
+<script src="{% static 'users/js/my_favorites.js' %}"></script>
 {% endblock %}

@@ -556,6 +556,17 @@
         object-fit: cover;
         display: block;
     }
+    .result-card-img.no-photo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: var(--muted, #94a3b8);
+        background: var(--sand, #f5f0ea);
+    }
+    .result-card-img.no-photo i { font-size: 1.6rem; }
+    .result-card-img.no-photo span { font-size: 0.8rem; }
     .result-card-img .badge {
         position: absolute;
         top: 12px;
@@ -687,6 +698,19 @@
         height: 100%;
         object-fit: cover;
     }
+
+    .quickview-col-property .qv-gallery-main.no-photo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: var(--muted, #94a3b8);
+        text-align: center;
+        padding: 0 20px;
+    }
+    .quickview-col-property .qv-gallery-main.no-photo i { font-size: 2rem; }
+    .quickview-col-property .qv-gallery-main.no-photo span { font-size: 0.9rem; }
 
     .quickview-col-property .qv-gallery-thumbs {
         display: flex;
@@ -1466,6 +1490,17 @@
             const wrap = document.createElement('div');
             const main = document.createElement('div');
             main.className = 'qv-gallery-main';
+
+            if (!images || images.length === 0) {
+                // Sin fotos reales: mostramos un estado vacío explícito
+                // en vez de una imagen de stock que el propietario nunca
+                // subió (ver _serialize_property_detail en views.py).
+                main.classList.add('no-photo');
+                main.innerHTML = '<i class="fas fa-image"></i><span>Este inmueble aún no tiene fotos</span>';
+                wrap.append(main);
+                return wrap;
+            }
+
             const mainImg = document.createElement('img');
             const cover = images.find(function(img) { return img.is_cover; }) || images[0];
             mainImg.src = cover.url;
@@ -1734,11 +1769,20 @@
 
             const imgWrap = document.createElement('div');
             imgWrap.className = 'result-card-img';
-            const img = document.createElement('img');
-            img.src = data.image_url;
-            img.alt = data.title || '';
-            img.loading = 'lazy';
-            imgWrap.append(img);
+            if (data.image_url) {
+                const img = document.createElement('img');
+                img.src = data.image_url;
+                img.alt = data.title || '';
+                img.loading = 'lazy';
+                imgWrap.append(img);
+            } else {
+                // Inmueble sin fotos reales todavía: en vez de pedir a
+                // un servicio externo (picsum.photos) una imagen que el
+                // propietario nunca subió, se muestra un estado vacío
+                // explícito para no confundirlo con una foto real.
+                imgWrap.classList.add('no-photo');
+                imgWrap.innerHTML = '<i class="fas fa-image"></i><span>Sin fotos</span>';
+            }
             if (data.status) {
                 const badge = document.createElement('span');
                 badge.className = 'badge';

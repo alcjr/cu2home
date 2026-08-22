@@ -8,23 +8,34 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
-    path('favorites/', views.favorite_list, name='favorites'),
-    path('favorites/<int:property_id>/toggle/', views.toggle_favorite, name='toggle_favorite'),
-    path('favorites/', views.favorites_page, name='favorites_page'),
+
+    # ===== Favoritos =====
+    # Un único patrón por vista/nombre (antes había duplicados: dos
+    # 'favorites/' -- uno a la vieja favorite_list basada en tabla, otro
+    # a favorites_page con la dxDataGrid, con el segundo inalcanzable
+    # porque el primero coincidía antes -- y dos 'toggle_favorite' que
+    # además apuntaban al mismo nombre de función pisado en views.py,
+    # ver corrección ahí).
+    path('favorites/', views.favorites_page, name='favorites'),
     path('favorites/data/', views.favorites_data, name='favorites_data'),
-    path('favorites/toggle/<int:property_id>/', views.toggle_favorite, name='toggle_favorite'),
+    path('favorites/<int:property_id>/toggle/', views.toggle_favorite, name='toggle_favorite'),
+
     path('saved-searches/', views.saved_search_list, name='saved_search_list'),
     path('saved-searches/create/', views.create_saved_search, name='create_saved_search'),
     path('saved-searches/<int:pk>/toggle/', views.toggle_saved_search, name='toggle_saved_search'),
     path('saved-searches/<int:pk>/delete/', views.delete_saved_search, name='delete_saved_search'),
+    # ===== Mis inmuebles =====
     path('my-properties/', views.my_properties, name='my_properties'),
-    
+    # GET (listado) + POST (alta) -- load()/insert() del CustomStore
+    path('my-properties/data/', views.my_properties_data, name='my_properties_data'),
+    # PATCH (edición) + DELETE (borrado) -- update()/remove() del CustomStore
+    path('my-properties/data/<int:pk>/', views.my_properties_detail, name='my_properties_detail'),
+    # Imágenes: se gestionan aparte del CustomStore principal (ver views.py)
+    path('my-properties/<int:pk>/images/', views.my_property_image_upload, name='my_property_image_upload'),
+    path('my-properties/<int:pk>/images/<int:image_id>/', views.my_property_image_delete, name='my_property_image_delete'),
+    path('my-properties/<int:pk>/images/<int:image_id>/cover/', views.my_property_image_set_cover, name='my_property_image_set_cover'),
+
     # ===== Recuperación de contraseña =====
-    # Vistas built-in de Django (django.contrib.auth.views) -- solo se
-    # personalizan template_name (para mantener el estilo del portal) y
-    # los nombres de las plantillas de email. El flujo de 4 pasos es el
-    # estándar de Django: form -> done (email enviado) -> confirm (desde
-    # el link del email, con uidb64/token) -> complete.
     path(
         'password-reset/',
         auth_views.PasswordResetView.as_view(

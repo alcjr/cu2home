@@ -151,19 +151,11 @@
         border-radius: 40px;
         font-family: 'Inter', sans-serif;
     }
-    
-
     .tag.op { 
-    background: transparent; 
-    color: var(--terracota); 
-    border: 1.5px solid var(--terracota);
+        background: transparent; 
+        color: var(--terracota); 
+        border: 1.5px solid var(--terracota);
     }
-
-
-
-
-
-
     .tag.type { background: #eef2f0; color: var(--azul-malecon); }
     .detail-head .price-block { text-align: right; }
     .detail-head .price-block .price {
@@ -203,12 +195,11 @@
         border: 1px solid var(--linea);
     }
 
-    /* Imagen grande */
     .gallery-main {
         position: relative;
         width: 100%;
         height: 500px;
-        background: #1a1a1a;
+        background: #f0f2f5;
         overflow: hidden;
     }
     .gallery-main img {
@@ -230,8 +221,27 @@
         backdrop-filter: blur(4px);
         pointer-events: none;
     }
+    .gallery-main .no-image-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: var(--texto-suave);
+        padding: 2rem;
+        text-align: center;
+    }
+    .gallery-main .no-image-placeholder i {
+        font-size: 4rem;
+        opacity: 0.3;
+        margin-bottom: 1rem;
+        display: block;
+    }
+    .gallery-main .no-image-placeholder span {
+        font-size: 1.1rem;
+        font-family: 'Inter', sans-serif;
+    }
 
-    /* Controles de navegación sobre la imagen grande */
     .gallery-nav {
         position: absolute;
         top: 50%;
@@ -264,7 +274,6 @@
         transform: translateY(-50%) scale(0.95);
     }
 
-    /* Miniaturas - Carrusel horizontal */
     .gallery-thumbs {
         padding: 14px 20px;
         background: #fff;
@@ -320,7 +329,6 @@
         object-fit: cover;
     }
 
-    /* Botones de scroll para miniaturas */
     .thumb-scroll-btn {
         position: absolute;
         top: 50%;
@@ -728,6 +736,15 @@
        ============================================================ */
     .print-sheet { display: none; }
 
+    .print-no-image {
+        text-align: center;
+        color: #5B6A62;
+        padding: 20px;
+        border: 1px dashed #E3D9C4;
+        border-radius: 8px;
+        font-size: 0.85rem;
+    }
+
     @media print {
         @page {
             size: A4 portrait;
@@ -896,18 +913,20 @@
         </div>
     </section>
 
-    <!-- 3.2 Fotos -->
+    <!-- 3.2 Fotos - SOLO imágenes reales de la base de datos -->
     <section class="print-block print-block-photos">
         <h3>{% trans "Fotos" %}</h3>
-        <div class="print-photo-grid">
-            {% if property_images %}
+        {% if property_images %}
+            <div class="print-photo-grid">
                 {% for image in property_images %}
                     <img src="{{ image.image.url }}" alt="{{ property.title }}">
                 {% endfor %}
-            {% else %}
-                <img src="https://picsum.photos/seed/{{ property.id }}/400/300" alt="{{ property.title }}">
-            {% endif %}
-        </div>
+            </div>
+        {% else %}
+            <div class="print-no-image">
+                <p>{% trans "Esta propiedad no tiene imágenes disponibles" %}</p>
+            </div>
+        {% endif %}
     </section>
 
     <!-- 3.3 Datos del agente/promotor -->
@@ -992,7 +1011,7 @@
     </div>
 </div>
 
-<!-- ===== GALERÍA - CARRUSEL ===== -->
+<!-- ===== GALERÍA - CARRUSEL (SOLO imágenes reales) ===== -->
 <div class="container">
     <div class="gallery-wrapper">
         <!-- Imagen grande -->
@@ -1000,50 +1019,48 @@
             {% if cover_image %}
                 <img id="galleryMainImg" src="{{ cover_image.image.url }}" alt="{{ property.title }}">
             {% else %}
-                <img id="galleryMainImg" src="https://picsum.photos/seed/{{ property.id }}/1200/600" alt="{{ property.title }}">
+                <div class="no-image-placeholder">
+                    <i class="fas fa-image"></i>
+                    <span>{% trans "Sin imágenes disponibles" %}</span>
+                </div>
             {% endif %}
             <div class="gallery-counter" id="galleryCounter">
-                {% if property_images %}<span id="currentIndex">1</span> / {{ property_images|length }}{% else %}1 / 1{% endif %}
+                {% if property_images %}
+                    <span id="currentIndex">1</span> / {{ property_images|length }}
+                {% else %}
+                    0 / 0
+                {% endif %}
             </div>
 
-            <!-- Botones de navegación -->
-            <button class="gallery-nav prev" id="galleryPrev" aria-label="Anterior">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="gallery-nav next" id="galleryNext" aria-label="Siguiente">
-                <i class="fas fa-chevron-right"></i>
-            </button>
+            <!-- Botones de navegación (solo si hay más de 1 imagen) -->
+            {% if property_images|length > 1 %}
+                <button class="gallery-nav prev" id="galleryPrev" aria-label="Anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="gallery-nav next" id="galleryNext" aria-label="Siguiente">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            {% endif %}
         </div>
 
-        <!-- Miniaturas -->
-        <div class="gallery-thumbs">
-            <button class="thumb-scroll-btn left" id="thumbScrollLeft" aria-label="Desplazar miniaturas izquierda">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <div class="gallery-thumbs-wrapper" id="galleryThumbs">
-                {% if property_images %}
+        <!-- Miniaturas (solo si hay imágenes) -->
+        {% if property_images %}
+            <div class="gallery-thumbs">
+                <button class="thumb-scroll-btn left" id="thumbScrollLeft" aria-label="Desplazar miniaturas izquierda">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="gallery-thumbs-wrapper" id="galleryThumbs">
                     {% for image in property_images %}
                         <div class="gallery-thumb {% if forloop.first %}is-active{% endif %}" data-index="{{ forloop.counter0 }}">
                             <img src="{{ image.image.url }}" alt="{{ property.title }} - Foto {{ forloop.counter }}" loading="lazy">
                         </div>
                     {% endfor %}
-                {% else %}
-                    <!-- Imagen de placeholder si no hay fotos -->
-                    <div class="gallery-thumb is-active" data-index="0">
-                        <img src="https://picsum.photos/seed/{{ property.id }}/200/150" alt="{{ property.title }}" loading="lazy">
-                    </div>
-                    <div class="gallery-thumb" data-index="1">
-                        <img src="https://picsum.photos/seed/{{ property.id }}a/200/150" alt="{{ property.title }}" loading="lazy">
-                    </div>
-                    <div class="gallery-thumb" data-index="2">
-                        <img src="https://picsum.photos/seed/{{ property.id }}b/200/150" alt="{{ property.title }}" loading="lazy">
-                    </div>
-                {% endif %}
+                </div>
+                <button class="thumb-scroll-btn right" id="thumbScrollRight" aria-label="Desplazar miniaturas derecha">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
-            <button class="thumb-scroll-btn right" id="thumbScrollRight" aria-label="Desplazar miniaturas derecha">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
+        {% endif %}
     </div>
 </div>
 
@@ -1284,9 +1301,10 @@
         });
 
         /* ============================================================
-           GALERÍA - CARRUSEL
+           GALERÍA - CARRUSEL (SOLO si hay imágenes)
            ============================================================ */
         (function initGallery() {
+            const mainContainer = document.getElementById('galleryMain');
             const mainImg = document.getElementById('galleryMainImg');
             const thumbsContainer = document.getElementById('galleryThumbs');
             const thumbElements = thumbsContainer ? thumbsContainer.querySelectorAll('.gallery-thumb') : [];
@@ -1298,16 +1316,27 @@
             const scrollRightBtn = document.getElementById('thumbScrollRight');
 
             let currentIndex = 0;
-            const totalImages = thumbElements.length || 1;
+            const totalImages = thumbElements.length || 0;
+
+            // Si no hay imágenes, ocultar controles y salir
+            if (totalImages === 0) {
+                if (prevBtn) prevBtn.style.display = 'none';
+                if (nextBtn) nextBtn.style.display = 'none';
+                if (scrollLeftBtn) scrollLeftBtn.style.display = 'none';
+                if (scrollRightBtn) scrollRightBtn.style.display = 'none';
+                if (totalCounter) {
+                    totalCounter.textContent = '0 / 0';
+                }
+                return;
+            }
 
             function updateGallery(index) {
                 if (index < 0) index = totalImages - 1;
                 if (index >= totalImages) index = 0;
                 currentIndex = index;
 
-                // Actualizar imagen grande
                 const thumb = thumbElements[index];
-                if (thumb) {
+                if (thumb && mainImg) {
                     const imgSrc = thumb.querySelector('img')?.src;
                     if (imgSrc) {
                         mainImg.style.opacity = '0';
@@ -1318,7 +1347,6 @@
                     }
                 }
 
-                // Actualizar contador
                 if (counter) {
                     counter.textContent = index + 1;
                 }
@@ -1326,15 +1354,13 @@
                     totalCounter.textContent = (index + 1) + ' / ' + totalImages;
                 }
 
-                // Actualizar estado activo de miniaturas
                 thumbElements.forEach((el, i) => {
                     el.classList.toggle('is-active', i === index);
                 });
 
-                // Scroll de la miniatura activa al centro del contenedor
                 if (thumbsContainer && thumbElements[index]) {
                     const containerWidth = thumbsContainer.offsetWidth;
-                    const thumbWidth = thumbElements[index].offsetWidth + 10; // + gap
+                    const thumbWidth = thumbElements[index].offsetWidth + 10;
                     const scrollPos = thumbElements[index].offsetLeft - (containerWidth / 2) + (thumbWidth / 2);
                     thumbsContainer.scrollTo({
                         left: Math.max(0, scrollPos),
@@ -1342,33 +1368,28 @@
                     });
                 }
 
-                // Actualizar estado de botones de navegación
                 if (prevBtn) prevBtn.disabled = totalImages <= 1;
                 if (nextBtn) nextBtn.disabled = totalImages <= 1;
             }
 
-            // Evento: clic en miniatura
             thumbElements.forEach((thumb, index) => {
                 thumb.addEventListener('click', function() {
                     updateGallery(index);
                 });
             });
 
-            // Evento: botón anterior
             if (prevBtn) {
                 prevBtn.addEventListener('click', function() {
                     updateGallery(currentIndex - 1);
                 });
             }
 
-            // Evento: botón siguiente
             if (nextBtn) {
                 nextBtn.addEventListener('click', function() {
                     updateGallery(currentIndex + 1);
                 });
             }
 
-            // Evento: teclado (flechas izquierda/derecha)
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'ArrowLeft') {
                     e.preventDefault();
@@ -1379,7 +1400,6 @@
                 }
             });
 
-            // Evento: scroll de miniaturas con botones
             if (scrollLeftBtn && thumbsContainer) {
                 scrollLeftBtn.addEventListener('click', function() {
                     thumbsContainer.scrollBy({ left: -200, behavior: 'smooth' });
@@ -1391,7 +1411,6 @@
                 });
             }
 
-            // Mostrar/ocultar botones de scroll según contenido
             if (thumbsContainer) {
                 function checkScrollButtons() {
                     if (scrollLeftBtn && scrollRightBtn) {
@@ -1402,14 +1421,10 @@
                 }
                 checkScrollButtons();
                 window.addEventListener('resize', checkScrollButtons);
-                // También verificar después de que las imágenes carguen
                 setTimeout(checkScrollButtons, 500);
             }
 
-            // Inicializar
             updateGallery(0);
-
-            // Exponer para debug
             window.gallery = { updateGallery, currentIndex: () => currentIndex };
         })();
 

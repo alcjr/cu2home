@@ -409,7 +409,6 @@ class Command(BaseCommand):
                         rent_price=rent_price,
                         seasonal_rent_price=seasonal_rent_price,
                         deposit_amount=deposit_amount,
-                        city=municipality.name,
                         province=province,
                         municipality=municipality,
                         address=self._build_address(),

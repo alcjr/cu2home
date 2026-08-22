@@ -1,6 +1,0 @@
-{% load i18n %}{% blocktrans with name=saved_search %}New matches for your saved search "{{ name }}"{% endblocktrans %}
-
-{% for property in matches %}- {{ property }} · {{ property.city }} · {{ property.price }}
-  {{ property.get_absolute_url }}
-{% endfor %}
-{% trans "You are receiving this because you saved this search on cu2home." %}
