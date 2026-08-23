@@ -1,0 +1,14 @@
+{% load i18n %}{% autoescape off %}
+{% blocktranslate %}Hola,
+
+Solicitaste recordar tu nombre de usuario en {{ site_name }}.
+
+Tu(s) nombre(s) de usuario asociado(s) a este correo electrónico son:
+
+{{ usernames }}
+
+Si no solicitaste esta información, puedes ignorar este mensaje.
+
+Gracias,
+El equipo de {{ site_name }}
+{% endblocktranslate %}{% endautoescape %}

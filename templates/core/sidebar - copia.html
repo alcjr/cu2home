@@ -1,0 +1,95 @@
+{% load static i18n %}
+
+{% if user.is_superuser %}
+<aside class="sidebar" id="sidebar" role="navigation" aria-label="{% trans 'Panel de administración' %}">
+    <div class="sidebar-inner">
+
+        <!-- ===== CABECERA DEL SIDEBAR ===== -->
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <img src="{% static 'core/images/cu2home.png' %}" alt="cu2home" class="sidebar-logo" style="height:32px;width:auto;max-width:100%;flex-shrink:0;">
+                <span class="sidebar-brand-text">cu2home<span class="dot">.</span></span>
+            </div>
+            <span class="sidebar-badge">{% trans "Admin" %}</span>
+        </div>
+
+        <!-- ===== MENÚ PRINCIPAL ===== -->
+        <nav class="sidebar-nav">
+            <ul class="sidebar-menu">
+                <!-- Dashboard -->
+                <li>
+                    <a href="{% url 'dashboard:dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>{% trans "Dashboard" %}</span>
+                        {% if unread_logs_count %}
+                            <span class="badge-pill">{{ unread_logs_count }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+
+                <!-- Visor de logs -->
+                <li>
+                    <a href="{% url 'visor:visor' %}" class="sidebar-link {% if request.resolver_match.url_name == 'visor' %}active{% endif %}">
+                        <i class="fas fa-scroll"></i>
+                        <span>{% trans "Visor de logs" %}</span>
+                        {% if pending_logs_count %}
+                            <span class="badge-pill warning">{{ pending_logs_count }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+
+                <!-- Configuración -->
+                <li>
+                    <a href="{% url 'config:config' %}" class="sidebar-link {% if request.resolver_match.url_name == 'config' %}active{% endif %}">
+                        <i class="fas fa-cog"></i>
+                        <span>{% trans "Configuración" %}</span>
+                    </a>
+                </li>
+
+                <!-- Base de datos -->
+                <li>
+                    <a href="{% url 'panel' %}" class="sidebar-link {% if request.resolver_match.url_name == 'panel' %}active{% endif %}">
+                        <i class="fas fa-database"></i>
+                        <span>{% trans "Base de datos" %}</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- ===== SECCIÓN DE INFORMACIÓN DEL SISTEMA ===== -->
+        <div class="sidebar-system">
+            <div class="system-info">
+                <span class="system-label">{% trans "Versión" %}</span>
+                <span class="system-value">{{ app_version|default:"1.0.0" }}</span>
+            </div>
+            <div class="system-info">
+                <span class="system-label">{% trans "Usuario" %}</span>
+                <span class="system-value">{{ user.username }}</span>
+            </div>
+            <div class="system-info">
+                <span class="system-label">{% trans "Último acceso" %}</span>
+                <span class="system-value">{{ user.last_login|date:"d/m/Y H:i" }}</span>
+            </div>
+        </div>
+
+        <!-- ===== BOTÓN DE CERRAR SESIÓN ===== -->
+        <div class="sidebar-footer">
+            <form method="post" action="{% url 'users:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="sidebar-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    {% trans "Cerrar sesión" %}
+                </button>
+            </form>
+        </div>
+
+        <!-- ===== BOTÓN PARA CERRAR EL SIDEBAR (MÓVIL) ===== -->
+        <button class="sidebar-close" id="sidebarClose" aria-label="{% trans 'Cerrar menú' %}">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</aside>
+
+<!-- ===== OVERLAY PARA MÓVIL ===== -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+{% endif %}

@@ -1,0 +1,63 @@
+{% extends "core/base.html" %}
+{% load static i18n %}
+
+{% block title %}{{ title }} - {{ block.super }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/22.1.7/css/dx.light.css">
+<link rel="stylesheet" href="{% static 'users/css/alerts.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="list-page">
+    <div class="list-page-head">
+        <h1><i class="fas fa-bell"></i>{{ title }}</h1>
+        <a href="{% url 'properties:list' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> {% trans "Volver al portal" %}
+        </a>
+    </div>
+
+    <div class="grid-wrapper">
+        <div id="alertsGrid"></div>
+    </div>
+</div>
+
+<!--
+    Datos de referencia para los <select> del popup (provincia, municipio,
+    tipo de inmueble, tipo de oferta, frecuencia). Son catálogos
+    server-rendered, no vale la pena una llamada AJAX aparte solo para
+    rellenarlos -- mismo criterio que my_properties.html.
+-->
+{{ property_types|json_script:"property-types-data" }}
+{{ offer_types|json_script:"offer-types-data" }}
+{{ frequencies|json_script:"frequencies-data" }}
+{{ provinces|json_script:"provinces-data" }}
+{{ municipalities|json_script:"municipalities-data" }}
+
+<!--
+    Contrato de views.alerts_data / views.alerts_detail -- un objeto por
+    fila, campos editables planos (province_id, municipality_id,
+    property_type, offer_type, min_sale_price, max_sale_price,
+    min_rent_price, max_rent_price, has_elevator, has_heating,
+    has_air_conditioning, name, frequency, is_active) más los calculados
+    de solo lectura (*_display, *_name, last_notified_at, created_at).
+    URLS.detail lleva el placeholder "/0/" para el pk, igual que en
+    my_properties.html.
+-->
+<script id="urls-config" type="application/json">
+{
+    "data": "{% url 'users:alerts_data' %}",
+    "detail": "{% url 'users:alerts_detail' 0 %}"
+}
+</script>
+<script>
+    window.csrfToken = '{{ csrf_token }}';
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn3.devexpress.com/jslib/22.1.7/js/dx.all.js"></script>
+<script src="https://cdn3.devexpress.com/jslib/22.1.7/js/localization/dx.messages.es.js"></script>
+<script src="{% static 'users/js/alerts.js' %}"></script>
+{% endblock %}

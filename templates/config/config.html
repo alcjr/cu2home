@@ -1,0 +1,16 @@
+{% extends "core/su_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Configuración" %} · {{ site_name|default:"cu2home" }}{% endblock %}
+
+{% block admin_content %}
+<div class="admin-content">
+    <div class="admin-header">
+        <h1>{% trans "Configuración" %}</h1>
+        <p>{% trans "Edición de config.ini." %}</p>
+    </div>
+    <div class="admin-card">
+        <p>{% trans "Aquí irá el formulario de edición de config.ini." %}</p>
+    </div>
+</div>
+{% endblock %}

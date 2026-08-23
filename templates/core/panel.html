@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Base de datos" %} · {{ site_name|default:"cu2home" }}{% endblock %}
+
+{% block content %}
+<div class="admin-content">
+    <div class="admin-header">
+        <h1>{% trans "Base de datos" %}</h1>
+        <p>{% trans "Acceso directo al panel de administración de Django." %}</p>
+    </div>
+    <div class="admin-card">
+        <p>{% trans "Gestiona directamente los modelos registrados en el admin de Django (usuarios, inmuebles, provincias, etc.)." %}</p>
+        <a href="{% url 'admin:index' %}" class="btn-register">
+            <i class="fas fa-database"></i> {% trans "Abrir el admin de Django" %}
+        </a>
+    </div>
+</div>
+{% endblock %}

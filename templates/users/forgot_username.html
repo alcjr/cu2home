@@ -11,7 +11,7 @@
 <div class="auth-wrapper">
     <div class="auth-card">
         <h1>{% trans "¿Olvidaste tu usuario?" %}</h1>
-        <p class="auth-sub">{% trans "Escribe el email de tu cuenta y te recordaremos tu nombre de usuario." %}</p>
+        <p class="auth-sub">{% trans "Introduce el correo electrónico de tu cuenta y te enviaremos tu nombre de usuario." %}</p>
 
         {% if form.non_field_errors %}
             <ul class="auth-nonfield-errors">
@@ -32,11 +32,13 @@
                     {% endif %}
                 </div>
             {% endfor %}
-            <button type="submit" class="btn-submit">{% trans "Enviar" %}</button>
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-envelope"></i> {% trans "Enviar usuario" %}
+            </button>
         </form>
 
         <p class="auth-links">
-            <a href="{% url 'users:login' %}">{% trans "Volver a iniciar sesión" %}</a>
+            <a href="{% url 'users:login' %}">{% trans "Volver al inicio de sesión" %}</a>
         </p>
     </div>
 </div>

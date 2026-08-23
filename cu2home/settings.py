@@ -103,6 +103,8 @@ INSTALLED_APPS = [
     'apps.dashboard',
     'apps.search',
     'apps.authentication',
+    'apps.visor',
+    'apps.config',
 ]
 
 # ==================== INTERNATIONALIZATION ====================

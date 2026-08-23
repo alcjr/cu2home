@@ -1,0 +1,209 @@
+.list-page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+}
+.list-page-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.list-page-head h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    color: var(--tinta);
+}
+.list-page-head h1 i {
+    color: var(--terracota);
+    font-size: 0.8em;
+    margin-right: 8px;
+}
+.list-page-head .back-link {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--terracota);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.list-page-head .back-link:hover {
+    color: var(--terracota-dark);
+}
+
+.grid-wrapper {
+    background: #fff;
+    border: 1px solid var(--linea);
+    border-radius: 16px;
+    padding: 4px;
+    overflow: hidden;
+}
+
+/* ===== Celda "Alerta" (nombre + resumen de filtros) ===== */
+.cell-wrap { display: flex; align-items: center; gap: 10px; height: 100%; padding: 4px 0; }
+.cell-stack { display: flex; flex-direction: column; min-width: 0; }
+.cell-primary {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--tinta);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.cell-secondary {
+    font-size: 0.72rem;
+    color: var(--texto-suave);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.cell-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    background: #fdf2ee;
+    color: var(--terracota);
+}
+
+/* ===== Badges ===== */
+.freq-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: #eef2f0;
+    color: #334155;
+    white-space: nowrap;
+}
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.status-active   { background: #e7f5ec; color: #1e7e42; }
+.status-inactive { background: #f1f1f1; color: #777; }
+
+/* ===== Botones de acción de fila ===== */
+.row-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+}
+.rbtn {
+    width: 28px;
+    height: 28px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--texto-suave);
+    transition: all 0.12s;
+}
+.rbtn i { color: inherit; }
+.rbtn-edit { color: var(--terracota) !important; }
+.rbtn-edit:hover { background: #fdf2ee; border-color: var(--terracota); }
+.rbtn-delete { color: #c0392b !important; }
+.rbtn-delete:hover { background: #fdecea; border-color: #c0392b; }
+
+.dx-datagrid .dx-empty-message {
+    padding: 60px 24px !important;
+}
+
+/* ===================================================================
+   POPUP de edición/creación de alerta
+   =================================================================== */
+.alert-edit-popup {
+    border-radius: 20px !important;
+    box-shadow: 0 20px 60px rgba(31, 26, 23, 0.25) !important;
+}
+
+.alert-edit-popup .dx-popup-content {
+    background: #f8f6f4;
+    padding: 20px 24px 16px !important;
+    overflow-y: auto !important;
+    /* Ver my_properties.css: sin flex + min-height:0 este bloque crece a
+       su altura natural en vez de encogerse dentro del layout flex del
+       popup, empujando la barra de Guardar/Cancelar fuera del área
+       visible. */
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+}
+
+.alert-edit-popup .dx-popup-normal,
+.alert-edit-popup .dx-overlay-content {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0 !important;
+}
+
+.alert-edit-popup .dx-popup-title {
+    background: #fff;
+    border-bottom: 1px solid var(--linea);
+    flex-shrink: 0 !important;
+}
+
+.alert-edit-popup .dx-popup-bottom {
+    flex-shrink: 0 !important;
+}
+
+.alert-edit-popup .dx-popup-bottom .dx-button {
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    padding: 8px 24px !important;
+    font-size: 0.95rem !important;
+}
+.alert-edit-popup .dx-popup-bottom .dx-button .dx-button-content {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+.alert-edit-popup .dx-popup-bottom .dx-button .dx-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    margin: 0 !important;
+}
+.alert-edit-popup .dx-popup-bottom .dx-button-mode-contained.dx-button-success .dx-icon { color: #fff !important; }
+.alert-edit-popup .dx-popup-bottom .dx-button-mode-contained.dx-button-danger .dx-icon { color: #64748b !important; }
+
+/* Dentro del form del popup */
+.alert-form-group-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+    margin: 4px 0 2px;
+}
+.alert-price-hint {
+    font-size: 0.72rem;
+    color: var(--texto-suave);
+    margin-top: -6px;
+    margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+    .list-page { padding: 20px 12px 40px; }
+    .alert-edit-popup .dx-popup-content { padding: 10px !important; }
+}

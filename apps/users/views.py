@@ -18,9 +18,10 @@ from django.views.decorators.http import require_POST, require_GET, require_http
 
 # Importaciones corregidas
 from apps.properties.models import SavedSearch, Property, PropertyImage, Province, Municipality
-from apps.properties.forms import PropertyForm
+from apps.properties.forms import PropertyForm, PropertyFilterForm
+from apps.properties.constants import DEFAULT_FAVORITE_LIST_NAME, PROPERTY_TYPES, OFFER_TYPES
 from .forms import ForgotUsernameForm, RegisterForm, SaveSearchForm
-from .models import Favorite
+from .models import Favorite, UserProfile
 
 User = get_user_model()
 
@@ -194,14 +195,6 @@ def favorites_data(request):
             'superficie': prop.surface,
             'estado': prop.get_status_display(),
             'anadido': fav.created_at.strftime('%d/%m/%Y'),
-            # FIX: Property no define get_absolute_url(), así que esto
-            # caía SIEMPRE en el fallback hardcodeado -- que además era
-            # incorrecto en dos cosas a la vez: el prefijo '/propiedades/'
-            # no existe en el URLconf real (properties está montada en la
-            # raíz), y le faltaba el pk (el patrón real es
-            # <int:pk>/<slug:slug>/, ver properties/urls.py, name='detail').
-            # Se usa reverse(), igual que ya hace _serialize_owner_property()
-            # más abajo en este mismo archivo para el mismo propósito.
             'detail_url': reverse('properties:detail', args=[prop.pk, prop.slug]),
         })
 
@@ -571,6 +564,217 @@ def toggle_saved_search(request, pk):
     return redirect('users:saved_search_list')
 
 
+# ===== Mis alertas (dxDataGrid) =====
+# Grilla con edición/borrado sobre SavedSearch, mismo patrón CustomStore +
+# popup que 'Mis inmuebles' (my_properties_data/my_properties_detail),
+# como alternativa a las vistas clásicas de arriba (saved_search_list,
+# create_saved_search...) que se mantienen intactas para no romper nada
+# que ya las use.
+#
+# query_params usa DELIBERADAMENTE los MISMOS nombres de campo que
+# PropertyFilterForm (apps/properties/forms.py): province_id,
+# municipality_id, property_type, offer_type, min_sale_price,
+# max_sale_price, min_rent_price, max_rent_price, has_elevator,
+# has_heating, has_air_conditioning. Así SavedSearch.get_matches()
+# (apps/properties/models.py) puede validarlo e interpretarlo con ese
+# mismo form sin inventar un esquema nuevo ni duplicar reglas de filtrado.
+ALERT_QUERY_PARAM_FIELDS = [
+    'province_id', 'municipality_id', 'property_type', 'offer_type',
+    'min_sale_price', 'max_sale_price', 'min_rent_price', 'max_rent_price',
+    'has_elevator', 'has_heating', 'has_air_conditioning',
+]
+
+# Para property_type_display/offer_type_display en _serialize_alert: a
+# diferencia de Property.get_property_type_display(), aquí no hay una
+# instancia de Property de la que tirar (SavedSearch solo guarda el
+# código en query_params), así que se resuelve a mano contra las mismas
+# choices que ya usa el modelo.
+_PROPERTY_TYPE_LABELS = dict(PROPERTY_TYPES)
+_OFFER_TYPE_LABELS = dict(OFFER_TYPES)
+
+
+def _alert_query_params_from_payload(payload, base=None):
+    """Extrae y limpia el sub-objeto query_params a partir de las claves
+    planas que envía el popup del grid, partiendo de `base` (el
+    query_params YA guardado, cuando se está editando) y sobreescribiendo
+    solo las claves presentes en `payload`. Los booleanos SÍ se
+    conservan aunque vengan en False (a diferencia de los demás, donde
+    False/None/'' significa "quitar este filtro"), porque False es su
+    valor real por defecto, no una ausencia de dato."""
+    params = dict(base) if base else {}
+    for key in ALERT_QUERY_PARAM_FIELDS:
+        if key not in payload:
+            continue
+        value = payload[key]
+        if key in ('has_elevator', 'has_heating', 'has_air_conditioning'):
+            params[key] = bool(value)
+        elif value in (None, ''):
+            params.pop(key, None)
+        else:
+            params[key] = value
+    return params
+
+
+def _serialize_alert(obj, province_map=None, municipality_map=None):
+    qp = obj.query_params or {}
+    province_map = province_map or {}
+    municipality_map = municipality_map or {}
+    return {
+        'id': obj.pk,
+        'name': obj.name,
+        'frequency': obj.frequency,
+        'frequency_display': obj.get_frequency_display(),
+        'is_active': obj.is_active,
+        'province_id': qp.get('province_id'),
+        'province_name': province_map.get(qp.get('province_id'), ''),
+        'municipality_id': qp.get('municipality_id'),
+        'municipality_name': municipality_map.get(qp.get('municipality_id'), ''),
+        'property_type': qp.get('property_type', ''),
+        'property_type_display': str(_PROPERTY_TYPE_LABELS.get(qp.get('property_type'), '')),
+        'offer_type': qp.get('offer_type', ''),
+        'offer_type_display': str(_OFFER_TYPE_LABELS.get(qp.get('offer_type'), '')),
+        'min_sale_price': qp.get('min_sale_price'),
+        'max_sale_price': qp.get('max_sale_price'),
+        'min_rent_price': qp.get('min_rent_price'),
+        'max_rent_price': qp.get('max_rent_price'),
+        'has_elevator': bool(qp.get('has_elevator')),
+        'has_heating': bool(qp.get('has_heating')),
+        'has_air_conditioning': bool(qp.get('has_air_conditioning')),
+        'last_notified_at': obj.last_notified_at.strftime('%d/%m/%Y %H:%M') if obj.last_notified_at else None,
+        'created_at': obj.created_at.strftime('%d/%m/%Y'),
+    }
+
+
+def _build_alert(user, payload, instance=None):
+    """Valida y arma un SavedSearch (nuevo o existente) a partir del
+    payload del popup. Devuelve (obj, errors) -- errors es None si todo
+    fue bien, o un dict de errores por campo listo para JsonResponse si
+    no.
+
+    FIX (mismo motivo que _full_payload_for_patch para PropertyForm):
+    dxDataGrid en modo popup solo envía en update() los campos que el
+    usuario cambió, no la fila completa. Sin partir de los valores
+    ACTUALES de `instance` (name, frequency, is_active y cada clave de
+    query_params) antes de aplicar el payload, editar por ejemplo solo
+    la casilla "Activa" habría reseteado en silencio provincia, tipo,
+    oferta, rango de precio y amenities a "sin filtro" en cada guardado
+    parcial.
+
+    La validación de los filtros de búsqueda se delega en
+    PropertyFilterForm -- así un SavedSearch nunca queda guardado con,
+    p.ej., un province_id inexistente que rompería get_matches() en cada
+    tick del beat en vez de fallar aquí con un 400 legible para el
+    usuario que está editando la alerta."""
+    base_query_params = (instance.query_params or {}) if instance else {}
+    query_params = _alert_query_params_from_payload(payload, base=base_query_params)
+
+    filter_form = PropertyFilterForm(query_params)
+    if not filter_form.is_valid():
+        return None, filter_form.errors
+
+    valid_frequencies = set(SavedSearch.Frequency.values)
+    current_frequency = instance.frequency if instance else SavedSearch.Frequency.DAILY
+    frequency = payload.get('frequency', current_frequency) or current_frequency
+    if frequency not in valid_frequencies:
+        return None, {'frequency': [_('Invalid frequency.')]}
+
+    current_name = instance.name if instance else ''
+    current_is_active = instance.is_active if instance else True
+
+    obj = instance or SavedSearch(user=user)
+    obj.name = (payload.get('name', current_name) or '').strip() or str(DEFAULT_FAVORITE_LIST_NAME)
+    obj.frequency = frequency
+    obj.is_active = bool(payload.get('is_active', current_is_active))
+    obj.query_params = query_params
+    return obj, None
+
+
+@login_required(login_url='users:login')
+def alerts_page(request):
+    """Renderiza la página con la grilla DevExpress (dxDataGrid) de
+    alertas -- 'Mis alertas' del dashboard de usuario. Provincias y
+    municipios se inyectan como JSON en el template (json_script), igual
+    que en my_properties: son datos de referencia estáticos, no vale la
+    pena una llamada AJAX aparte solo para rellenar los <select> del
+    popup."""
+    provinces = list(Province.objects.order_by('name').values('id', 'name'))
+    municipalities = list(
+        Municipality.objects.select_related('province').order_by('name').values('id', 'name', 'province_id')
+    )
+    return render(request, 'users/alerts.html', {
+        'title': _('Mis alertas'),
+        'property_types': list(Property._meta.get_field('property_type').choices),
+        'offer_types': list(Property._meta.get_field('offer_type').choices),
+        'frequencies': list(SavedSearch.Frequency.choices),
+        'provinces': provinces,
+        'municipalities': municipalities,
+    })
+
+
+def _province_municipality_maps():
+    """dicts {id: name} para resolver province_id/municipality_id a texto
+    en _serialize_alert sin una query por fila. Se construye una vez por
+    request (nunca son tantas provincias/municipios como para pesar)."""
+    provinces = dict(Province.objects.values_list('id', 'name'))
+    municipalities = dict(Municipality.objects.values_list('id', 'name'))
+    return provinces, municipalities
+
+
+@login_required(login_url='users:login')
+@require_http_methods(['GET', 'POST'])
+def alerts_data(request):
+    """Listado (GET) + alta (POST) para el CustomStore del grid de 'Mis
+    alertas'. El queryset SIEMPRE se filtra por user=request.user --
+    nunca se acepta un id de usuario desde el cliente."""
+    province_map, municipality_map = _province_municipality_maps()
+
+    if request.method == 'GET':
+        searches = SavedSearch.objects.filter(user=request.user).order_by('-created_at')
+        return JsonResponse(
+            [_serialize_alert(s, province_map, municipality_map) for s in searches],
+            safe=False,
+        )
+
+    try:
+        payload = json.loads(request.body or '{}')
+    except json.JSONDecodeError:
+        return JsonResponse({'error': _('Invalid JSON payload.')}, status=400)
+
+    obj, errors = _build_alert(request.user, payload)
+    if errors:
+        return JsonResponse({'errors': errors}, status=400)
+
+    obj.save()
+    return JsonResponse(_serialize_alert(obj, province_map, municipality_map), status=201)
+
+
+@login_required(login_url='users:login')
+@require_http_methods(['PATCH', 'DELETE'])
+def alerts_detail(request, pk):
+    """Edición (PATCH) y borrado (DELETE) de una alerta propia, para
+    update()/remove() del CustomStore. get_object_or_404 con
+    user=request.user: un usuario nunca puede editar/borrar una alerta
+    que no es suya, ni aunque adivine el id."""
+    obj = get_object_or_404(SavedSearch, pk=pk, user=request.user)
+
+    if request.method == 'DELETE':
+        obj.delete()
+        return JsonResponse({'deleted': True})
+
+    try:
+        payload = json.loads(request.body or '{}')
+    except json.JSONDecodeError:
+        return JsonResponse({'error': _('Invalid JSON payload.')}, status=400)
+
+    obj, errors = _build_alert(request.user, payload, instance=obj)
+    if errors:
+        return JsonResponse({'errors': errors}, status=400)
+
+    obj.save()
+    province_map, municipality_map = _province_municipality_maps()
+    return JsonResponse(_serialize_alert(obj, province_map, municipality_map))
+
+
 def forgot_username(request):
     """
     'Olvidé mi usuario', complementario a PasswordResetView (que ya trae
@@ -605,3 +809,64 @@ def forgot_username(request):
         form = ForgotUsernameForm()
 
     return render(request, 'users/forgot_username.html', {'form': form})
+
+
+# ============================================================================
+# MIS DATOS
+# ============================================================================
+
+@login_required(login_url='users:login')
+def my_data(request):
+    """
+    Página de gestión de datos del usuario registrado.
+    Permite leer y actualizar: nombre, apellidos, email, teléfono,
+    tipo de usuario (comprador/agente), avatar, biografía, nombre de
+    agencia y preferencia de alertas por email.
+    """
+    user = request.user
+    profile = user.profile
+
+    if request.method == 'POST':
+        # ===== DATOS DEL USER =====
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        email = request.POST.get('email', '').strip()
+
+        # Validación de email único
+        if email:
+            if User.objects.exclude(pk=user.pk).filter(email__iexact=email).exists():
+                messages.error(request, _('Este correo electrónico ya está registrado por otro usuario.'))
+                return redirect('users:my_data')
+            user.email = email
+
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save()
+
+        # ===== DATOS DEL PERFIL =====
+        profile.user_type = request.POST.get('user_type', profile.user_type)
+        profile.phone = request.POST.get('phone', '').strip()
+        profile.bio = request.POST.get('bio', '').strip()
+        profile.agency_name = request.POST.get('agency_name', '').strip()
+        profile.receive_email_alerts = request.POST.get('receive_email_alerts') == 'on'
+
+        # Avatar - si se sube una nueva imagen
+        if request.FILES.get('avatar'):
+            profile.avatar = request.FILES['avatar']
+
+        # Eliminar avatar si se marca la casilla
+        if request.POST.get('remove_avatar') == 'on' and profile.avatar:
+            profile.avatar.delete(save=False)
+            profile.avatar = None
+
+        profile.save()
+
+        messages.success(request, _('Tus datos han sido actualizados correctamente.'))
+        return redirect('users:my_data')
+
+    return render(request, 'users/my_data.html', {
+        'title': _('Mis datos'),
+        'user': user,
+        'profile': profile,
+        'user_type_choices': UserProfile.UserType.choices,
+    })

@@ -1,0 +1,16 @@
+{% extends "core/su_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Visor de logs" %} · {{ site_name|default:"cu2home" }}{% endblock %}
+
+{% block admin_content %}
+<div class="admin-content">
+    <div class="admin-header">
+        <h1>{% trans "Visor de logs" %}</h1>
+        <p>{% trans "Consulta y filtra los logs del sistema." %}</p>
+    </div>
+    <div class="admin-card">
+        <p>{% trans "Aquí irá el listado de logs." %}</p>
+    </div>
+</div>
+{% endblock %}

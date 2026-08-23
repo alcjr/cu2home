@@ -4,7 +4,7 @@ from django.conf.urls.i18n import i18n_patterns
 from django.conf import settings
 from django.conf.urls.static import static
 
-from apps.core.views import index  # <-- importar la vista
+from apps.core.views import index, panel
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,10 +12,13 @@ urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
-    path('', index, name='home'),  # <-- Ruta raíz -> portada
-    path('', include('apps.properties.urls')),
+    path('', index, name='home'),
+    path('panel/', panel, name='panel'),
+    path('', include('apps.properties.urls')),          # Sin namespace duplicado
     path('auth/', include('apps.authentication.urls')),
-    path('dashboard/', include('apps.dashboard.urls')),
+    path('dashboard/', include('apps.dashboard.urls')), # ← Ya no necesita namespace aquí
+    path('visor/', include('apps.visor.urls')),
+    path('config/', include('apps.config.urls')),
     path('users/', include('apps.users.urls')),
     prefix_default_language=False,
 )

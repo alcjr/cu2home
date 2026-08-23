@@ -1,3 +1,7 @@
 from django.shortcuts import render
+from apps.core.decorators import superuser_required
 
-# Create your views here.
+
+@superuser_required
+def config(request):
+    return render(request, 'config/config.html', {})

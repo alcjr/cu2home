@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.gis.db import models as gis_models
 from django.contrib.gis.geos import Point
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 from parler.models import TranslatableModel, TranslatedFields
@@ -370,3 +371,82 @@ class SavedSearch(models.Model):
 
     def __str__(self):
         return f'{self.user} - {self.name or "Search"}'
+
+    def get_matches(self, since=None):
+        """
+        Devuelve el queryset de Property activos que casan con
+        self.query_params, opcionalmente restringido a los publicados
+        después de `since` (para no re-notificar en cada tick del beat
+        los mismos inmuebles ya avisados).
+
+        FIX: este método no existía -- tasks.py.dispatch_saved_search_alerts()
+        lo llama sin ningún try/except alrededor, así que CUALQUIER
+        SavedSearch activa hacía reventar todo el dispatch con
+        AttributeError antes de llegar siquiera a encolar un solo email
+        (ver deliver_saved_search_alert). El sistema de alertas estaba
+        roto de raíz, no solo sin frontend de edición.
+
+        Reutiliza PropertyFilterForm (apps/properties/forms.py) -- el
+        MISMO form que ya valida los filtros de la búsqueda pública en
+        _filtered_properties() (apps/properties/views.py) -- para
+        interpretar query_params, en vez de duplicar las reglas de
+        filtrado con una lectura manual del dict. Si PropertyFilterForm
+        cambia, esto queda alineado solo.
+
+        Un query_params inválido u obsoleto (p.ej. un property_type que
+        ya no existe en PROPERTY_TYPES) no rompe el envío: el form
+        simplemente lo trata como filtro no aplicado, así que
+        get_matches() nunca lanza excepción por datos guardados en su
+        día con un esquema distinto.
+        """
+        from .forms import PropertyFilterForm
+
+        qs = Property.objects.filter(is_active=True)
+
+        form = PropertyFilterForm(self.query_params or {})
+        if form.is_valid():
+            data = form.cleaned_data
+
+            if data.get('province_id'):
+                qs = qs.filter(province=data['province_id'])
+            if data.get('municipality_id'):
+                qs = qs.filter(municipality=data['municipality_id'])
+            if data.get('property_type'):
+                qs = qs.filter(property_type=data['property_type'])
+
+            offer_type = data.get('offer_type')
+            if offer_type:
+                if offer_type == 'sale':
+                    qs = qs.filter(Q(offer_type='sale') | Q(offer_type='sale_or_rent'))
+                elif offer_type == 'rent':
+                    qs = qs.filter(Q(offer_type='rent') | Q(offer_type='sale_or_rent'))
+                else:
+                    qs = qs.filter(offer_type=offer_type)
+
+            if data.get('min_sale_price') is not None:
+                qs = qs.filter(sale_price__gte=data['min_sale_price'])
+            if data.get('max_sale_price') is not None:
+                qs = qs.filter(sale_price__lte=data['max_sale_price'])
+            if data.get('min_rent_price') is not None:
+                qs = qs.filter(rent_price__gte=data['min_rent_price'])
+            if data.get('max_rent_price') is not None:
+                qs = qs.filter(rent_price__lte=data['max_rent_price'])
+
+            if data.get('has_elevator'):
+                qs = qs.filter(has_elevator=True)
+            if data.get('has_heating'):
+                qs = qs.filter(has_heating=True)
+            if data.get('has_air_conditioning'):
+                qs = qs.filter(has_air_conditioning=True)
+
+        # Sin 'since' (primer envío, last_notified_at aún None): se
+        # consideran coincidencia TODOS los inmuebles activos que casen
+        # con el filtro, no solo los futuros -- es la única forma de que
+        # una alerta recién creada tenga algo que notificar la primera
+        # vez. A partir de ahí, dispatch_saved_search_alerts() actualiza
+        # last_notified_at y las siguientes pasadas ya solo cuentan lo
+        # publicado después de esa fecha.
+        if since:
+            qs = qs.filter(created_at__gt=since)
+
+        return qs.distinct()

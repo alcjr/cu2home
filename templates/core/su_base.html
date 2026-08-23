@@ -1,0 +1,192 @@
+{% extends "core/base.html" %}
+{% load static i18n %}
+
+{#
+    su_base.html — Plantilla base del panel de administración
+    =============================================================
+    Hereda de core/base.html (cabecera, pie de página y estructura
+    principal) y añade el sidebar lateral para superusuarios.
+    
+    Esta plantilla debe ser usada por todas las vistas del panel:
+    - dashboard.html
+    - visor.html
+    - config.html
+    - panel.html (si existe)
+#}
+
+{% block extra_css %}
+<style>
+    /* =========================================================
+       Comportamiento de scroll — idéntico al de core/index.html
+       ========================================================= */
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    header, .header, #header, nav.navbar, .navbar {
+        flex-shrink: 0;
+    }
+    footer, .footer, #footer {
+        flex-shrink: 0;
+    }
+
+    /* Refuerzo del degradado de cabecera */
+    header {
+        background: linear-gradient(135deg, #0A2E2A 0%, #A8D5BA 100%) !important;
+        border-bottom: 1px solid rgba(225,91,51,0.22) !important;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.18) !important;
+    }
+
+    .app-layout {
+        min-height: 0 !important;
+    }
+    .app-content {
+        display: flex;
+        flex-direction: column;
+        min-height: 0 !important;
+        overflow: hidden;
+    }
+
+    .admin-shell {
+        display: flex;
+        flex: 1;
+        min-height: 0;
+    }
+
+    #adminContentArea {
+        flex: 1;
+        min-width: 0;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 28px 32px;
+        background: var(--sand);
+    }
+
+    /* =========================================================
+       ESTILOS DEL CONTENIDO ADMIN
+       ========================================================= */
+    .admin-content { max-width: 1120px; }
+    .admin-header { margin-bottom: 24px; }
+    .admin-header h1 {
+        font-family: var(--font-display);
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 4px;
+    }
+    .admin-header p { color: var(--muted); font-size: 0.92rem; }
+    .admin-card {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-soft);
+        padding: 20px 24px;
+    }
+    .admin-card + .admin-card { margin-top: 16px; }
+
+    .admin-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+    }
+    .admin-stat-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .admin-stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-md);
+        background: var(--sand);
+        color: var(--terracotta);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+    .admin-stat-body { display: flex; flex-direction: column; min-width: 0; }
+    .admin-stat-value {
+        font-family: var(--font-mono);
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: var(--ink);
+        line-height: 1.2;
+    }
+    .admin-stat-label { font-size: 0.82rem; color: var(--muted); }
+
+    @media (max-width: 480px) {
+        .admin-stats-grid { grid-template-columns: 1fr; }
+    }
+
+    .admin-denied {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 24px;
+    }
+    .admin-denied .admin-card {
+        max-width: 420px;
+        text-align: center;
+    }
+    .admin-denied h1 {
+        font-family: var(--font-display);
+        font-size: 1.4rem;
+        color: var(--ink);
+        margin-bottom: 8px;
+    }
+    .admin-denied p { color: var(--muted); font-size: 0.92rem; margin-bottom: 18px; }
+    .admin-denied-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--terracotta);
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: background 0.2s;
+    }
+    .admin-denied-link:hover { background: var(--terracotta-dark); }
+
+    {% block admin_extra_css %}{% endblock %}
+</style>
+{% endblock %}
+
+{% block content %}
+{% if user.is_superuser %}
+<div class="admin-shell">
+    {# Zona 2: menú lateral #}
+    {% include "core/sidebar.html" %}
+
+    {# Zona 3: contenido específico de cada página admin #}
+    <div id="adminContentArea">
+        {% block admin_content %}{% endblock %}
+    </div>
+</div>
+{% else %}
+    <div class="admin-denied">
+        <div class="admin-card">
+            <h1>{% trans "Acceso restringido" %}</h1>
+            <p>{% trans "Esta sección del sitio es solo para superusuarios." %}</p>
+            <a href="{% url 'home' %}" class="admin-denied-link">
+                <i class="fas fa-arrow-left"></i> {% trans "Volver al inicio" %}
+            </a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{# El JavaScript del sidebar ya está en base.html #}
+{# No es necesario cargar sidebar.js porque el script ya está integrado #}
+{% block admin_extra_js %}{% endblock %}
+{% endblock %}

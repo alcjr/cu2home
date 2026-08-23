@@ -1,0 +1,37 @@
+{% extends "core/su_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Dashboard" %} · {{ site_name|default:"cu2home" }}{% endblock %}
+
+{% block admin_content %}
+<div class="admin-content">
+    <div class="admin-header">
+        <h1>{% trans "Dashboard" %}</h1>
+        <p>{% trans "Resumen general del portal." %}</p>
+    </div>
+
+    <div class="admin-stats-grid">
+        <div class="admin-card admin-stat-card">
+            <span class="admin-stat-icon"><i class="fas fa-building"></i></span>
+            <div class="admin-stat-body">
+                <span class="admin-stat-value">{{ total_properties }}</span>
+                <span class="admin-stat-label">{% trans "Propiedades activas" %}</span>
+            </div>
+        </div>
+        <div class="admin-card admin-stat-card">
+            <span class="admin-stat-icon"><i class="fas fa-users"></i></span>
+            <div class="admin-stat-body">
+                <span class="admin-stat-value">{{ total_users }}</span>
+                <span class="admin-stat-label">{% trans "Usuarios registrados" %}</span>
+            </div>
+        </div>
+        <div class="admin-card admin-stat-card">
+            <span class="admin-stat-icon"><i class="fas fa-eye"></i></span>
+            <div class="admin-stat-body">
+                <span class="admin-stat-value">{{ total_views }}</span>
+                <span class="admin-stat-label">{% trans "Vistas totales" %}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

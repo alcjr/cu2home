@@ -1,0 +1,826 @@
+{% extends "core/su_base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Dashboard" %} · {{ site_name|default:"cu2home" }}{% endblock %}
+
+{% block admin_extra_css %}
+<style>
+    .dashboard-content {
+        max-width: 100%;
+    }
+    
+    /* Filtros */
+    .filters-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 24px;
+        padding: 16px 20px;
+        background: var(--paper);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--line);
+        align-items: flex-end;
+    }
+    
+    .filters-bar .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 160px;
+        flex: 1;
+    }
+    
+    .filters-bar .filter-group label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--muted);
+    }
+    
+    .filters-bar .filter-group select,
+    .filters-bar .filter-group input {
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-sm);
+        background: var(--sand);
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        color: var(--ink);
+        transition: border-color 0.2s;
+    }
+    
+    .filters-bar .filter-group select:focus,
+    .filters-bar .filter-group input:focus {
+        border-color: var(--turquoise);
+        outline: none;
+        background: #fff;
+    }
+    
+    .filters-bar .btn-reset {
+        padding: 8px 20px;
+        background: var(--terracotta);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+        font-family: var(--font-body);
+        height: 40px;
+        align-self: flex-end;
+    }
+    
+    .filters-bar .btn-reset:hover {
+        background: var(--terracotta-dark);
+    }
+    
+    /* Grid de KPI */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+    
+    .kpi-card {
+        background: var(--paper);
+        border-radius: var(--radius-lg);
+        padding: 18px 20px;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-soft);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lift);
+    }
+    
+    .kpi-card .kpi-label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+    
+    .kpi-card .kpi-value {
+        font-family: var(--font-mono);
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--ink);
+    }
+    
+    .kpi-card .kpi-percent {
+        font-size: 0.85rem;
+        color: var(--turquoise-dark);
+        margin-left: 8px;
+    }
+    
+    .kpi-card .kpi-percent.negative {
+        color: var(--terracotta);
+    }
+    
+    .kpi-card .kpi-sub {
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-top: 2px;
+    }
+    
+    .kpi-card.kpi-primary .kpi-value { color: var(--turquoise-dark); }
+    .kpi-card.kpi-secondary .kpi-value { color: var(--terracotta); }
+    .kpi-card.kpi-gold .kpi-value { color: var(--gold); }
+    .kpi-card.kpi-purple .kpi-value { color: #6B4FA0; }
+    
+    /* Grid de gráficos */
+    .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+    
+    .chart-card {
+        background: var(--paper);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-soft);
+        overflow: hidden;
+    }
+    
+    .chart-card .chart-header {
+        padding: 16px 20px 8px;
+        border-bottom: 1px solid var(--line);
+    }
+    
+    .chart-card .chart-header h3 {
+        font-family: var(--font-display);
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--ink);
+    }
+    
+    .chart-card .chart-header p {
+        font-size: 0.82rem;
+        color: var(--muted);
+    }
+    
+    .chart-card .chart-body {
+        padding: 16px 20px 20px;
+        height: 300px;
+    }
+    
+    .chart-card .chart-body .chart-container {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .chart-card.full-width {
+        grid-column: 1 / -1;
+    }
+    
+    .chart-card .chart-body .chart-container.half-height {
+        height: 250px;
+    }
+    
+    /* Loading */
+    .chart-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+    
+    .chart-loading i {
+        margin-right: 10px;
+        color: var(--terracotta);
+        font-size: 1.2rem;
+    }
+    
+    @media (max-width: 768px) {
+        .charts-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .kpi-grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+        
+        .filters-bar {
+            flex-direction: column;
+        }
+        
+        .filters-bar .filter-group {
+            min-width: 100%;
+        }
+        
+        .filters-bar .btn-reset {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block admin_content %}
+<div class="dashboard-content">
+    
+    <!-- ===== FILTROS ===== -->
+    <div class="filters-bar" id="filtersBar">
+        <div class="filter-group">
+            <label for="filterYear">{% trans "Año" %}</label>
+            <select id="filterYear">
+                <option value="">{% trans "Todos" %}</option>
+                {% for year in years %}
+                    <option value="{{ year.year }}">{{ year.year }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="filterProvince">{% trans "Provincia" %}</label>
+            <select id="filterProvince">
+                <option value="">{% trans "Todas" %}</option>
+                {% for province in provinces %}
+                    <option value="{{ province.id }}">{{ province.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="filterMunicipality">{% trans "Municipio" %}</label>
+            <select id="filterMunicipality">
+                <option value="">{% trans "Todos" %}</option>
+                {% for municipality in municipalities %}
+                    <option value="{{ municipality.id }}" data-province="{{ municipality.province_id }}">
+                        {{ municipality.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <button class="btn-reset" id="resetFilters">{% trans "Aplicar filtros" %}</button>
+    </div>
+    
+    <!-- ===== KPI ===== -->
+    <div class="kpi-grid" id="kpiGrid">
+        <!-- Se llena con JavaScript -->
+    </div>
+    
+    <!-- ===== GRÁFICOS ===== -->
+    <div class="charts-grid" id="chartsGrid">
+        <!-- Meses -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>{% trans "Ventas por mes" %}</h3>
+                <p>{% trans "Propiedades vendidas por mes" %}</p>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" id="chartMonthlySales"></div>
+            </div>
+        </div>
+        
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>{% trans "Alquileres por mes" %}</h3>
+                <p>{% trans "Propiedades alquiladas por mes" %}</p>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" id="chartMonthlyRents"></div>
+            </div>
+        </div>
+        
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>{% trans "Permutas por mes" %}</h3>
+                <p>{% trans "Propiedades permutadas por mes" %}</p>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" id="chartMonthlySwaps"></div>
+            </div>
+        </div>
+        
+        <!-- Municipios -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>{% trans "Ventas por municipio" %}</h3>
+                <p>{% trans "Distribución de ventas por municipio" %}</p>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" id="chartMunicipalitySales"></div>
+            </div>
+        </div>
+        
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>{% trans "Alquileres por municipio" %}</h3>
+                <p>{% trans "Distribución de alquileres por municipio" %}</p>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" id="chartMunicipalityRents"></div>
+            </div>
+        </div>
+        
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>{% trans "Permutas por municipio" %}</h3>
+                <p>{% trans "Distribución de permutas por municipio" %}</p>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" id="chartMunicipalitySwaps"></div>
+            </div>
+        </div>
+        
+        <!-- Precio m² -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>{% trans "Precio m² - Ventas" %}</h3>
+                <p>{% trans "Precio estimado del metro cuadrado por municipio" %}</p>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" id="chartPricePerSqmSale"></div>
+            </div>
+        </div>
+        
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>{% trans "Precio m² - Alquiler" %}</h3>
+                <p>{% trans "Precio estimado del metro cuadrado por municipio" %}</p>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" id="chartPricePerSqmRent"></div>
+            </div>
+        </div>
+        
+        <!-- Gráficos adicionales -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>{% trans "Distribución por tipo" %}</h3>
+                <p>{% trans "Propiedades por tipo de inmueble" %}</p>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" id="chartPropertyType"></div>
+            </div>
+        </div>
+        
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>{% trans "Distribución por estado" %}</h3>
+                <p>{% trans "Propiedades por estado" %}</p>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" id="chartStatus"></div>
+            </div>
+        </div>
+        
+        <div class="chart-card full-width">
+            <div class="chart-header">
+                <h3>{% trans "Top provincias" %}</h3>
+                <p>{% trans "Provincias con más propiedades" %}</p>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" id="chartTopProvinces"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== HIGHCHARTS ===== -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<script>
+(function() {
+    'use strict';
+    
+    var currentData = null;
+    var charts = {};
+    
+    // ===== COLORES =====
+    var COLORS = {
+        turquoise: '#2F9C95',
+        turquoiseDark: '#227A74',
+        terracotta: '#E15B33',
+        terracottaDark: '#C1471F',
+        gold: '#C9A24B',
+        purple: '#6B4FA0',
+        green: '#4CAF50',
+        blue: '#3F8CC0',
+        orange: '#F5A623',
+        pink: '#E57373',
+        grey: '#9E9E9E',
+    };
+    
+    var COLOR_PALETTE = [
+        COLORS.turquoise, COLORS.terracotta, COLORS.gold, COLORS.purple,
+        COLORS.green, COLORS.blue, COLORS.orange, COLORS.pink, COLORS.grey
+    ];
+    
+    // ===== MESES =====
+    var MONTHS = [
+        'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+        'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+    ];
+    
+    // ===== KPI TEMPLATE =====
+    function renderKPI(data) {
+        var grid = document.getElementById('kpiGrid');
+        var kpi = data.kpi;
+        
+        var cards = [
+            { label: 'Total inmuebles', value: kpi.total_properties, cls: 'kpi-primary' },
+            { label: 'Activos', value: kpi.active_properties, pct: kpi.active_percent, cls: 'kpi-primary' },
+            { label: 'Disponibles', value: kpi.available_properties, pct: kpi.available_percent, cls: 'kpi-primary' },
+            { label: 'Reservados', value: kpi.reserved_properties, pct: kpi.reserved_percent, cls: 'kpi-secondary' },
+            { label: 'Vendidos', value: kpi.sold_properties, pct: kpi.sold_percent, cls: 'kpi-secondary' },
+            { label: 'En venta', value: kpi.sale_properties, pct: kpi.sale_percent, cls: 'kpi-secondary' },
+            { label: 'En alquiler', value: kpi.rent_properties, pct: kpi.rent_percent, cls: 'kpi-secondary' },
+            { label: 'Permutas', value: kpi.swap_properties, pct: kpi.swap_percent, cls: 'kpi-gold' },
+            { label: 'Venta/Alquiler', value: kpi.sale_or_rent_properties, pct: kpi.sale_or_rent_percent, cls: 'kpi-purple' },
+        ];
+        
+        grid.innerHTML = cards.map(function(card) {
+            var pctHtml = card.pct !== undefined 
+                ? '<span class="kpi-percent">(' + card.pct + '%)</span>'
+                : '';
+            return '<div class="kpi-card ' + card.cls + '">' +
+                '<div class="kpi-label">' + card.label + '</div>' +
+                '<div class="kpi-value">' + card.value + pctHtml + '</div>' +
+                '</div>';
+        }).join('');
+    }
+    
+    // ===== GRÁFICOS =====
+    function createChart(containerId, options) {
+        if (charts[containerId]) {
+            charts[containerId].destroy();
+        }
+        charts[containerId] = Highcharts.chart(containerId, options);
+        return charts[containerId];
+    }
+    
+    function renderCharts(data) {
+        var charts_data = data.charts;
+        var months = MONTHS;
+        
+        // 1. Ventas por mes
+        createChart('chartMonthlySales', {
+            chart: { type: 'column' },
+            title: { text: null },
+            xAxis: { categories: months },
+            yAxis: { title: { text: 'Cantidad' }, min: 0 },
+            series: [{
+                name: 'Ventas',
+                data: charts_data.monthly_sales,
+                color: COLORS.turquoise
+            }],
+            tooltip: { valueSuffix: ' propiedades' },
+            credits: { enabled: false },
+            exporting: { enabled: true }
+        });
+        
+        // 2. Alquileres por mes
+        createChart('chartMonthlyRents', {
+            chart: { type: 'column' },
+            title: { text: null },
+            xAxis: { categories: months },
+            yAxis: { title: { text: 'Cantidad' }, min: 0 },
+            series: [{
+                name: 'Alquileres',
+                data: charts_data.monthly_rents,
+                color: COLORS.terracotta
+            }],
+            tooltip: { valueSuffix: ' propiedades' },
+            credits: { enabled: false },
+            exporting: { enabled: true }
+        });
+        
+        // 3. Permutas por mes
+        createChart('chartMonthlySwaps', {
+            chart: { type: 'column' },
+            title: { text: null },
+            xAxis: { categories: months },
+            yAxis: { title: { text: 'Cantidad' }, min: 0 },
+            series: [{
+                name: 'Permutas',
+                data: charts_data.monthly_swaps,
+                color: COLORS.gold
+            }],
+            tooltip: { valueSuffix: ' propiedades' },
+            credits: { enabled: false },
+            exporting: { enabled: true }
+        });
+        
+        // 4. Ventas por municipio
+        createChart('chartMunicipalitySales', {
+            chart: { type: 'bar' },
+            title: { text: null },
+            xAxis: { 
+                categories: charts_data.municipality_sales.names,
+                title: { text: null }
+            },
+            yAxis: { title: { text: 'Cantidad' }, min: 0 },
+            series: [{
+                name: 'Ventas',
+                data: charts_data.municipality_sales.values,
+                color: COLORS.turquoise
+            }],
+            tooltip: { valueSuffix: ' propiedades' },
+            credits: { enabled: false },
+            exporting: { enabled: true }
+        });
+        
+        // 5. Alquileres por municipio
+        createChart('chartMunicipalityRents', {
+            chart: { type: 'bar' },
+            title: { text: null },
+            xAxis: { 
+                categories: charts_data.municipality_rents.names,
+                title: { text: null }
+            },
+            yAxis: { title: { text: 'Cantidad' }, min: 0 },
+            series: [{
+                name: 'Alquileres',
+                data: charts_data.municipality_rents.values,
+                color: COLORS.terracotta
+            }],
+            tooltip: { valueSuffix: ' propiedades' },
+            credits: { enabled: false },
+            exporting: { enabled: true }
+        });
+        
+        // 6. Permutas por municipio
+        createChart('chartMunicipalitySwaps', {
+            chart: { type: 'bar' },
+            title: { text: null },
+            xAxis: { 
+                categories: charts_data.municipality_swaps.names,
+                title: { text: null }
+            },
+            yAxis: { title: { text: 'Cantidad' }, min: 0 },
+            series: [{
+                name: 'Permutas',
+                data: charts_data.municipality_swaps.values,
+                color: COLORS.gold
+            }],
+            tooltip: { valueSuffix: ' propiedades' },
+            credits: { enabled: false },
+            exporting: { enabled: true }
+        });
+        
+        // 7. Precio m² - Ventas
+        createChart('chartPricePerSqmSale', {
+            chart: { type: 'column' },
+            title: { text: null },
+            xAxis: { 
+                categories: charts_data.sale_price_per_sqm.names,
+                title: { text: null }
+            },
+            yAxis: { 
+                title: { text: 'Precio m²' },
+                labels: { format: '{value:,.0f}' }
+            },
+            series: [{
+                name: 'Precio m² (Venta)',
+                data: charts_data.sale_price_per_sqm.values,
+                color: COLORS.turquoise
+            }],
+            tooltip: { valuePrefix: '$', valueSuffix: ' USD/m²' },
+            credits: { enabled: false },
+            exporting: { enabled: true }
+        });
+        
+        // 8. Precio m² - Alquiler
+        createChart('chartPricePerSqmRent', {
+            chart: { type: 'column' },
+            title: { text: null },
+            xAxis: { 
+                categories: charts_data.rent_price_per_sqm.names,
+                title: { text: null }
+            },
+            yAxis: { 
+                title: { text: 'Precio m²' },
+                labels: { format: '{value:,.0f}' }
+            },
+            series: [{
+                name: 'Precio m² (Alquiler)',
+                data: charts_data.rent_price_per_sqm.values,
+                color: COLORS.terracotta
+            }],
+            tooltip: { valuePrefix: '$', valueSuffix: ' USD/m²' },
+            credits: { enabled: false },
+            exporting: { enabled: true }
+        });
+        
+        // 9. Distribución por tipo
+        var typeData = charts_data.property_type_distribution || [];
+        var typeNames = typeData.map(function(d) { 
+            var labels = {
+                'apartment': 'Apartamento',
+                'house': 'Casa',
+                'villa': 'Villa',
+                'penthouse': 'Penthouse',
+                'studio': 'Estudio',
+                'commercial': 'Local comercial'
+            };
+            return labels[d.property_type] || d.property_type;
+        });
+        var typeValues = typeData.map(function(d) { return d.count; });
+        
+        createChart('chartPropertyType', {
+            chart: { type: 'pie' },
+            title: { text: null },
+            series: [{
+                name: 'Propiedades',
+                data: typeNames.map(function(name, i) {
+                    return {
+                        name: name,
+                        y: typeValues[i],
+                        color: COLOR_PALETTE[i % COLOR_PALETTE.length]
+                    };
+                }),
+                innerSize: '40%'
+            }],
+            tooltip: { valueSuffix: ' propiedades' },
+            credits: { enabled: false },
+            exporting: { enabled: true },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f}%'
+                    }
+                }
+            }
+        });
+        
+        // 10. Distribución por estado
+        var statusData = charts_data.status_distribution || [];
+        var statusNames = statusData.map(function(d) {
+            var labels = {
+                'available': 'Disponible',
+                'reserved': 'Reservado',
+                'sold': 'Vendido'
+            };
+            return labels[d.status] || d.status;
+        });
+        var statusValues = statusData.map(function(d) { return d.count; });
+        var statusColors = {
+            'available': COLORS.turquoise,
+            'reserved': COLORS.gold,
+            'sold': COLORS.terracotta
+        };
+        
+        createChart('chartStatus', {
+            chart: { type: 'pie' },
+            title: { text: null },
+            series: [{
+                name: 'Propiedades',
+                data: statusNames.map(function(name, i) {
+                    var statusKey = statusData[i] ? statusData[i].status : '';
+                    return {
+                        name: name,
+                        y: statusValues[i],
+                        color: statusColors[statusKey] || COLOR_PALETTE[i % COLOR_PALETTE.length]
+                    };
+                }),
+                innerSize: '40%'
+            }],
+            tooltip: { valueSuffix: ' propiedades' },
+            credits: { enabled: false },
+            exporting: { enabled: true },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f}%'
+                    }
+                }
+            }
+        });
+        
+        // 11. Top provincias
+        var topProvs = charts_data.top_provinces || [];
+        createChart('chartTopProvinces', {
+            chart: { type: 'bar' },
+            title: { text: null },
+            xAxis: { 
+                categories: topProvs.map(function(d) { return d.province__name || 'Sin provincia'; }),
+                title: { text: null }
+            },
+            yAxis: { title: { text: 'Cantidad' }, min: 0 },
+            series: [{
+                name: 'Propiedades',
+                data: topProvs.map(function(d) { return d.count; }),
+                color: COLORS.terracotta
+            }],
+            tooltip: { valueSuffix: ' propiedades' },
+            credits: { enabled: false },
+            exporting: { enabled: true }
+        });
+    }
+    
+    // ===== CARGA DE DATOS =====
+    function loadDashboardData() {
+        var year = document.getElementById('filterYear').value;
+        var province = document.getElementById('filterProvince').value;
+        var municipality = document.getElementById('filterMunicipality').value;
+        
+        var params = new URLSearchParams();
+        if (year) params.set('year', year);
+        if (province) params.set('province_id', province);
+        if (municipality) params.set('municipality_id', municipality);
+        
+        fetch('{% url "dashboard:data" %}?' + params.toString())
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                currentData = data;
+                renderKPI(data);
+                renderCharts(data);
+            })
+            .catch(function(error) {
+                console.error('Error loading dashboard data:', error);
+            });
+    }
+    
+    // ===== FILTROS =====
+    function setupFilters() {
+        var provinceSelect = document.getElementById('filterProvince');
+        var municipalitySelect = document.getElementById('filterMunicipality');
+        var resetBtn = document.getElementById('resetFilters');
+        
+        // Filtrar municipios por provincia
+        provinceSelect.addEventListener('change', function() {
+            var provinceId = this.value;
+            var options = municipalitySelect.querySelectorAll('option');
+            
+            options.forEach(function(opt) {
+                if (opt.value === '') {
+                    opt.style.display = '';
+                    return;
+                }
+                var optProvince = opt.getAttribute('data-province');
+                if (!provinceId || optProvince === provinceId) {
+                    opt.style.display = '';
+                } else {
+                    opt.style.display = 'none';
+                }
+            });
+            
+            // Resetear municipio si no es válido
+            if (municipalitySelect.value) {
+                var selectedOpt = municipalitySelect.querySelector(
+                    'option[value="' + municipalitySelect.value + '"]'
+                );
+                if (selectedOpt && selectedOpt.style.display === 'none') {
+                    municipalitySelect.value = '';
+                }
+            }
+        });
+        
+        // Trigger initial filter
+        provinceSelect.dispatchEvent(new Event('change'));
+        
+        // Reset / aplicar filtros
+        resetBtn.addEventListener('click', function() {
+            loadDashboardData();
+        });
+        
+        // Auto-load al cambiar filtros (con debounce)
+        var timeout = null;
+        [provinceSelect, municipalitySelect, document.getElementById('filterYear')].forEach(function(el) {
+            el.addEventListener('change', function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(loadDashboardData, 300);
+            });
+        });
+    }
+    
+    // ===== INICIO =====
+    document.addEventListener('DOMContentLoaded', function() {
+        setupFilters();
+        loadDashboardData();
+        
+        // Redibujar gráficos al cambiar tamaño de ventana
+        var resizeTimeout = null;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                if (currentData) {
+                    renderCharts(currentData);
+                }
+            }, 500);
+        });
+    });
+})();
+</script>
+{% endblock %}

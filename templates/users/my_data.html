@@ -1,0 +1,352 @@
+{% extends "core/base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Mis datos" %} | {{ site_name|default:"cu2home" }}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 40px; padding-bottom: 60px;">
+    <div class="my-data-header" style="margin-bottom: 32px;">
+        <h1 style="font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--ink); letter-spacing: -0.5px;">
+            {% trans "Mis datos" %}
+        </h1>
+        <p style="color: var(--muted); font-size: 0.95rem; margin-top: 4px;">
+            {% trans "Consulta y actualiza tu información personal." %}
+        </p>
+    </div>
+
+    <div class="my-data-card" style="
+        background: var(--paper);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--line);
+        padding: 40px 44px;
+        max-width: 720px;
+        box-shadow: var(--shadow-soft);
+    ">
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            <!-- ===== AVATAR ===== -->
+            <div class="form-section" style="margin-bottom: 32px;">
+                <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+                    <div class="avatar-preview" style="
+                        width: 96px;
+                        height: 96px;
+                        border-radius: 50%;
+                        background: var(--sand-deep);
+                        border: 2px solid var(--line);
+                        overflow: hidden;
+                        flex-shrink: 0;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    ">
+                        {% if profile.avatar %}
+                            <img src="{{ profile.avatar.url }}" alt="{% trans 'Avatar' %}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <span style="font-size: 2.5rem; font-weight: 700; color: var(--muted);">
+                                {{ user.username|first|upper }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="id_avatar" style="
+                            display: inline-block;
+                            font-weight: 600;
+                            font-size: 0.88rem;
+                            color: var(--ink);
+                            margin-bottom: 6px;
+                        ">{% trans "Avatar" %}</label>
+                        <input type="file" name="avatar" id="id_avatar" accept="image/*" style="
+                            display: block;
+                            width: 100%;
+                            padding: 8px 12px;
+                            border: 1px solid var(--line);
+                            border-radius: var(--radius-sm);
+                            font-family: var(--font-body);
+                            font-size: 0.86rem;
+                            background: var(--sand);
+                        ">
+                        {% if profile.avatar %}
+                            <label style="display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 0.86rem; color: var(--terracotta-dark); cursor: pointer;">
+                                <input type="checkbox" name="remove_avatar" value="on">
+                                {% trans "Eliminar avatar actual" %}
+                            </label>
+                        {% endif %}
+                        <p style="font-size: 0.75rem; color: var(--muted); margin-top: 4px;">
+                            {% trans "Formatos permitidos: JPG, PNG. Tamaño máximo: 2MB." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== DATOS PERSONALES ===== -->
+            <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+                <div class="form-group">
+                    <label for="id_first_name" style="
+                        display: block;
+                        font-weight: 600;
+                        font-size: 0.88rem;
+                        color: var(--ink);
+                        margin-bottom: 4px;
+                    ">{% trans "Nombre" %}</label>
+                    <input type="text" name="first_name" id="id_first_name" value="{{ user.first_name }}" style="
+                        width: 100%;
+                        padding: 10px 14px;
+                        border: 1px solid var(--line);
+                        border-radius: var(--radius-sm);
+                        font-family: var(--font-body);
+                        font-size: 0.95rem;
+                        transition: border-color 0.2s;
+                        background: var(--sand);
+                    ">
+                </div>
+                <div class="form-group">
+                    <label for="id_last_name" style="
+                        display: block;
+                        font-weight: 600;
+                        font-size: 0.88rem;
+                        color: var(--ink);
+                        margin-bottom: 4px;
+                    ">{% trans "Apellidos" %}</label>
+                    <input type="text" name="last_name" id="id_last_name" value="{{ user.last_name }}" style="
+                        width: 100%;
+                        padding: 10px 14px;
+                        border: 1px solid var(--line);
+                        border-radius: var(--radius-sm);
+                        font-family: var(--font-body);
+                        font-size: 0.95rem;
+                        transition: border-color 0.2s;
+                        background: var(--sand);
+                    ">
+                </div>
+            </div>
+
+            <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+                <div class="form-group">
+                    <label for="id_email" style="
+                        display: block;
+                        font-weight: 600;
+                        font-size: 0.88rem;
+                        color: var(--ink);
+                        margin-bottom: 4px;
+                    ">{% trans "Correo electrónico" %} <span style="color: var(--terracotta);">*</span></label>
+                    <input type="email" name="email" id="id_email" value="{{ user.email }}" required style="
+                        width: 100%;
+                        padding: 10px 14px;
+                        border: 1px solid var(--line);
+                        border-radius: var(--radius-sm);
+                        font-family: var(--font-body);
+                        font-size: 0.95rem;
+                        transition: border-color 0.2s;
+                        background: var(--sand);
+                    ">
+                </div>
+                <div class="form-group">
+                    <label for="id_phone" style="
+                        display: block;
+                        font-weight: 600;
+                        font-size: 0.88rem;
+                        color: var(--ink);
+                        margin-bottom: 4px;
+                    ">{% trans "Teléfono" %}</label>
+                    <input type="tel" name="phone" id="id_phone" value="{{ profile.phone }}" style="
+                        width: 100%;
+                        padding: 10px 14px;
+                        border: 1px solid var(--line);
+                        border-radius: var(--radius-sm);
+                        font-family: var(--font-body);
+                        font-size: 0.95rem;
+                        transition: border-color 0.2s;
+                        background: var(--sand);
+                    ">
+                </div>
+            </div>
+
+            <!-- ===== TIPO DE USUARIO ===== -->
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label for="id_user_type" style="
+                    display: block;
+                    font-weight: 600;
+                    font-size: 0.88rem;
+                    color: var(--ink);
+                    margin-bottom: 4px;
+                ">{% trans "Tipo de cuenta" %}</label>
+                <select name="user_type" id="id_user_type" style="
+                    width: 100%;
+                    padding: 10px 14px;
+                    border: 1px solid var(--line);
+                    border-radius: var(--radius-sm);
+                    font-family: var(--font-body);
+                    font-size: 0.95rem;
+                    background: var(--sand);
+                    transition: border-color 0.2s;
+                ">
+                    {% for value, label in user_type_choices %}
+                        <option value="{{ value }}" {% if profile.user_type == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <p style="font-size: 0.78rem; color: var(--muted); margin-top: 4px;">
+                    {% trans "Comprador/Visitante: solo puedes guardar favoritos y alertas. Agente: puedes publicar inmuebles." %}
+                </p>
+            </div>
+
+            <!-- ===== AGENCY NAME (solo para agentes) ===== -->
+            <div class="form-group agency-field" style="margin-bottom: 24px; {% if profile.user_type != 'agent' %}display: none;{% endif %}">
+                <label for="id_agency_name" style="
+                    display: block;
+                    font-weight: 600;
+                    font-size: 0.88rem;
+                    color: var(--ink);
+                    margin-bottom: 4px;
+                ">{% trans "Nombre de la agencia" %}</label>
+                <input type="text" name="agency_name" id="id_agency_name" value="{{ profile.agency_name }}" style="
+                    width: 100%;
+                    padding: 10px 14px;
+                    border: 1px solid var(--line);
+                    border-radius: var(--radius-sm);
+                    font-family: var(--font-body);
+                    font-size: 0.95rem;
+                    transition: border-color 0.2s;
+                    background: var(--sand);
+                ">
+                <p style="font-size: 0.78rem; color: var(--muted); margin-top: 4px;">
+                    {% trans "Opcional. Si trabajas con una inmobiliaria, indícala aquí." %}
+                </p>
+            </div>
+
+            <!-- ===== BIO ===== -->
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label for="id_bio" style="
+                    display: block;
+                    font-weight: 600;
+                    font-size: 0.88rem;
+                    color: var(--ink);
+                    margin-bottom: 4px;
+                ">{% trans "Biografía / Presentación" %}</label>
+                <textarea name="bio" id="id_bio" rows="4" style="
+                    width: 100%;
+                    padding: 10px 14px;
+                    border: 1px solid var(--line);
+                    border-radius: var(--radius-sm);
+                    font-family: var(--font-body);
+                    font-size: 0.95rem;
+                    resize: vertical;
+                    min-height: 100px;
+                    transition: border-color 0.2s;
+                    background: var(--sand);
+                ">{{ profile.bio }}</textarea>
+                <p style="font-size: 0.78rem; color: var(--muted); margin-top: 4px;">
+                    {% trans "Cuéntanos algo sobre ti. Esto aparecerá en tu perfil público." %}
+                </p>
+            </div>
+
+            <!-- ===== PREFERENCIAS ===== -->
+            <div class="form-group" style="margin-bottom: 32px;">
+                <label style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 10px;
+                    cursor: pointer;
+                    font-weight: 500;
+                    font-size: 0.92rem;
+                ">
+                    <input type="checkbox" name="receive_email_alerts" {% if profile.receive_email_alerts %}checked{% endif %} style="
+                        width: 18px;
+                        height: 18px;
+                        accent-color: var(--turquoise);
+                        cursor: pointer;
+                    ">
+                    {% trans "Recibir alertas por correo electrónico" %}
+                </label>
+                <p style="font-size: 0.78rem; color: var(--muted); margin-top: 4px; margin-left: 28px;">
+                    {% trans "Recibe notificaciones cuando se publiquen inmuebles que coincidan con tus búsquedas guardadas." %}
+                </p>
+            </div>
+
+            <!-- ===== BOTONES ===== -->
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 24px;">
+                <button type="submit" style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    background: var(--terracotta);
+                    color: #fff;
+                    padding: 12px 32px;
+                    border: none;
+                    border-radius: 40px;
+                    font-family: var(--font-body);
+                    font-weight: 600;
+                    font-size: 0.95rem;
+                    cursor: pointer;
+                    transition: background 0.2s, transform 0.15s;
+                ">
+                    <i class="fas fa-save"></i> {% trans "Guardar cambios" %}
+                </button>
+                <a href="{% url 'properties:list' %}" style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 12px 24px;
+                    border: 1px solid var(--line);
+                    border-radius: 40px;
+                    text-decoration: none;
+                    color: var(--ink);
+                    font-weight: 500;
+                    transition: background 0.2s;
+                ">
+                    <i class="fas fa-arrow-left"></i> {% trans "Volver al inicio" %}
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Mostrar/ocultar el campo de nombre de agencia según el tipo de usuario
+    document.addEventListener('DOMContentLoaded', function() {
+        var userTypeSelect = document.getElementById('id_user_type');
+        var agencyField = document.querySelector('.agency-field');
+
+        function toggleAgencyField() {
+            if (userTypeSelect.value === 'agent') {
+                agencyField.style.display = 'block';
+            } else {
+                agencyField.style.display = 'none';
+            }
+        }
+
+        userTypeSelect.addEventListener('change', toggleAgencyField);
+        toggleAgencyField();
+    });
+</script>
+
+<style>
+    /* Estilos adicionales específicos de esta página */
+    .my-data-card input:focus,
+    .my-data-card textarea:focus,
+    .my-data-card select:focus {
+        border-color: var(--turquoise);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(47, 156, 149, 0.12);
+    }
+
+    .my-data-card input::placeholder,
+    .my-data-card textarea::placeholder {
+        color: #b0b8b0;
+    }
+
+    @media (max-width: 640px) {
+        .my-data-card {
+            padding: 24px 20px !important;
+        }
+        .form-grid {
+            grid-template-columns: 1fr !important;
+        }
+        .my-data-header h1 {
+            font-size: 1.6rem !important;
+        }
+    }
+</style>
+{% endblock %}
