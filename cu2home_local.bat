@@ -3,7 +3,7 @@ chcp 65001 >nul
 title Fingest - Servidor Local Django
 
 echo ===============================================
-echo    Iniciando Fingest - Servidor Local Django
+echo    Iniciando cu2home - Servidor Local Django
 echo ===============================================
 echo.
 

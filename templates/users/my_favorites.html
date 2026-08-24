@@ -11,31 +11,30 @@
 {% block content %}
 <div class="list-page">
     <div class="list-page-head">
-        <h1><i class="fas fa-heart"></i>{% trans "Mis favoritos" %}</h1>
+        <h1><i class="fas fa-heart"></i>{{ title }}</h1>
         <a href="{% url 'properties:list' %}" class="back-link">
             <i class="fas fa-arrow-left"></i> {% trans "Volver al portal" %}
         </a>
     </div>
 
     <div class="grid-wrapper">
-        <div id="myFavoritesGrid"></div>
+        <div id="favoritesGrid"></div>
     </div>
 </div>
 
 <!--
-    Contrato esperado del backend (ver comentario ampliado al inicio de
-    my_favorites.js):
-      - URLS.data:   GET  -> lista de inmuebles favoritos del usuario
-                             autenticado (un objeto por fila, con "id"
-                             = id del INMUEBLE, no del registro Favorite).
-      - URLS.remove: POST -> misma vista/URL que 'users:toggle_favorite'
-                             usada en detail.html; togglear un favorito
-                             ya existente lo elimina, así que se reutiliza
-                             tal cual para "quitar de favoritos".
+    Contrato real de views.favorites_data (GET) -- un objeto por fila:
+        favorite_id, property_id, codigo (slug), tipo, tipo_raw,
+        ubicacion, oferta, precio, superficie, estado, anadido
+        ('dd/mm/yyyy' ya formateado), detail_url.
+    URLS.remove es la misma URL de views.toggle_favorite (POST,
+    property_id en el path): togglear un favorito ya existente lo
+    elimina, así que se reutiliza tal cual para "quitar de favoritos"
+    -- no hay ni hace falta un endpoint de borrado dedicado.
 -->
 <script id="urls-config" type="application/json">
 {
-    "data": "{% url 'users:my_favorites_data' %}",
+    "data": "{% url 'users:favorites_data' %}",
     "remove": "{% url 'users:toggle_favorite' 0 %}"
 }
 </script>

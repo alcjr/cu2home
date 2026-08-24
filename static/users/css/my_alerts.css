@@ -142,10 +142,13 @@
     background: #f8f6f4;
     padding: 20px 24px 16px !important;
     overflow-y: auto !important;
-    /* Ver my_properties.css: sin flex + min-height:0 este bloque crece a
-       su altura natural en vez de encogerse dentro del layout flex del
-       popup, empujando la barra de Guardar/Cancelar fuera del área
-       visible. */
+    /* Con popup.height fijo (ver my_alerts.js) este bloque es la única zona
+       que crece/decrece: flex:1 1 auto + min-height:0 hace que ocupe
+       exactamente el hueco entre título y barra de Guardar/Cancelar
+       (ambos flex-shrink:0 más abajo) y sea SIEMPRE ese bloque, nunca el
+       popup completo, el que hace scroll si una pestaña no cabe. Así los
+       botones quedan fijos en la misma posición se cambie o no de
+       pestaña. Mismo patrón que my_properties.css. */
     flex: 1 1 auto !important;
     min-height: 0 !important;
 }
@@ -203,7 +206,41 @@
     margin-bottom: 8px;
 }
 
+/* ===== Cards dentro de cada tab del popup (Datos generales / Tipo de
+   inmueble / Ubicación / Rango de precio · Venta / Rango de precio ·
+   Alquiler / Comodidades) ===== */
+.alert-form-card {
+    background: #fff;
+    border: 1px solid var(--linea);
+    border-radius: 14px;
+    padding: 14px 16px 6px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 3px rgba(31, 26, 23, 0.04);
+}
+.alert-form-card:last-child {
+    margin-bottom: 0;
+}
+.alert-form-card .dx-form-group-caption {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--linea);
+}
+/* Grupos anidados (p.ej. los pares de precio dentro de una card) no
+   necesitan su propio marco -- solo la card exterior */
+.alert-form-card .alert-form-card {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 0;
+}
+
 @media (max-width: 768px) {
     .list-page { padding: 20px 12px 40px; }
     .alert-edit-popup .dx-popup-content { padding: 10px !important; }
+    .alert-form-card { padding: 10px 12px 4px; border-radius: 12px; }
 }

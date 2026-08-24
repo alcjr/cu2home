@@ -101,7 +101,6 @@ INSTALLED_APPS = [
     'apps.properties',
     'apps.users',
     'apps.dashboard',
-    'apps.search',
     'apps.authentication',
     'apps.visor',
     'apps.config',
@@ -202,11 +201,16 @@ DEFAULT_MAP_ZOOM = get_config_int('Maps', 'default_zoom', 7)
 
 # Logging
 LOG_LEVEL = get_config('Logging', 'nivel_desarrollo', 'DEBUG') if DEBUG else get_config('Logging', 'nivel_produccion', 'INFO')
-LOG_FILE = BASE_DIR / 'logs' / get_config('Logging', 'log_file', 'cu2home.log')
+# --- Ruta del archivo de log (robusta ante rutas duplicadas en config.ini) ---
+_log_file_raw = get_config('Logging', 'log_file', 'cu2home.log')
+# Extraer solo el nombre del archivo para evitar rutas anidadas tipo logs/cu2home/logs/cu2home.log
+_log_file_name = os.path.basename(_log_file_raw.replace('\\', '/').replace('//', '/')) or 'cu2home.log'
+LOG_FILE = BASE_DIR / 'logs' / _log_file_name
+
+# Asegurar que el directorio de logs exista ANTES de que Django configure el handler
+os.makedirs(LOG_FILE.parent, exist_ok=True)
 LOG_MAX_BYTES = get_config_int('Logging', 'max_bytes', 10485760)
 LOG_BACKUP_COUNT = get_config_int('Logging', 'backup_count', 10)
-
-os.makedirs(BASE_DIR / 'logs', exist_ok=True)
 
 LOGGING = {
     'version': 1,

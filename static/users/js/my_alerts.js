@@ -129,7 +129,18 @@
     let municipalityEditorInstance = null;
     const priceEditorInstances = {};
 
-    function updateMunicipalityOptions(provinceId) {
+    // isUserAction=false (valor por defecto): la cascada solo actualiza el
+    // dataSource/placeholder del municipio, nunca borra su valor. Esto
+    // cubre las veces que onValueChanged se dispara de forma programática
+    // (apertura del popup con datos existentes, revalidación del form al
+    // pulsar Guardar, reinicialización de editores al cambiar de pestaña)
+    // en las que args.event viene undefined -- si en esos casos se
+    // limpiara el municipio, se perdería un valor que el usuario nunca
+    // tocó. Solo cuando el cambio de provincia es una acción real del
+    // usuario (isUserAction=true, es decir args.event existe) tiene
+    // sentido limpiar un municipio que ya no encaja con la provincia
+    // recién elegida.
+    function updateMunicipalityOptions(provinceId, isUserAction) {
         if (!municipalityEditorInstance) return;
         const filtered = provinceId
             ? municipalityLookupAll.filter(m => String(m.province_id) === String(provinceId))
@@ -138,7 +149,7 @@
         if (!provinceId) {
             municipalityEditorInstance.option('placeholder', gettext('Cualquier municipio'));
         } else if (filtered.length === 0) {
-            municipalityEditorInstance.option('value', null);
+            if (isUserAction) municipalityEditorInstance.option('value', null);
             municipalityEditorInstance.option('placeholder', gettext('No hay municipios para esta provincia'));
         } else {
             municipalityEditorInstance.option('placeholder', gettext('Cualquier municipio'));
@@ -161,13 +172,28 @@
         return true;
     }
 
-    function updatePriceFieldsAvailability(offerType) {
+    // isUserAction=false (valor por defecto): solo actualiza el estado
+    // visual disabled/enabled, NUNCA toca el valor introducido. Necesario
+    // porque esta función se llama también desde form.onContentReady --
+    // que se dispara de forma programática cada vez que se (re)renderiza
+    // el contenido del form, incluida la revalidación interna que
+    // DevExtreme hace al pulsar "Guardar" en un form con pestañas -- y en
+    // esos disparos offerType puede llegar undefined de forma transitoria
+    // aunque el usuario nunca haya tocado "Tipo de oferta". Si en ese
+    // momento se limpiara el valor, se perdería el precio ya introducido
+    // justo antes de construir el payload que se envía al backend (el bug
+    // reportado: precio de venta y provincia desaparecidos tras guardar).
+    // Solo cuando el propio onValueChanged de "Tipo de oferta" confirma
+    // que es una acción real del usuario (isUserAction=true, es decir
+    // args.event existe) tiene sentido borrar un precio que ya no aplica
+    // al nuevo tipo de oferta elegido.
+    function updatePriceFieldsAvailability(offerType, isUserAction) {
         Object.keys(priceEditorInstances).forEach(field => {
             const editor = priceEditorInstances[field];
             if (!editor) return;
             const enabled = isPriceFieldEnabled(field, offerType);
             editor.option('disabled', !enabled);
-            if (!enabled && editor.option('value') !== null) {
+            if (isUserAction && !enabled && editor.option('value') !== null) {
                 editor.option('value', null);
             }
         });
@@ -192,7 +218,6 @@
 
         const amenities = [];
         if (data.has_elevator) amenities.push(gettext('Ascensor'));
-        if (data.has_heating) amenities.push(gettext('Calefacción'));
         if (data.has_air_conditioning) amenities.push(gettext('A/C'));
         if (amenities.length) parts.push(amenities.join(', '));
 
@@ -274,7 +299,7 @@
                 // momento. Aquí se fija una altura EXPLÍCITA e idéntica para
                 // las dos pestañas (proporción del viewport, con techo);
                 // title y barra Guardar/Cancelar quedan fuera de ese
-                // presupuesto (ver alerts.css, flex-shrink:0) y el
+                // presupuesto (ver my_alerts.css, flex-shrink:0) y el
                 // contenido intermedio (.dx-popup-content) hace scroll
                 // interno si una pestaña no cabe. Resultado: los botones
                 // ocupan siempre la misma posición, se cambie o no de
@@ -293,9 +318,14 @@
             form: {
                 colCount: 1,
                 onContentReady: function () {
-                    // Al reabrir el popup, los editores/valores ya están
-                    // montados: sincroniza cascada + visibilidad de precio
-                    // con los valores actuales de la fila.
+                    // Puede dispararse varias veces por sesión de popup
+                    // (apertura inicial, cambio de pestaña, revalidación
+                    // al pulsar Guardar en un form con pestañas). Por eso
+                    // se llama SIN isUserAction=true: solo sincroniza el
+                    // estado visual disabled/enabled de los precios según
+                    // la oferta actual, nunca borra un valor ya
+                    // introducido por el usuario (ver comentario en
+                    // updatePriceFieldsAvailability).
                     const offerType = offerTypeCurrentValue();
                     updatePriceFieldsAvailability(offerType);
                 },
@@ -369,7 +399,7 @@
                                         itemType: 'group',
                                         cssClass: 'alert-form-card',
                                         caption: gettext('Tipo de inmueble'),
-                                        colCount: 2,
+                                        colCount: 1,
                                         items: [
                                             {
                                                 dataField: 'property_type',
@@ -396,7 +426,11 @@
                                                         offerTypeCurrentValue = function () { return args.component.option('value'); };
                                                     },
                                                     onValueChanged: function (args) {
-                                                        updatePriceFieldsAvailability(args.value);
+                                                        // !!args.event distingue un clic/selección real
+                                                        // del usuario de una asignación programática
+                                                        // (apertura del popup, revalidación al guardar,
+                                                        // etc.), donde args.event viene undefined.
+                                                        updatePriceFieldsAvailability(args.value, !!args.event);
                                                     }
                                                 }
                                             }
@@ -406,7 +440,7 @@
                                         itemType: 'group',
                                         cssClass: 'alert-form-card',
                                         caption: gettext('Ubicación'),
-                                        colCount: 2,
+                                        colCount: 1,
                                         items: [
                                             {
                                                 dataField: 'province_id',
@@ -423,7 +457,10 @@
                                                         provinceEditorInstance = args.component;
                                                     },
                                                     onValueChanged: function (args) {
-                                                        updateMunicipalityOptions(args.value);
+                                                        // Mismo motivo que en offer_type: solo limpiar
+                                                        // el municipio cuando el usuario cambia la
+                                                        // provincia de verdad, no en disparos programáticos.
+                                                        updateMunicipalityOptions(args.value, !!args.event);
                                                     }
                                                 }
                                             },
@@ -450,7 +487,7 @@
                                         itemType: 'group',
                                         cssClass: 'alert-form-card',
                                         caption: gettext('Rango de precio · Venta'),
-                                        colCount: 2,
+                                        colCount: 1,
                                         items: [
                                             {
                                                 dataField: 'min_sale_price',
@@ -478,7 +515,7 @@
                                         itemType: 'group',
                                         cssClass: 'alert-form-card',
                                         caption: gettext('Rango de precio · Alquiler (mensual)'),
-                                        colCount: 2,
+                                        colCount: 1,
                                         items: [
                                             {
                                                 dataField: 'min_rent_price',
@@ -507,10 +544,9 @@
                                         cssClass: 'alert-form-card',
                                         caption: gettext('Comodidades'),
                                         colSpan: 2,
-                                        colCount: 3,
+                                        colCount: 2,
                                         items: [
                                             { dataField: 'has_elevator', label: { text: gettext('Ascensor') }, editorType: 'dxCheckBox' },
-                                            { dataField: 'has_heating', label: { text: gettext('Calefacción') }, editorType: 'dxCheckBox' },
                                             { dataField: 'has_air_conditioning', label: { text: gettext('A/C') }, editorType: 'dxCheckBox' }
                                         ]
                                     }
@@ -529,7 +565,6 @@
             e.data.is_active = true;
             e.data.frequency = 'daily';
             e.data.has_elevator = false;
-            e.data.has_heating = false;
             e.data.has_air_conditioning = false;
         },
 
@@ -601,7 +636,6 @@
             { dataField: 'min_rent_price', visible: false },
             { dataField: 'max_rent_price', visible: false },
             { dataField: 'has_elevator', visible: false },
-            { dataField: 'has_heating', visible: false },
             { dataField: 'has_air_conditioning', visible: false },
             {
                 type: 'buttons',
@@ -660,5 +694,5 @@
         DevExpress.ui.notify(gettext('Datos actualizados'), 'success', 1800);
     }
 
-    console.log('🚀 alerts.js inicializado correctamente');
+    console.log('🚀 my_alerts.js inicializado correctamente');
 })();

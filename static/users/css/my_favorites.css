@@ -46,7 +46,7 @@
     overflow: hidden;
 }
 
-/* ===== Celda de título con miniatura de portada ===== */
+/* ===== Celda "Inmueble" (codigo + ubicación) ===== */
 .cell-wrap { display: flex; align-items: center; gap: 10px; height: 100%; padding: 4px 0; }
 .cell-stack { display: flex; flex-direction: column; min-width: 0; }
 .cell-primary {
@@ -65,25 +65,19 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.cover-thumb {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    object-fit: cover;
-    flex-shrink: 0;
-    background: #f1f1f1;
-}
-.cover-thumb-fallback {
+/* Sin imagen de portada disponible en el JSON (favorites_data no la
+   envía): icono de marcador de posición en vez de miniatura real. */
+.cell-icon {
     width: 32px;
     height: 32px;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     flex-shrink: 0;
-    background: #f3f4f6;
-    color: #9ca3af;
+    background: #fdf2ee;
+    color: var(--terracota);
 }
 
 /* ===== Badges (tipo / estado) ===== */
@@ -103,6 +97,8 @@
     border-radius: 999px;
     font-size: 0.75rem;
     font-weight: 600;
+    background: #f1f1f1;
+    color: #555;
 }
 .status-available { background: #e7f5ec; color: #1e7e42; }
 .status-reserved  { background: #fff4e0; color: #b0740a; }
@@ -135,7 +131,6 @@
 .rbtn-delete { color: #c0392b !important; }
 .rbtn-delete:hover { background: #fdecea; border-color: #c0392b; }
 
-/* ===== Cuadro vacío (sin favoritos) ===== */
 .dx-datagrid .dx-empty-message {
     padding: 60px 24px !important;
 }

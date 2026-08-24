@@ -142,7 +142,7 @@
     background: #f8f6f4;
     padding: 20px 24px 16px !important;
     overflow-y: auto !important;
-    /* Con popup.height fijo (ver alerts.js) este bloque es la única zona
+    /* Con popup.height fijo (ver my_alerts.js) este bloque es la única zona
        que crece/decrece: flex:1 1 auto + min-height:0 hace que ocupe
        exactamente el hueco entre título y barra de Guardar/Cancelar
        (ambos flex-shrink:0 más abajo) y sea SIEMPRE ese bloque, nunca el

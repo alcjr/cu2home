@@ -387,5 +387,5 @@
         return message;
     }
 
-    console.log('🚀 favorites.js inicializado correctamente');
+    console.log('🚀 my_favorites.js inicializado correctamente');
 })();

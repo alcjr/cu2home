@@ -17,22 +17,17 @@
 {% block extra_css %}
 <style>
     /* =========================================================
-       Comportamiento de scroll — idéntico al de core/index.html
+       Comportamiento de scroll — ya viene resuelto globalmente
+       en core/base.html (body sin scroll propio, .app-content
+       hace scroll entre cabecera y pie de página). Aquí solo se
+       evita que .app-content vuelva a hacer scroll por su cuenta,
+       porque el panel admin tiene su propio contenedor scrollable
+       interno (#adminContentArea) junto al sidebar.
        ========================================================= */
-    html, body {
-        height: 100%;
-        margin: 0;
-    }
-    body {
+    .app-content {
         display: flex;
         flex-direction: column;
         overflow: hidden;
-    }
-    header, .header, #header, nav.navbar, .navbar {
-        flex-shrink: 0;
-    }
-    footer, .footer, #footer {
-        flex-shrink: 0;
     }
 
     /* Refuerzo del degradado de cabecera */
@@ -40,16 +35,6 @@
         background: linear-gradient(135deg, #0A2E2A 0%, #A8D5BA 100%) !important;
         border-bottom: 1px solid rgba(225,91,51,0.22) !important;
         box-shadow: 0 6px 18px rgba(0,0,0,0.18) !important;
-    }
-
-    .app-layout {
-        min-height: 0 !important;
-    }
-    .app-content {
-        display: flex;
-        flex-direction: column;
-        min-height: 0 !important;
-        overflow: hidden;
     }
 
     .admin-shell {

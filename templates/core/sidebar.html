@@ -46,9 +46,9 @@
                     </a>
                 </li>
 
-                <!-- Base de datos -->
+                <!-- Base de datos (Django admin personalizado) -->
                 <li>
-                    <a href="{% url 'panel' %}" class="sidebar-link {% if request.resolver_match.url_name == 'panel' %}active{% endif %}">
+                    <a href="{% url 'admin:index' %}" class="sidebar-link {% if request.resolver_match.namespace == 'admin' %}active{% endif %}">
                         <i class="fas fa-database"></i>
                         <span>{% trans "Base de datos" %}</span>
                     </a>

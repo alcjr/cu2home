@@ -160,7 +160,7 @@ def toggle_favorite(request, property_id):
 def favorites_page(request):
     """Renderiza la página con la grilla DevExpress (dxDataGrid) de
     favoritos -- 'Mis favoritos' del dashboard de usuario."""
-    return render(request, 'users/favorites.html', {
+    return render(request, 'users/my_favorites.html', {
         'title': _('Mis favoritos'),
     })
 
@@ -701,7 +701,7 @@ def alerts_page(request):
     municipalities = list(
         Municipality.objects.select_related('province').order_by('name').values('id', 'name', 'province_id')
     )
-    return render(request, 'users/alerts.html', {
+    return render(request, 'users/my_alerts.html', {
         'title': _('Mis alertas'),
         'property_types': list(Property._meta.get_field('property_type').choices),
         'offer_types': list(Property._meta.get_field('offer_type').choices),

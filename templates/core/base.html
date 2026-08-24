@@ -301,7 +301,12 @@
         body {
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            height: 100vh;
+            /* El body ya no hace scroll por sí mismo: el scroll vertical
+               vive únicamente en .app-content (ver más abajo), entre el
+               borde inferior de la cabecera y el borde superior del pie
+               de página, que quedan siempre visibles y fijos. */
+            overflow: hidden;
             font-family: var(--font-body);
             background: var(--sand);
             color: var(--ink);
@@ -313,14 +318,17 @@
         /* ===== LAYOUT CON SIDEBAR ===== */
         .app-layout {
             display: flex;
-            min-height: 100vh;
             flex: 1;
+            min-height: 0; /* permite que .app-content pueda encoger y activar su propio scroll */
+            overflow: hidden;
         }
 
         .app-content {
             flex: 1;
             min-width: 0;
+            min-height: 0;
             padding: 0;
+            overflow-y: auto; /* única zona con scroll: de la cabecera al pie de página */
         }
 
         .app-layout > aside {
@@ -335,6 +343,9 @@
         @media (max-width: 768px) {
             .app-layout {
                 display: block;
+            }
+            .app-content {
+                height: 100%; /* .app-layout ya no es flex aquí; hay que heredar su alto explícitamente */
             }
         }
 

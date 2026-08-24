@@ -759,6 +759,15 @@
                 onHiding: function () {
                     console.log('Popup hiding - resetting editors');
                     resetEditFormEditorRefs();
+                    // FIX: aquí (y no en cada cambio de foto) es donde se
+                    // refresca el grid, para que la fila muestre el conteo
+                    // de fotos / portada actualizados. Los cambios de fotos
+                    // (subir, borrar, marcar portada) ya se guardan al
+                    // instante contra el backend según se hacen, así que
+                    // refrescar al cerrar -- se guarde o se cancele el resto
+                    // del formulario -- es correcto y no afecta a la pestaña
+                    // activa porque el popup ya se está cerrando.
+                    try { gridInstanceRef.refresh(); } catch (e) {}
                     // FIX: evita que la fila de esta sesión de edición
                     // sobreviva y se reutilice por error en la siguiente
                     // apertura del popup (alta o edición de otra fila).
@@ -1052,11 +1061,23 @@
                                         }
 
                                         console.log('📸 Modo EDICIÓN - renderizando manager con imágenes. rowData.id:', rowData.id, 'image_ids:', (rowData.images || []).map(function (i) { return i.id; }));
-                                        const notifyChange = function() {
-                                            try {
-                                                gridInstanceRef.refresh();
-                                            } catch (e) {}
-                                        };
+                                        // FIX: antes, notifyChange() llamaba a
+                                        // gridInstanceRef.refresh() -- un refresco
+                                        // COMPLETO del grid en cada alta/baja/portada de
+                                        // foto, con el popup de edición todavía abierto.
+                                        // Ese refresh recargaba los datos y reconstruía el
+                                        // formulario del popup, y como el dxTabPanel no
+                                        // conserva su selectedIndex entre reconstrucciones,
+                                        // la pestaña activa volvía siempre a "General" (la
+                                        // primera). rowData.images es la misma referencia
+                                        // que ya usa el grid (currentEditingRowData = e.data
+                                        // en onEditingStart, ver más abajo), así que no hace
+                                        // falta refrescar nada mientras se edita: los cambios
+                                        // ya están reflejados en esa misma fila. El refresco
+                                        // real de la lista (para que el conteo de fotos y la
+                                        // miniatura de portada se vean actualizados) se hace
+                                        // una sola vez al cerrar el popup, en editing.popup.onHiding.
+                                        const notifyChange = function() {};
 
                                         renderImageManager($container, rowData, notifyChange);
                                     }

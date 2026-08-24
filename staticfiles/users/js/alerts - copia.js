@@ -37,7 +37,7 @@
         return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
     }
 
-    // Mismo motivo que en my_properties.js/favorites.js: .replace() con
+    // Mismo motivo que en my_properties.js/my_favorites.js: .replace() con
     // string literal sustituye solo la PRIMERA ocurrencia de "/0/".
     function buildUrl(baseUrl, ...args) {
         let url = baseUrl;
@@ -274,7 +274,7 @@
                 // momento. Aquí se fija una altura EXPLÍCITA e idéntica para
                 // las dos pestañas (proporción del viewport, con techo);
                 // title y barra Guardar/Cancelar quedan fuera de ese
-                // presupuesto (ver alerts.css, flex-shrink:0) y el
+                // presupuesto (ver my_alerts.css, flex-shrink:0) y el
                 // contenido intermedio (.dx-popup-content) hace scroll
                 // interno si una pestaña no cabe. Resultado: los botones
                 // ocupan siempre la misma posición, se cambie o no de
@@ -660,5 +660,5 @@
         DevExpress.ui.notify(gettext('Datos actualizados'), 'success', 1800);
     }
 
-    console.log('🚀 alerts.js inicializado correctamente');
+    console.log('🚀 my_alerts.js inicializado correctamente');
 })();
