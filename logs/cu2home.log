@@ -1,44 +1,151 @@
-INFO 2026-08-24 12:57:06,386 views visor.views Log file cleared by user cu2home_su
-INFO 2026-08-24 13:08:08,098 autoreload Watching for file changes with StatReloader
-WARNING 2026-08-24 13:08:20,273 log Not Found: /favicon.ico
-INFO 2026-08-24 13:23:49,573 autoreload C:\00_projects\cu2home\apps\dashboard\views.py changed, reloading.
-INFO 2026-08-24 13:23:51,393 autoreload Watching for file changes with StatReloader
-INFO 2026-08-24 13:24:16,613 autoreload Watching for file changes with StatReloader
-INFO 2026-08-24 13:31:19,170 autoreload Watching for file changes with StatReloader
-INFO 2026-08-24 13:38:59,829 autoreload Watching for file changes with StatReloader
-INFO 2026-08-24 13:52:51,799 autoreload Watching for file changes with StatReloader
-WARNING 2026-08-24 13:53:27,575 log Not Found: /favicon.ico
-INFO 2026-08-24 14:06:04,082 autoreload C:\00_projects\cu2home\apps\users\views.py changed, reloading.
-INFO 2026-08-24 14:06:05,099 autoreload Watching for file changes with StatReloader
-INFO 2026-08-24 14:17:33,073 autoreload C:\00_projects\cu2home\cu2home\settings.py changed, reloading.
-INFO 2026-08-24 14:17:34,281 autoreload Watching for file changes with StatReloader
-INFO 2026-08-24 14:17:43,839 autoreload Watching for file changes with StatReloader
-INFO 2026-08-24 14:29:11,472 autoreload Watching for file changes with StatReloader
-ERROR 2026-08-24 14:32:41,507 log Internal Server Error: /users/favorites/
+INFO 2026-08-24 14:51:49,101 views visor.views Log file cleared by user cu2home_su
+WARNING 2026-08-24 14:56:37,189 log Not Found: /media/properties/222/images/222_1.jpg
+WARNING 2026-08-24 14:56:37,192 log Not Found: /media/properties/221/images/221_1.jpg
+WARNING 2026-08-24 14:56:41,314 log Not Found: /media/properties/223/images/223_1.jpg
+WARNING 2026-08-24 14:56:41,342 log Not Found: /media/properties/221/images/221_1.jpg
+WARNING 2026-08-24 14:56:41,345 log Not Found: /media/properties/222/images/222_1.jpg
+WARNING 2026-08-24 14:57:40,812 log Not Found: /media/properties/222/images/222_3.jpg
+WARNING 2026-08-24 14:57:40,823 log Not Found: /media/properties/222/images/222_2.jpg
+WARNING 2026-08-24 14:57:40,829 log Not Found: /media/properties/222/images/222_1.jpg
+WARNING 2026-08-24 14:57:41,056 log Not Found: /media/properties/222/images/222_1.jpg
+WARNING 2026-08-24 16:44:02,345 log Not Found: /media/properties/321/images/321_1.jpg
+WARNING 2026-08-24 16:44:02,351 log Not Found: /media/properties/323/images/323_1.jpg
+WARNING 2026-08-24 16:44:02,351 log Not Found: /media/properties/326/images/326_1.jpg
+WARNING 2026-08-24 16:44:02,359 log Not Found: /media/properties/327/images/327_1.jpg
+WARNING 2026-08-24 16:44:02,364 log Not Found: /media/properties/315/images/315_1.jpg
+WARNING 2026-08-24 16:44:02,669 log Not Found: /media/properties/316/images/316_1.jpg
+WARNING 2026-08-24 16:44:02,712 log Not Found: /media/properties/277/images/277_1.jpg
+WARNING 2026-08-24 16:44:02,740 log Not Found: /media/properties/278/images/278_1.jpg
+WARNING 2026-08-24 16:44:02,743 log Not Found: /media/properties/280/images/280_1.jpg
+WARNING 2026-08-24 16:44:02,764 log Not Found: /media/properties/282/images/282_1.jpg
+WARNING 2026-08-24 16:44:02,781 log Not Found: /media/properties/283/images/283_1.jpg
+WARNING 2026-08-24 16:44:02,783 log Not Found: /media/properties/285/images/285_1.jpg
+WARNING 2026-08-24 16:44:04,463 log Not Found: /media/properties/327/images/327_2.jpg
+WARNING 2026-08-24 16:44:04,471 log Not Found: /media/properties/327/images/327_1.jpg
+WARNING 2026-08-24 16:44:04,510 log Not Found: /media/properties/327/images/327_6.jpg
+WARNING 2026-08-24 16:44:04,533 log Not Found: /media/properties/327/images/327_4.jpg
+WARNING 2026-08-24 16:44:04,549 log Not Found: /media/properties/327/images/327_3.jpg
+WARNING 2026-08-24 16:44:04,580 log Not Found: /media/properties/327/images/327_5.jpg
+WARNING 2026-08-24 16:44:04,686 log Not Found: /media/properties/327/images/327_8.jpg
+WARNING 2026-08-24 16:44:04,709 log Not Found: /media/properties/327/images/327_7.jpg
+WARNING 2026-08-24 16:44:04,749 log Not Found: /media/properties/327/images/327_1.jpg
+INFO 2026-08-24 16:52:56,322 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-24 16:54:18,914 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-24 16:54:25,729 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-24 16:54:55,532 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-24 16:58:05,349 log Forbidden (CSRF token from POST incorrect.): /admin/logout/
+ERROR 2026-08-24 17:01:15,710 forms Failed to send password reset email to 50
 Traceback (most recent call last):
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
-    return view_func(request, *args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\00_projects\cu2home\apps\users\views.py", line 163, in favorites_page
-    return render(request, 'users/favorites.html', {
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
-    content = loader.render_to_string(template_name, context, request, using=using)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
-    template = get_template(template_name, using=using)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\template\loader.py", line 19, in get_template
-    raise TemplateDoesNotExist(template_name, chain=chain)
-django.template.exceptions.TemplateDoesNotExist: users/favorites.html
-INFO 2026-08-24 14:34:37,421 autoreload C:\00_projects\cu2home\apps\users\views.py changed, reloading.
-INFO 2026-08-24 14:34:38,537 autoreload Watching for file changes with StatReloader
-WARNING 2026-08-24 14:36:01,481 log Forbidden (CSRF token from POST incorrect.): /users/logout/
-WARNING 2026-08-24 14:36:31,504 log Forbidden (CSRF token from POST incorrect.): /users/logout/
-WARNING 2026-08-24 14:36:44,366 log Forbidden (CSRF token from POST incorrect.): /users/logout/
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\contrib\auth\forms.py", line 320, in send_mail
+    email_message.send()
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\message.py", line 301, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 128, in send_messages
+    new_conn_created = self.open()
+                       ^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 86, in open
+    self.connection = self.connection_class(
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 255, in __init__
+    (code, msg) = self.connect(host, port)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 343, in connect
+    (code, msg) = self.getreply()
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 405, in getreply
+    raise SMTPServerDisconnected("Connection unexpectedly closed")
+smtplib.SMTPServerDisconnected: Connection unexpectedly closed
+ERROR 2026-08-24 17:02:08,827 forms Failed to send password reset email to 50
+Traceback (most recent call last):
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\contrib\auth\forms.py", line 320, in send_mail
+    email_message.send()
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\message.py", line 301, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 128, in send_messages
+    new_conn_created = self.open()
+                       ^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 86, in open
+    self.connection = self.connection_class(
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 255, in __init__
+    (code, msg) = self.connect(host, port)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 343, in connect
+    (code, msg) = self.getreply()
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 405, in getreply
+    raise SMTPServerDisconnected("Connection unexpectedly closed")
+smtplib.SMTPServerDisconnected: Connection unexpectedly closed
+ERROR 2026-08-24 17:02:38,419 forms Failed to send password reset email to 51
+Traceback (most recent call last):
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\contrib\auth\forms.py", line 320, in send_mail
+    email_message.send()
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\message.py", line 301, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 128, in send_messages
+    new_conn_created = self.open()
+                       ^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 86, in open
+    self.connection = self.connection_class(
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 255, in __init__
+    (code, msg) = self.connect(host, port)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 343, in connect
+    (code, msg) = self.getreply()
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 405, in getreply
+    raise SMTPServerDisconnected("Connection unexpectedly closed")
+smtplib.SMTPServerDisconnected: Connection unexpectedly closed
+ERROR 2026-08-24 17:02:45,816 forms Failed to send password reset email to 51
+Traceback (most recent call last):
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\contrib\auth\forms.py", line 320, in send_mail
+    email_message.send()
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\message.py", line 301, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 128, in send_messages
+    new_conn_created = self.open()
+                       ^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 86, in open
+    self.connection = self.connection_class(
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 255, in __init__
+    (code, msg) = self.connect(host, port)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 343, in connect
+    (code, msg) = self.getreply()
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 405, in getreply
+    raise SMTPServerDisconnected("Connection unexpectedly closed")
+smtplib.SMTPServerDisconnected: Connection unexpectedly closed
+WARNING 2026-08-24 17:02:46,277 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2026-08-24 17:08:07,262 autoreload C:\00_projects\cu2home\apps\users\views.py changed, reloading.
+INFO 2026-08-24 17:08:08,922 autoreload Watching for file changes with StatReloader
+INFO 2026-08-24 17:08:14,136 autoreload Watching for file changes with StatReloader
+ERROR 2026-08-24 17:16:04,606 forms Failed to send password reset email to 51
+Traceback (most recent call last):
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\contrib\auth\forms.py", line 320, in send_mail
+    email_message.send()
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\message.py", line 301, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 128, in send_messages
+    new_conn_created = self.open()
+                       ^^^^^^^^^^^
+  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 86, in open
+    self.connection = self.connection_class(
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 255, in __init__
+    (code, msg) = self.connect(host, port)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 343, in connect
+    (code, msg) = self.getreply()
+                  ^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\smtplib.py", line 405, in getreply
+    raise SMTPServerDisconnected("Connection unexpectedly closed")
+smtplib.SMTPServerDisconnected: Connection unexpectedly closed
+INFO 2026-08-24 17:59:54,507 autoreload Watching for file changes with StatReloader

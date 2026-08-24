@@ -12,6 +12,7 @@ from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST, require_GET, require_http_methods
@@ -128,6 +129,14 @@ def toggle_favorite(request, property_id):
     get_or_create + delete si ya existía, igual que describe el
     docstring de Favorite en models.py: evita duplicados ante doble
     submit sin necesitar una comprobación previa aparte.
+
+    SEGURIDAD: 'next' llega desde request.POST (lo controla el
+    cliente), así que se valida con url_has_allowed_host_and_scheme
+    antes de redirigir -- el mismo check que usa internamente
+    LoginView. Sin esto, alguien podría manipular el campo 'next' del
+    formulario para redirigir tras la acción a un dominio externo
+    (open redirect / phishing), ya que redirect() no valida el host
+    por sí solo.
     """
     property_obj = get_object_or_404(Property, pk=property_id, is_active=True)
 
@@ -150,10 +159,18 @@ def toggle_favorite(request, property_id):
     else:
         messages.success(request, _('Removed from favorites.'))
 
-    next_url = request.POST.get('next') or reverse(
-        'properties:detail', args=[property_obj.pk, property_obj.slug]
-    )
-    return redirect(next_url)
+    default_url = reverse('properties:detail', args=[property_obj.pk, property_obj.slug])
+    next_url = request.POST.get('next')
+    if next_url and url_has_allowed_host_and_scheme(
+        next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        redirect_to = next_url
+    else:
+        redirect_to = default_url
+
+    return redirect(redirect_to)
 
 
 @login_required(login_url='users:login')
