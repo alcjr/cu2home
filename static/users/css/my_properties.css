@@ -599,15 +599,16 @@
         padding: 2px 2px 0 !important;
     }
 
-    .property-edit-popup.dx-popup-wrapper {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    .property-edit-popup .dx-popup-content {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
+    /* FIX: se retiran los forzados width:100%!important que habia aqui
+       antes en .dx-popup-wrapper y .dx-popup-content. Competian sin
+       necesidad con la funcion popup.width (ver JS) -- el form calcula el
+       ancho de sus columnas (colCount) midiendo el contenedor en el
+       momento del render, y estos !important terminaban pisando ese
+       cálculo (o el ancho inline que DevExtreme ya fija según popup.width),
+       lo que dejaba a la card de la derecha calculada más ancha de lo que
+       el popup realmente mostraba -- de ahí el borde derecho cortado.
+       Sin estas reglas, el ancho real vuelve a ser el que define
+       popup.width y el layout de columnas coincide con él. */
 
     @media (max-width: 992px) {
         .property-edit-popup .dx-popup-content {

@@ -732,8 +732,15 @@
                 // sigue siendo el único bloque que hace scroll interno si
                 // una pestaña no cabe -- título y barra Guardar/Cancelar
                 // quedan siempre en la misma posición, cambie o no de tab.
+                // FIX: 780 dejaba demasiado hueco vacío en pestañas cortas
+                // como "General" (ver captura). Se baja el techo a 640,
+                // más ajustado al contenido real de las pestañas más
+                // densas ("Precio y ubicación", "Características"); si
+                // alguna pestaña llegara a necesitar más espacio, el
+                // scroll interno de .dx-popup-content (ver CSS) sigue
+                // cubriendo ese caso sin mover título ni botones.
                 height: function () {
-                    return Math.min(window.innerHeight * 0.86, 780);
+                    return Math.min(window.innerHeight * 0.75, 640);
                 },
                 wrapperAttr: { class: 'property-edit-popup' },
                 // FIX: NO se debe sustituir editing.popup.toolbarItems por un
