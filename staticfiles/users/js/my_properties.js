@@ -717,19 +717,24 @@
                 width: function () {
                     return Math.min(window.innerWidth * 0.94, 1500);
                 },
-                // FIX: con height:'auto' DevExtreme mide el popup por su
-                // contenido real y crece hasta maxHeight; a partir de ahí
-                // el propio dx-popup-content interno hace scroll. El
-                // truncamiento de Guardar/Cancelar que había antes NO lo
-                // causaba 'auto' en sí, sino un max-height fijo en CSS que
-                // competía con este cálculo (ya retirado más abajo, ver
-                // .property-edit-popup .dx-popup-content). Si aquí se fija
-                // una altura constante en vez de 'auto', el popup deja un
-                // hueco vacío enorme cuando el contenido de la pestaña
-                // activa es corto (p.ej. "General"), así que se mantiene
-                // 'auto'.
-                height: 'auto',
-                maxHeight: 'calc(100vh - 80px)',
+                // FIX: antes height:'auto' + maxHeight -- el popup medía su
+                // altura contra el contenido de la pestaña ACTIVA, así que
+                // el resultado dependía de cuál pestaña estuviera abierta
+                // (p.ej. "General" quedaba bajo, "Fotos" o "Precio y
+                // ubicación" altos), dando el efecto de "salto" de tamaño
+                // al cambiar de tab. Mismo fix que en my_alerts.js: una
+                // altura EXPLÍCITA e idéntica para todas las pestañas
+                // (proporción del viewport, con techo). El techo (780) es
+                // algo mayor que el de alerts (700) porque aquí hay más
+                // contenido por pestaña (textarea de descripción, 4-6
+                // campos por card, galería de fotos). Con esto,
+                // .dx-popup-content (ver CSS, flex:1 1 auto + min-height:0)
+                // sigue siendo el único bloque que hace scroll interno si
+                // una pestaña no cabe -- título y barra Guardar/Cancelar
+                // quedan siempre en la misma posición, cambie o no de tab.
+                height: function () {
+                    return Math.min(window.innerHeight * 0.86, 780);
+                },
                 wrapperAttr: { class: 'property-edit-popup' },
                 // FIX: NO se debe sustituir editing.popup.toolbarItems por un
                 // array propio -- eso reemplaza también el binding interno
@@ -759,6 +764,15 @@
                 onHiding: function () {
                     console.log('Popup hiding - resetting editors');
                     resetEditFormEditorRefs();
+                    // FIX: aquí (y no en cada cambio de foto) es donde se
+                    // refresca el grid, para que la fila muestre el conteo
+                    // de fotos / portada actualizados. Los cambios de fotos
+                    // (subir, borrar, marcar portada) ya se guardan al
+                    // instante contra el backend según se hacen, así que
+                    // refrescar al cerrar -- se guarde o se cancele el resto
+                    // del formulario -- es correcto y no afecta a la pestaña
+                    // activa porque el popup ya se está cerrando.
+                    try { gridInstanceRef.refresh(); } catch (e) {}
                     // FIX: evita que la fila de esta sesión de edición
                     // sobreviva y se reutilice por error en la siguiente
                     // apertura del popup (alta o edición de otra fila).
@@ -790,10 +804,11 @@
                             {
                                 title: gettext('General'),
                                 colCount: 2,
-                                colCountByScreen: { xs: 1, sm: 1, md: 2, lg: 2, xl: 2 },
+                                colCountByScreen: { xs: 1, sm: 1, md: 2, lg: 2 },
                                 items: [
                                     {
                                         itemType: 'group',
+                                        cssClass: 'property-form-card',
                                         caption: gettext('Datos generales'),
                                         colCount: 2,
                                         items: [
@@ -858,6 +873,7 @@
                                     },
                                     {
                                         itemType: 'group',
+                                        cssClass: 'property-form-card',
                                         caption: gettext('Descripción'),
                                         items: [{
                                             dataField: 'description',
@@ -876,10 +892,11 @@
                             {
                                 title: gettext('Precio y ubicación'),
                                 colCount: 2,
-                                colCountByScreen: { xs: 1, sm: 1, md: 2, lg: 2, xl: 2 },
+                                colCountByScreen: { xs: 1, sm: 1, md: 2, lg: 2 },
                                 items: [
                                     {
                                         itemType: 'group',
+                                        cssClass: 'property-form-card',
                                         caption: gettext('Precio'),
                                         colCount: 2,
                                         items: [
@@ -943,6 +960,7 @@
                                     },
                                     {
                                         itemType: 'group',
+                                        cssClass: 'property-form-card',
                                         caption: gettext('Ubicación'),
                                         colCount: 2,
                                         items: [
@@ -993,6 +1011,7 @@
                                 items: [
                                     {
                                         itemType: 'group',
+                                        cssClass: 'property-form-card',
                                         colCount: 3,
                                         items: [
                                             {
@@ -1052,11 +1071,23 @@
                                         }
 
                                         console.log('📸 Modo EDICIÓN - renderizando manager con imágenes. rowData.id:', rowData.id, 'image_ids:', (rowData.images || []).map(function (i) { return i.id; }));
-                                        const notifyChange = function() {
-                                            try {
-                                                gridInstanceRef.refresh();
-                                            } catch (e) {}
-                                        };
+                                        // FIX: antes, notifyChange() llamaba a
+                                        // gridInstanceRef.refresh() -- un refresco
+                                        // COMPLETO del grid en cada alta/baja/portada de
+                                        // foto, con el popup de edición todavía abierto.
+                                        // Ese refresh recargaba los datos y reconstruía el
+                                        // formulario del popup, y como el dxTabPanel no
+                                        // conserva su selectedIndex entre reconstrucciones,
+                                        // la pestaña activa volvía siempre a "General" (la
+                                        // primera). rowData.images es la misma referencia
+                                        // que ya usa el grid (currentEditingRowData = e.data
+                                        // en onEditingStart, ver más abajo), así que no hace
+                                        // falta refrescar nada mientras se edita: los cambios
+                                        // ya están reflejados en esa misma fila. El refresco
+                                        // real de la lista (para que el conteo de fotos y la
+                                        // miniatura de portada se vean actualizados) se hace
+                                        // una sola vez al cerrar el popup, en editing.popup.onHiding.
+                                        const notifyChange = function() {};
 
                                         renderImageManager($container, rowData, notifyChange);
                                     }

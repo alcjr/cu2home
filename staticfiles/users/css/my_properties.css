@@ -16,13 +16,13 @@
         font-size: clamp(1.5rem, 3vw, 2rem);
         font-weight: 800;
         letter-spacing: -0.6px;
-        color: var(--tinta);
+        color: var(--ink);
     }
     .list-page-head .back-link {
         font-family: var(--font-body);
         font-size: 0.85rem;
         font-weight: 600;
-        color: var(--terracota);
+        color: var(--terracotta);
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -30,26 +30,26 @@
         transition: color 0.2s;
     }
     .list-page-head .back-link:hover {
-        color: var(--terracota-dark);
+        color: var(--terracotta-dark);
     }
     .grid-wrapper {
         background: #fff;
-        border: 1px solid var(--linea);
+        border: 1px solid var(--line);
         border-radius: 16px;
         padding: 4px;
         overflow: hidden;
     }
     .empty-state {
         background: #fff;
-        border: 1px dashed var(--linea);
+        border: 1px dashed var(--line);
         border-radius: 16px;
         padding: 60px 24px;
         text-align: center;
-        color: var(--texto-suave);
+        color: var(--muted);
     }
     .empty-state i {
         font-size: 2rem;
-        color: var(--terracota);
+        color: var(--terracotta);
         margin-bottom: 12px;
         display: block;
     }
@@ -69,14 +69,14 @@
     .cell-primary {
         font-size: 0.85rem;
         font-weight: 700;
-        color: var(--tinta);
+        color: var(--ink);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
     .cell-secondary {
         font-size: 0.72rem;
-        color: var(--texto-suave);
+        color: var(--muted);
         margin-top: 2px;
         white-space: nowrap;
         overflow: hidden;
@@ -121,19 +121,19 @@
         align-items: center;
         justify-content: center;
         font-size: 0.75rem;
-        color: var(--texto-suave);
+        color: var(--muted);
         transition: all 0.12s;
     }
     .rbtn i { color: inherit; }
-    .rbtn-view { color: var(--azul-malecon) !important; }
-    .rbtn-view:hover { background: #eef2f0; border-color: var(--azul-malecon); }
-    .rbtn-edit { color: var(--terracota) !important; }
-    .rbtn-edit:hover { background: #fdf2ee; border-color: var(--terracota); }
+    .rbtn-view { color: var(--turquoise) !important; }
+    .rbtn-view:hover { background: #eef2f0; border-color: var(--turquoise); }
+    .rbtn-edit { color: var(--terracotta) !important; }
+    .rbtn-edit:hover { background: #fdf2ee; border-color: var(--terracotta); }
 
     .img-manager { margin-top: 8px; }
     .img-manager-hint {
         font-size: 0.9rem;
-        color: var(--texto-suave);
+        color: var(--muted);
         margin-bottom: 10px;
     }
     .img-manager-empty {
@@ -143,20 +143,20 @@
         justify-content: center;
         gap: 8px;
         padding: 28px 20px;
-        border: 1px dashed var(--linea);
+        border: 1px dashed var(--line);
         border-radius: 12px;
         background: #faf9f7;
         text-align: center;
     }
     .img-manager-empty i {
         font-size: 1.6rem;
-        color: var(--terracota);
+        color: var(--terracotta);
     }
     .img-manager-empty p {
         margin: 0;
         font-size: 0.92rem;
         line-height: 1.5;
-        color: var(--texto-suave);
+        color: var(--muted);
         max-width: 320px;
     }
     /* ===== DROPZONE DE FOTOS PARA ALTA (inmueble aún sin id) ===== */
@@ -167,7 +167,7 @@
         justify-content: center;
         gap: 6px;
         padding: 24px 16px;
-        border: 2px dashed var(--linea);
+        border: 2px dashed var(--line);
         border-radius: 12px;
         background: #faf9f7;
         text-align: center;
@@ -176,23 +176,23 @@
     }
     .img-dropzone:hover,
     .img-dropzone:focus-visible {
-        border-color: var(--terracota);
+        border-color: var(--terracotta);
         background: #fdf6f3;
         outline: none;
     }
     .img-dropzone.dragover {
-        border-color: var(--terracota);
+        border-color: var(--terracotta);
         background: #fdf2ee;
     }
     .img-dropzone.has-error { border-color: #c0392b; background: #fdecea; }
-    .img-dropzone i { font-size: 1.4rem; color: var(--terracota); }
-    .img-dropzone-text { font-size: 0.92rem; font-weight: 600; color: var(--tinta); }
-    .img-dropzone-sub { display: block; font-size: 0.8rem; font-weight: 400; color: var(--texto-suave); margin-top: 3px; }
+    .img-dropzone i { font-size: 1.4rem; color: var(--terracotta); }
+    .img-dropzone-text { font-size: 0.92rem; font-weight: 600; color: var(--ink); }
+    .img-dropzone-sub { display: block; font-size: 0.8rem; font-weight: 400; color: var(--muted); margin-top: 3px; }
     .img-dropzone input[type="file"] { display: none; }
 
     .img-pending-counter {
         font-size: 0.9rem;
-        color: var(--texto-suave);
+        color: var(--muted);
         margin: 8px 0;
     }
     .img-pending-counter.limit-reached { color: #c0392b; font-weight: 600; }
@@ -203,15 +203,15 @@
         height: 92px;
         border-radius: 10px;
         overflow: hidden;
-        border: 2px solid var(--linea);
+        border: 2px solid var(--line);
     }
-    .img-pending-item:first-child { border-color: var(--terracota); }
+    .img-pending-item:first-child { border-color: var(--terracotta); }
     .img-pending-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .img-pending-item .cover-tag {
         position: absolute;
         top: 4px;
         left: 4px;
-        background: var(--terracota);
+        background: var(--terracotta);
         color: #fff;
         font-size: 0.62rem;
         font-weight: 700;
@@ -249,15 +249,15 @@
         height: 92px;
         border-radius: 10px;
         overflow: hidden;
-        border: 2px solid var(--linea);
+        border: 2px solid var(--line);
     }
-    .img-thumb.is-cover { border-color: var(--terracota); }
+    .img-thumb.is-cover { border-color: var(--terracotta); }
     .img-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .img-thumb .cover-tag {
         position: absolute;
         top: 4px;
         left: 4px;
-        background: var(--terracota);
+        background: var(--terracotta);
         color: #fff;
         font-size: 0.62rem;
         font-weight: 700;
@@ -283,7 +283,7 @@
         padding: 2px 4px;
         transition: color 0.2s;
     }
-    .img-thumb .img-tools button:hover { color: var(--terracota); }
+    .img-thumb .img-tools button:hover { color: var(--terracotta); }
     
     .dx-popup-content .img-manager {
         padding: 8px 0;
@@ -333,13 +333,13 @@
 
     .property-edit-popup .dx-popup-title {
         background: #fff;
-        border-bottom: 2px solid var(--terracota);
+        border-bottom: 2px solid var(--terracotta);
         padding: 16px 24px !important;
         font-family: 'Fraunces', serif;
         font-size: 1.35rem !important;
         font-weight: 700 !important;
         letter-spacing: -0.3px;
-        color: var(--tinta);
+        color: var(--ink);
         border-radius: 20px 20px 0 0;
     }
 
@@ -350,7 +350,7 @@
 
     .property-edit-popup .dx-popup-bottom {
         background: #fff;
-        border-top: 1px solid var(--linea);
+        border-top: 1px solid var(--line);
         padding: 10px 24px !important;
         border-radius: 0 0 20px 20px;
     }
@@ -385,13 +385,13 @@
     }
 
     .property-edit-popup .dx-popup-bottom .dx-button-mode-contained.dx-button-success {
-        background: var(--terracota) !important;
-        border-color: var(--terracota) !important;
+        background: var(--terracotta) !important;
+        border-color: var(--terracotta) !important;
     }
 
     .property-edit-popup .dx-popup-bottom .dx-button-mode-contained.dx-button-success:hover {
-        background: var(--terracota-dark) !important;
-        border-color: var(--terracota-dark) !important;
+        background: var(--terracotta-dark) !important;
+        border-color: var(--terracotta-dark) !important;
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(192, 82, 45, 0.3);
     }
@@ -407,47 +407,54 @@
         border-color: #cbd5e1 !important;
     }
 
-    .property-edit-popup .dx-form-group {
+    /* ===== CARDS DEL FORMULARIO (mismo patrón que .alert-form-card en
+       my_alerts.css: card con acento izquierdo terracota, aplicada vía
+       cssClass:'property-form-card' en los itemType:'group' del form) ===== */
+    .property-edit-popup .property-form-card {
         background: #fff;
-        border: 1px solid #e8e3de;
-        border-radius: 12px;
-        padding: 14px 18px 12px !important;
-        margin-bottom: 12px !important;
+        border: 1px solid var(--line);
+        border-left: 4px solid var(--terracotta);
+        border-radius: 14px;
+        padding: 14px 16px 6px 18px;
+        margin-bottom: 14px;
         box-shadow: 0 1px 3px rgba(31, 26, 23, 0.04);
-        transition: box-shadow 0.2s ease;
     }
 
-    .property-edit-popup .dx-form-group:hover {
-        box-shadow: 0 2px 8px rgba(31, 26, 23, 0.07);
+    .property-edit-popup .property-form-card:last-child {
+        margin-bottom: 0;
     }
 
-    .property-edit-popup .dx-form-group-caption {
-        font-family: 'Fraunces', serif;
-        font-weight: 700;
-        font-size: 0.82rem !important;
-        letter-spacing: 0.4px;
-        color: #475569 !important;
-        padding-bottom: 8px !important;
-        margin-bottom: 10px !important;
-        border-bottom: 2px solid var(--terracota);
-        display: block;
+    /* Grupos anidados (ninguno actualmente, pero por si acaso -- mismo
+       criterio que my_alerts.css) no necesitan su propio marco. */
+    .property-edit-popup .property-form-card .property-form-card {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin-bottom: 0;
+    }
+
+    .property-edit-popup .property-form-card .dx-form-group-caption {
+        font-size: 0.78rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.04em;
         text-transform: uppercase;
+        color: var(--muted) !important;
+        margin-bottom: 10px !important;
+        padding-bottom: 8px !important;
+        border-bottom: 1px solid var(--line);
+        display: block;
     }
 
     .property-edit-popup .dx-field-item {
         padding: 4px 4px !important;
     }
 
-    .property-edit-popup .dx-field-item-label {
-        font-size: 0.85rem !important;
-        font-weight: 600 !important;
-        color: #334155 !important;
-        margin-bottom: 4px !important;
-    }
-
+    .property-edit-popup .dx-field-item-label,
     .property-edit-popup .dx-field-item-label-text {
+        font-size: 0.92rem !important;
         font-weight: 600 !important;
-        color: #1f2937 !important;
+        color: var(--ink) !important;
+        margin-bottom: 4px !important;
     }
 
     .property-edit-popup .dx-field-item-required-mark {
@@ -460,9 +467,10 @@
         border-radius: 6px !important;
     }
 
-    .property-edit-popup .dx-texteditor.dx-state-focused {
-        border-color: var(--terracota) !important;
-        box-shadow: 0 0 0 3px rgba(192, 82, 45, 0.1) !important;
+    .property-edit-popup .dx-texteditor.dx-state-focused,
+    .property-edit-popup .dx-checkbox.dx-state-focused .dx-checkbox-icon {
+        border-color: var(--terracotta) !important;
+        box-shadow: 0 0 0 2px rgba(217, 119, 87, 0.18) !important;
     }
 
     .property-edit-popup .dx-texteditor .dx-texteditor-input {
@@ -489,6 +497,11 @@
         min-height: 38px !important;
     }
 
+    .property-edit-popup .dx-item-content .dx-list-item,
+    .property-edit-popup .dx-selectbox-popup-wrapper .dx-list-item-content {
+        font-size: 0.92rem !important;
+    }
+
     .property-edit-popup .dx-checkbox {
         margin-top: 4px !important;
     }
@@ -502,16 +515,13 @@
 
     .property-edit-popup .dx-checkbox .dx-checkbox-text {
         font-size: 0.9rem !important;
+        color: var(--ink) !important;
         padding-left: 8px !important;
     }
 
-    .property-edit-popup .dx-checkbox.dx-state-focused .dx-checkbox-icon {
-        border-color: var(--terracota) !important;
-    }
-
     .property-edit-popup .dx-checkbox.dx-checkbox-checked .dx-checkbox-icon {
-        background: var(--terracota) !important;
-        border-color: var(--terracota) !important;
+        background: var(--terracotta) !important;
+        border-color: var(--terracotta) !important;
     }
 
     .property-edit-popup .dx-scrollable-content {
@@ -555,26 +565,26 @@
 
     .property-edit-popup .dx-tabpanel .dx-tabs {
         background: transparent;
-        border-bottom: 1px solid var(--linea);
+        border-bottom: 1px solid var(--line);
         margin-bottom: 12px;
     }
 
-    .property-edit-popup .dx-tab {
-        font-family: 'Fraunces', serif;
+    .property-edit-popup .dx-tab,
+    .property-edit-popup .dx-tabs-item-text {
         font-weight: 600;
-        font-size: 0.92rem;
+        font-size: 0.95rem;
         letter-spacing: 0.2px;
-        color: #475569;
+        color: var(--muted);
         padding: 12px 18px !important;
     }
 
     .property-edit-popup .dx-tab-selected {
-        color: var(--terracota) !important;
+        color: var(--terracotta) !important;
     }
 
     .property-edit-popup .dx-tabs-wrapper .dx-tab.dx-tab-selected::after,
     .property-edit-popup .dx-tab-indicator {
-        background: var(--terracota) !important;
+        background: var(--terracotta) !important;
     }
 
     .property-edit-popup .dx-tab:hover {

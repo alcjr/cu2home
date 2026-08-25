@@ -720,8 +720,25 @@ def alerts_page(request):
     )
     return render(request, 'users/my_alerts.html', {
         'title': _('Mis alertas'),
-        'property_types': list(Property._meta.get_field('property_type').choices),
-        'offer_types': list(Property._meta.get_field('offer_type').choices),
+        # FIX: antes usaba los choices del campo Property.property_type/
+        # offer_type (los valores válidos para UN inmueble individual).
+        # La validación y la serialización de la alerta (_build_alert,
+        # _serialize_alert, más arriba en este archivo) usan en cambio
+        # PROPERTY_TYPES/OFFER_TYPES de apps.properties.constants, que
+        # además incluye 'sale_or_rent' -- un valor que solo tiene sentido
+        # como FILTRO de búsqueda ("me vale venta o alquiler"), nunca como
+        # tipo de oferta de un inmueble real, así que no está entre los
+        # choices del modelo. Al rellenar el <select> del popup con la
+        # lista más corta del modelo, una alerta guardada con
+        # offer_type='sale_or_rent' se guardaba bien (la validación sí lo
+        # acepta) pero al reabrir el popup para editarla el combo no
+        # encontraba esa opción entre las suyas y el campo se mostraba
+        # vacío -- el dato seguía intacto en query_params, solo dejaba de
+        # visualizarse. Usar aquí la misma fuente que el resto del
+        # flujo de alertas garantiza que el combo siempre pueda mostrar
+        # cualquier valor que el backend sea capaz de guardar y devolver.
+        'property_types': list(PROPERTY_TYPES),
+        'offer_types': list(OFFER_TYPES),
         'frequencies': list(SavedSearch.Frequency.choices),
         'provinces': provinces,
         'municipalities': municipalities,

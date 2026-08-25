@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    const gridEl = document.getElementById('myFavoritesGrid');
+    const gridEl = document.getElementById('favoritesGrid');
     if (!gridEl) return;
     if (typeof DevExpress === 'undefined') {
         console.error('DevExpress no está disponible.');
@@ -35,6 +35,18 @@
         return { text: displayText || propertyType, icon: info.icon, badgeBg: info.badgeBg, badgeText: info.badgeText };
     }
 
+    // favorites_data() solo envía 'estado' ya traducido (get_status_display()),
+    // sin un código crudo equivalente al 'tipo_raw' que sí acompaña a 'tipo'.
+    // Mapeo best-effort por texto para colorear el badge; si el texto no
+    // coincide (locale distinto, texto cambiado en el modelo, etc.) se
+    // muestra sin color en vez de romper. Si se puede, lo ideal sería que
+    // favorites_data añadiera un 'estado_raw' como ya hace con 'tipo_raw'.
+    const STATUS_BADGE_CLASS = {
+        'Disponible': 'status-available',
+        'Reservado': 'status-reserved',
+        'Vendido': 'status-sold'
+    };
+
     function escapeHtml(text) {
         if (!text) return '';
         const d = document.createElement('div');
@@ -47,10 +59,9 @@
         return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
     }
 
-    // FIX (mismo motivo que en my_properties.js): .replace() con string
-    // literal sustituye solo la PRIMERA ocurrencia de "/0/", así que un
-    // solo argumento encaja de forma posicional sin arrastrar los demás
-    // placeholders si en el futuro la URL tuviera más de uno.
+    // Mismo motivo que en my_properties.js: .replace() con string literal
+    // sustituye solo la PRIMERA ocurrencia de "/0/", encajando de forma
+    // posicional con el placeholder de la URL de toggle_favorite.
     function buildUrl(baseUrl, ...args) {
         let url = baseUrl;
         for (const arg of args) {
@@ -91,28 +102,22 @@
     }
 
     // ===== CUSTOM STORE (solo lectura + eliminar) =====
-    // Contrato esperado de URLS.data (GET, lista de inmuebles favoritos
-    // del usuario autenticado), un objeto por fila:
-    // {
-    //   "id": <property_id>,                 // clave de la grilla
-    //   "title": "...",
-    //   "property_type": "apartment",        // código, para icono/color
-    //   "property_type_display": "...",      // texto ya traducido
-    //   "offer_type_display": "...",
-    //   "province_name": "...", "municipality_name": "...",
-    //   "sale_price": 120000, "rent_price": null,
-    //   "surface": 85.0, "rooms": 3, "bathrooms": 2,
-    //   "status": "available", "status_display": "Disponible",
-    //   "detail_url": "/inmuebles/123/",
-    //   "cover_image": "/media/.../foto.jpg" | null,
-    //   "favorited_at": "2026-08-10T12:00:00Z"
-    // }
-    // URLS.remove es la MISMA url de toggle_favorite que usa detail.html
-    // (con placeholder "/0/" para el id del inmueble): togglear un
-    // favorito ya existente lo elimina, así que no hace falta un
-    // endpoint nuevo solo para "quitar de favoritos".
+    // key: 'property_id' -- no 'favorite_id'. La vista toggle_favorite
+    // (users:toggle_favorite) recibe property_id en la URL, así que usar
+    // property_id como clave de la grilla permite construir la URL de
+    // borrado directamente a partir de la key, sin tener que resolver
+    // favorite_id -> property_id por separado. Es seguro como clave única
+    // porque el modelo Favorite tiene UniqueConstraint(user, property):
+    // un usuario nunca puede tener dos filas con el mismo property_id.
+    //
+    // "remove" reutiliza toggle_favorite (POST): como es un TOGGLE, quitar
+    // un favorito ya existente lo borra -- no existe (ni hace falta) un
+    // endpoint de borrado dedicado. Ojo: por ser un toggle, dos DELETE
+    // seguidos sobre la misma fila (doble clic muy rápido antes de que la
+    // grilla se refresque) volverían a AÑADIRLO en vez de fallar; con el
+    // diálogo de confirmación de editing.texts esto es muy improbable.
     const store = new DevExpress.data.CustomStore({
-        key: 'id',
+        key: 'property_id',
         load: function () {
             console.log('📥 LOAD - Cargando favoritos');
             return apiRequest(URLS.data, 'GET');
@@ -125,9 +130,9 @@
     });
 
     // ===== GRID PRINCIPAL =====
-    const gridInstanceRef = $('#myFavoritesGrid').dxDataGrid({
+    const gridInstanceRef = $('#favoritesGrid').dxDataGrid({
         dataSource: store,
-        keyExpr: 'id',
+        keyExpr: 'property_id',
         showBorders: true,
         rowAlternationEnabled: true,
         columnAutoWidth: false,
@@ -143,10 +148,9 @@
         pager: { showPageSizeSelector: true, allowedPageSizes: [10, 20, 50], showInfo: true },
         searchPanel: { visible: true, placeholder: gettext('Buscar...') },
 
-        // Grilla de solo lectura respecto al inmueble: no se puede crear
-        // ni editar desde aquí (eso vive en "Mis inmuebles"); la única
-        // operación posible es "eliminar", que en este contexto significa
-        // "quitar de favoritos" -- NUNCA borra el inmueble en sí.
+        // Solo lectura respecto al inmueble: no se puede crear ni editar
+        // desde aquí. La única operación es "eliminar", que aquí significa
+        // "quitar de favoritos" -- nunca borra el inmueble en sí.
         editing: {
             mode: 'row',
             allowAdding: false,
@@ -161,73 +165,60 @@
 
         columns: [
             {
-                dataField: 'title',
-                caption: gettext('Título'),
-                minWidth: 220,
+                dataField: 'codigo',
+                caption: gettext('Inmueble'),
+                minWidth: 200,
                 fixed: true,
                 fixedPosition: 'left',
                 allowEditing: false,
                 cellTemplate: function (container, options) {
-                    const location = [options.data.municipality_name, options.data.province_name].filter(Boolean).join(', ');
-                    const thumb = options.data.cover_image
-                        ? `<img class="cover-thumb" src="${escapeHtml(options.data.cover_image)}" alt="">`
-                        : `<div class="cover-thumb-fallback"><i class="fas fa-image"></i></div>`;
                     $(container).append(
                         `<div class="cell-wrap">
-                            ${thumb}
+                            <div class="cell-icon"><i class="fas fa-home"></i></div>
                             <div class="cell-stack">
-                                <span class="cell-primary">${escapeHtml(options.value || gettext('Sin título'))}</span>
-                                <span class="cell-secondary">${escapeHtml(location) || '&nbsp;'}</span>
+                                <span class="cell-primary">${escapeHtml(options.value || gettext('Sin referencia'))}</span>
+                                <span class="cell-secondary">${escapeHtml(options.data.ubicacion) || '&nbsp;'}</span>
                             </div>
                         </div>`
                     );
                 }
             },
             {
-                dataField: 'property_type',
+                dataField: 'tipo_raw',
                 caption: gettext('Tipo'),
                 width: 150,
                 allowEditing: false,
                 cellTemplate: function (container, options) {
-                    const info = getTipoInfo(options.value, options.data.property_type_display);
+                    const info = getTipoInfo(options.value, options.data.tipo);
                     $(`<span class="tipo-badge"></span>`)
                         .css({ background: info.badgeBg, color: info.badgeText })
                         .html(`<i class="fas ${info.icon}"></i> ${escapeHtml(info.text)}`)
                         .appendTo(container);
                 }
             },
-            { dataField: 'offer_type_display', caption: gettext('Oferta'), width: 130, allowEditing: false },
-            { dataField: 'province_name', caption: gettext('Provincia'), width: 140, allowEditing: false },
-            { dataField: 'municipality_name', caption: gettext('Municipio'), width: 150, allowEditing: false },
+            { dataField: 'oferta', caption: gettext('Oferta'), width: 130, allowEditing: false },
+            { dataField: 'ubicacion', caption: gettext('Ubicación'), width: 160, allowEditing: false },
             {
-                dataField: 'sale_price', caption: gettext('Venta'), dataType: 'number',
-                format: { type: 'currency', currency: 'EUR' }, alignment: 'right', width: 110, allowEditing: false
+                dataField: 'precio', caption: gettext('Precio'), dataType: 'number',
+                format: { type: 'currency', currency: 'EUR' }, alignment: 'right', width: 120, allowEditing: false
             },
+            { dataField: 'superficie', caption: gettext('m²'), dataType: 'number', width: 80, alignment: 'right', format: { type: 'fixedPoint', precision: 1 }, allowEditing: false },
             {
-                dataField: 'rent_price', caption: gettext('Alquiler'), dataType: 'number',
-                format: { type: 'currency', currency: 'EUR' }, alignment: 'right', width: 110, allowEditing: false
-            },
-            { dataField: 'surface', caption: gettext('m²'), dataType: 'number', width: 80, alignment: 'right', format: { type: 'fixedPoint', precision: 1 }, allowEditing: false },
-            { dataField: 'rooms', caption: gettext('Hab.'), dataType: 'number', width: 70, alignment: 'center', allowEditing: false },
-            { dataField: 'bathrooms', caption: gettext('Baños'), dataType: 'number', width: 70, alignment: 'center', allowEditing: false },
-            {
-                dataField: 'status_display',
+                dataField: 'estado',
                 caption: gettext('Estado'),
-                width: 110,
+                width: 120,
                 allowEditing: false,
                 cellTemplate: function (container, options) {
-                    const cls = { 'available': 'status-available', 'reserved': 'status-reserved', 'sold': 'status-sold' }[options.data.status] || '';
-                    $(`<span class="status-badge"></span>`).addClass(cls).text(options.value).appendTo(container);
+                    const cls = STATUS_BADGE_CLASS[options.value] || '';
+                    $(`<span class="status-badge"></span>`).addClass(cls).text(options.value || '–').appendTo(container);
                 }
             },
             {
-                dataField: 'favorited_at',
+                dataField: 'anadido',
                 caption: gettext('Guardado el'),
-                dataType: 'date',
-                format: 'dd/MM/yyyy',
                 width: 110,
                 allowEditing: false,
-                sortOrder: 'desc'
+                allowSorting: false // ya viene pre-ordenado por el backend (-created_at) y es un string 'dd/mm/yyyy', no un valor de fecha ordenable
             },
             {
                 type: 'buttons',
@@ -264,7 +255,7 @@
 
         summary: {
             totalItems: [
-                { column: 'title', summaryType: 'count', displayFormat: `${gettext('Total')}: {0}` }
+                { column: 'codigo', summaryType: 'count', displayFormat: `${gettext('Total')}: {0}` }
             ]
         },
 
@@ -316,7 +307,7 @@
                         opt.excelCell.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 12 };
                         opt.excelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFC0522D' } };
                     }
-                    if (opt.gridCell.column && ['sale_price', 'rent_price'].includes(opt.gridCell.column.dataField)) {
+                    if (opt.gridCell.column && opt.gridCell.column.dataField === 'precio') {
                         if (opt.excelCell.value && typeof opt.excelCell.value === 'number') {
                             opt.excelCell.numFmt = '#,##0.00 €';
                         }
@@ -361,22 +352,21 @@
         <div class="subtitle">${gettext('Generado el')} ${fecha} ${gettext('a las')} ${hora}</div>
         <div class="subtitle">${gettext('Total')}: ${items.length} ${gettext('inmuebles')}</div></div>
         <table><thead><tr>
-            <th>${gettext('Título')}</th><th>${gettext('Tipo')}</th><th>${gettext('Oferta')}</th>
-            <th>${gettext('Provincia')}</th><th>${gettext('Municipio')}</th><th>${gettext('Venta')}</th>
-            <th>${gettext('Alquiler')}</th><th>m²</th><th>${gettext('Estado')}</th>
+            <th>${gettext('Inmueble')}</th><th>${gettext('Tipo')}</th><th>${gettext('Oferta')}</th>
+            <th>${gettext('Ubicación')}</th><th>${gettext('Precio')}</th><th>m²</th>
+            <th>${gettext('Estado')}</th><th>${gettext('Guardado el')}</th>
         </tr></thead><tbody>`;
 
         items.forEach(d => {
             html += `<tr>
-                <td>${escapeHtml(d.title || '–')}</td>
-                <td>${escapeHtml(d.property_type_display || '–')}</td>
-                <td>${escapeHtml(d.offer_type_display || '–')}</td>
-                <td>${escapeHtml(d.province_name || '–')}</td>
-                <td>${escapeHtml(d.municipality_name || '–')}</td>
-                <td style="text-align:right">${d.sale_price != null ? formatCurrency(d.sale_price) : '–'}</td>
-                <td style="text-align:right">${d.rent_price != null ? formatCurrency(d.rent_price) : '–'}</td>
-                <td style="text-align:right">${d.surface != null ? d.surface.toFixed(1) : '–'}</td>
-                <td>${escapeHtml(d.status_display || '–')}</td>
+                <td>${escapeHtml(d.codigo || '–')}</td>
+                <td>${escapeHtml(d.tipo || '–')}</td>
+                <td>${escapeHtml(d.oferta || '–')}</td>
+                <td>${escapeHtml(d.ubicacion || '–')}</td>
+                <td style="text-align:right">${d.precio != null ? formatCurrency(d.precio) : '–'}</td>
+                <td style="text-align:right">${d.superficie != null ? Number(d.superficie).toFixed(1) : '–'}</td>
+                <td>${escapeHtml(d.estado || '–')}</td>
+                <td>${escapeHtml(d.anadido || '–')}</td>
             </tr>`;
         });
 

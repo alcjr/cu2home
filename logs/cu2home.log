@@ -1,151 +1,28 @@
-INFO 2026-08-24 14:51:49,101 views visor.views Log file cleared by user cu2home_su
-WARNING 2026-08-24 14:56:37,189 log Not Found: /media/properties/222/images/222_1.jpg
-WARNING 2026-08-24 14:56:37,192 log Not Found: /media/properties/221/images/221_1.jpg
-WARNING 2026-08-24 14:56:41,314 log Not Found: /media/properties/223/images/223_1.jpg
-WARNING 2026-08-24 14:56:41,342 log Not Found: /media/properties/221/images/221_1.jpg
-WARNING 2026-08-24 14:56:41,345 log Not Found: /media/properties/222/images/222_1.jpg
-WARNING 2026-08-24 14:57:40,812 log Not Found: /media/properties/222/images/222_3.jpg
-WARNING 2026-08-24 14:57:40,823 log Not Found: /media/properties/222/images/222_2.jpg
-WARNING 2026-08-24 14:57:40,829 log Not Found: /media/properties/222/images/222_1.jpg
-WARNING 2026-08-24 14:57:41,056 log Not Found: /media/properties/222/images/222_1.jpg
-WARNING 2026-08-24 16:44:02,345 log Not Found: /media/properties/321/images/321_1.jpg
-WARNING 2026-08-24 16:44:02,351 log Not Found: /media/properties/323/images/323_1.jpg
-WARNING 2026-08-24 16:44:02,351 log Not Found: /media/properties/326/images/326_1.jpg
-WARNING 2026-08-24 16:44:02,359 log Not Found: /media/properties/327/images/327_1.jpg
-WARNING 2026-08-24 16:44:02,364 log Not Found: /media/properties/315/images/315_1.jpg
-WARNING 2026-08-24 16:44:02,669 log Not Found: /media/properties/316/images/316_1.jpg
-WARNING 2026-08-24 16:44:02,712 log Not Found: /media/properties/277/images/277_1.jpg
-WARNING 2026-08-24 16:44:02,740 log Not Found: /media/properties/278/images/278_1.jpg
-WARNING 2026-08-24 16:44:02,743 log Not Found: /media/properties/280/images/280_1.jpg
-WARNING 2026-08-24 16:44:02,764 log Not Found: /media/properties/282/images/282_1.jpg
-WARNING 2026-08-24 16:44:02,781 log Not Found: /media/properties/283/images/283_1.jpg
-WARNING 2026-08-24 16:44:02,783 log Not Found: /media/properties/285/images/285_1.jpg
-WARNING 2026-08-24 16:44:04,463 log Not Found: /media/properties/327/images/327_2.jpg
-WARNING 2026-08-24 16:44:04,471 log Not Found: /media/properties/327/images/327_1.jpg
-WARNING 2026-08-24 16:44:04,510 log Not Found: /media/properties/327/images/327_6.jpg
-WARNING 2026-08-24 16:44:04,533 log Not Found: /media/properties/327/images/327_4.jpg
-WARNING 2026-08-24 16:44:04,549 log Not Found: /media/properties/327/images/327_3.jpg
-WARNING 2026-08-24 16:44:04,580 log Not Found: /media/properties/327/images/327_5.jpg
-WARNING 2026-08-24 16:44:04,686 log Not Found: /media/properties/327/images/327_8.jpg
-WARNING 2026-08-24 16:44:04,709 log Not Found: /media/properties/327/images/327_7.jpg
-WARNING 2026-08-24 16:44:04,749 log Not Found: /media/properties/327/images/327_1.jpg
-INFO 2026-08-24 16:52:56,322 autoreload Watching for file changes with StatReloader
-WARNING 2026-08-24 16:54:18,914 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-24 16:54:25,729 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-24 16:54:55,532 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-24 16:58:05,349 log Forbidden (CSRF token from POST incorrect.): /admin/logout/
-ERROR 2026-08-24 17:01:15,710 forms Failed to send password reset email to 50
-Traceback (most recent call last):
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\contrib\auth\forms.py", line 320, in send_mail
-    email_message.send()
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\message.py", line 301, in send
-    return self.get_connection(fail_silently).send_messages([self])
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 128, in send_messages
-    new_conn_created = self.open()
-                       ^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 86, in open
-    self.connection = self.connection_class(
-                      ^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 255, in __init__
-    (code, msg) = self.connect(host, port)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 343, in connect
-    (code, msg) = self.getreply()
-                  ^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 405, in getreply
-    raise SMTPServerDisconnected("Connection unexpectedly closed")
-smtplib.SMTPServerDisconnected: Connection unexpectedly closed
-ERROR 2026-08-24 17:02:08,827 forms Failed to send password reset email to 50
-Traceback (most recent call last):
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\contrib\auth\forms.py", line 320, in send_mail
-    email_message.send()
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\message.py", line 301, in send
-    return self.get_connection(fail_silently).send_messages([self])
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 128, in send_messages
-    new_conn_created = self.open()
-                       ^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 86, in open
-    self.connection = self.connection_class(
-                      ^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 255, in __init__
-    (code, msg) = self.connect(host, port)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 343, in connect
-    (code, msg) = self.getreply()
-                  ^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 405, in getreply
-    raise SMTPServerDisconnected("Connection unexpectedly closed")
-smtplib.SMTPServerDisconnected: Connection unexpectedly closed
-ERROR 2026-08-24 17:02:38,419 forms Failed to send password reset email to 51
-Traceback (most recent call last):
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\contrib\auth\forms.py", line 320, in send_mail
-    email_message.send()
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\message.py", line 301, in send
-    return self.get_connection(fail_silently).send_messages([self])
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 128, in send_messages
-    new_conn_created = self.open()
-                       ^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 86, in open
-    self.connection = self.connection_class(
-                      ^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 255, in __init__
-    (code, msg) = self.connect(host, port)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 343, in connect
-    (code, msg) = self.getreply()
-                  ^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 405, in getreply
-    raise SMTPServerDisconnected("Connection unexpectedly closed")
-smtplib.SMTPServerDisconnected: Connection unexpectedly closed
-ERROR 2026-08-24 17:02:45,816 forms Failed to send password reset email to 51
-Traceback (most recent call last):
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\contrib\auth\forms.py", line 320, in send_mail
-    email_message.send()
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\message.py", line 301, in send
-    return self.get_connection(fail_silently).send_messages([self])
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 128, in send_messages
-    new_conn_created = self.open()
-                       ^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 86, in open
-    self.connection = self.connection_class(
-                      ^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 255, in __init__
-    (code, msg) = self.connect(host, port)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 343, in connect
-    (code, msg) = self.getreply()
-                  ^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 405, in getreply
-    raise SMTPServerDisconnected("Connection unexpectedly closed")
-smtplib.SMTPServerDisconnected: Connection unexpectedly closed
-WARNING 2026-08-24 17:02:46,277 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-INFO 2026-08-24 17:08:07,262 autoreload C:\00_projects\cu2home\apps\users\views.py changed, reloading.
-INFO 2026-08-24 17:08:08,922 autoreload Watching for file changes with StatReloader
-INFO 2026-08-24 17:08:14,136 autoreload Watching for file changes with StatReloader
-ERROR 2026-08-24 17:16:04,606 forms Failed to send password reset email to 51
-Traceback (most recent call last):
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\contrib\auth\forms.py", line 320, in send_mail
-    email_message.send()
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\message.py", line 301, in send
-    return self.get_connection(fail_silently).send_messages([self])
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 128, in send_messages
-    new_conn_created = self.open()
-                       ^^^^^^^^^^^
-  File "C:\00_projects\cu2home\venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 86, in open
-    self.connection = self.connection_class(
-                      ^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 255, in __init__
-    (code, msg) = self.connect(host, port)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 343, in connect
-    (code, msg) = self.getreply()
-                  ^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python311\Lib\smtplib.py", line 405, in getreply
-    raise SMTPServerDisconnected("Connection unexpectedly closed")
-smtplib.SMTPServerDisconnected: Connection unexpectedly closed
-INFO 2026-08-24 17:59:54,507 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 09:43:05,061 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 10:19:33,496 autoreload C:\00_projects\cu2home\apps\users\views.py changed, reloading.
+INFO 2026-08-25 10:19:35,352 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 10:19:56,571 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-25 10:20:17,067 log Not Found: /favicon.ico
+INFO 2026-08-25 10:47:25,102 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-25 10:48:09,413 log Not Found: /favicon.ico
+INFO 2026-08-25 10:58:30,231 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 11:11:15,980 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-25 11:11:25,718 log Not Found: /favicon.ico
+INFO 2026-08-25 11:27:41,202 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-25 11:27:50,816 log Not Found: /favicon.ico
+WARNING 2026-08-25 11:33:54,448 log Not Found: /favicon.ico
+WARNING 2026-08-25 11:34:18,024 log Not Found: /favicon.ico
+WARNING 2026-08-25 11:34:47,681 log Not Found: /favicon.ico
+INFO 2026-08-25 11:36:55,250 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 11:43:57,343 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-25 11:44:36,787 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-25 11:44:43,020 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-25 11:57:49,905 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2026-08-25 12:15:26,679 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-25 12:15:47,388 log Not Found: /favicon.ico
+INFO 2026-08-25 12:32:25,045 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-25 12:32:44,464 log Not Found: /favicon.ico
+INFO 2026-08-25 12:36:18,890 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 12:43:10,828 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 12:50:10,034 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 13:00:38,075 autoreload Watching for file changes with StatReloader

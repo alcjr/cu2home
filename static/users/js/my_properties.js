@@ -717,19 +717,24 @@
                 width: function () {
                     return Math.min(window.innerWidth * 0.94, 1500);
                 },
-                // FIX: con height:'auto' DevExtreme mide el popup por su
-                // contenido real y crece hasta maxHeight; a partir de ahí
-                // el propio dx-popup-content interno hace scroll. El
-                // truncamiento de Guardar/Cancelar que había antes NO lo
-                // causaba 'auto' en sí, sino un max-height fijo en CSS que
-                // competía con este cálculo (ya retirado más abajo, ver
-                // .property-edit-popup .dx-popup-content). Si aquí se fija
-                // una altura constante en vez de 'auto', el popup deja un
-                // hueco vacío enorme cuando el contenido de la pestaña
-                // activa es corto (p.ej. "General"), así que se mantiene
-                // 'auto'.
-                height: 'auto',
-                maxHeight: 'calc(100vh - 80px)',
+                // FIX: antes height:'auto' + maxHeight -- el popup medía su
+                // altura contra el contenido de la pestaña ACTIVA, así que
+                // el resultado dependía de cuál pestaña estuviera abierta
+                // (p.ej. "General" quedaba bajo, "Fotos" o "Precio y
+                // ubicación" altos), dando el efecto de "salto" de tamaño
+                // al cambiar de tab. Mismo fix que en my_alerts.js: una
+                // altura EXPLÍCITA e idéntica para todas las pestañas
+                // (proporción del viewport, con techo). El techo (780) es
+                // algo mayor que el de alerts (700) porque aquí hay más
+                // contenido por pestaña (textarea de descripción, 4-6
+                // campos por card, galería de fotos). Con esto,
+                // .dx-popup-content (ver CSS, flex:1 1 auto + min-height:0)
+                // sigue siendo el único bloque que hace scroll interno si
+                // una pestaña no cabe -- título y barra Guardar/Cancelar
+                // quedan siempre en la misma posición, cambie o no de tab.
+                height: function () {
+                    return Math.min(window.innerHeight * 0.86, 780);
+                },
                 wrapperAttr: { class: 'property-edit-popup' },
                 // FIX: NO se debe sustituir editing.popup.toolbarItems por un
                 // array propio -- eso reemplaza también el binding interno
@@ -799,10 +804,11 @@
                             {
                                 title: gettext('General'),
                                 colCount: 2,
-                                colCountByScreen: { xs: 1, sm: 1, md: 2, lg: 2, xl: 2 },
+                                colCountByScreen: { xs: 1, sm: 1, md: 2, lg: 2 },
                                 items: [
                                     {
                                         itemType: 'group',
+                                        cssClass: 'property-form-card',
                                         caption: gettext('Datos generales'),
                                         colCount: 2,
                                         items: [
@@ -867,6 +873,7 @@
                                     },
                                     {
                                         itemType: 'group',
+                                        cssClass: 'property-form-card',
                                         caption: gettext('Descripción'),
                                         items: [{
                                             dataField: 'description',
@@ -885,10 +892,11 @@
                             {
                                 title: gettext('Precio y ubicación'),
                                 colCount: 2,
-                                colCountByScreen: { xs: 1, sm: 1, md: 2, lg: 2, xl: 2 },
+                                colCountByScreen: { xs: 1, sm: 1, md: 2, lg: 2 },
                                 items: [
                                     {
                                         itemType: 'group',
+                                        cssClass: 'property-form-card',
                                         caption: gettext('Precio'),
                                         colCount: 2,
                                         items: [
@@ -952,6 +960,7 @@
                                     },
                                     {
                                         itemType: 'group',
+                                        cssClass: 'property-form-card',
                                         caption: gettext('Ubicación'),
                                         colCount: 2,
                                         items: [
@@ -1002,6 +1011,7 @@
                                 items: [
                                     {
                                         itemType: 'group',
+                                        cssClass: 'property-form-card',
                                         colCount: 3,
                                         items: [
                                             {

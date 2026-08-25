@@ -234,10 +234,25 @@ LOGGING = {
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
 EMAIL_HOST = get_config('Email', 'smtp_server', '')
 EMAIL_PORT = get_config_int('Email', 'smtp_port', 465)
-EMAIL_USE_TLS = get_config_boolean('Email', 'smtp_use_tls', True)
 EMAIL_HOST_USER = get_config('Email', 'smtp_user', '')
 EMAIL_HOST_PASSWORD = os.getenv('SMTP_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'no-reply@cu2home.com')
+
+# EMAIL_USE_TLS (STARTTLS, típico en el puerto 587) y EMAIL_USE_SSL (SSL
+# implícito, típico en el puerto 465) son mutuamente excluyentes en Django
+# -- activar ambos, o activar el que no corresponde al puerto, deja la
+# conexión SMTP colgada hasta el timeout (o un SSLError tras un buen rato)
+# sin ningún error visible en el navegador, porque el fallo ocurre dentro
+# de smtplib mientras la request sigue "cargando". config.ini traía
+# smtp_port=465 con smtp_use_tls=true, que es justo esa combinación
+# incorrecta. Se deriva automáticamente por puerto en vez de depender de
+# smtp_use_tls para el caso 465, que ahora se ignora a propósito.
+if EMAIL_PORT == 465:
+    EMAIL_USE_SSL = True
+    EMAIL_USE_TLS = False
+else:
+    EMAIL_USE_TLS = get_config_boolean('Email', 'smtp_use_tls', True)
+    EMAIL_USE_SSL = False
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
