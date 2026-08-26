@@ -1,0 +1,725 @@
+{% extends "core/su_base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Visor de logs" %} · {{ site_name|default:"cu2home" }}{% endblock %}
+
+{% block admin_extra_css %}
+<style>
+    .visor-content { max-width: 100%; }
+
+    /* ── Header ── */
+    .visor-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+    .visor-header h1 {
+        font-family: var(--font-display);
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--ink);
+        margin: 0;
+    }
+    .visor-header p {
+        color: var(--muted);
+        margin: 4px 0 0;
+        font-size: 0.9rem;
+    }
+    .visor-meta {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.82rem;
+        color: var(--muted);
+    }
+    .visor-meta .badge {
+        background: var(--sand);
+        padding: 4px 10px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--line);
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+    }
+
+    /* ── Stats cards ── */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    .stat-card {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        padding: 14px 16px;
+        text-align: center;
+        box-shadow: var(--shadow-soft);
+        transition: transform 0.15s;
+    }
+    .stat-card:hover { transform: translateY(-2px); }
+    .stat-card .stat-value {
+        font-family: var(--font-mono);
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    .stat-card .stat-label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: var(--muted);
+        margin-top: 2px;
+    }
+
+    /* ── Filtros ── */
+    .filters-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 16px;
+        padding: 14px 18px;
+        background: var(--paper);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--line);
+        align-items: flex-end;
+    }
+    .filters-bar .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 140px;
+        flex: 1;
+    }
+    .filters-bar .filter-group label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: var(--muted);
+    }
+    .filters-bar .filter-group select,
+    .filters-bar .filter-group input {
+        padding: 7px 10px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-sm);
+        background: var(--sand);
+        font-family: var(--font-body);
+        font-size: 0.88rem;
+        color: var(--ink);
+        transition: border-color 0.2s;
+    }
+    .filters-bar .filter-group select:focus,
+    .filters-bar .filter-group input:focus {
+        border-color: var(--turquoise);
+        outline: none;
+        background: #fff;
+    }
+    .filters-bar .btn {
+        padding: 7px 16px;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s, opacity 0.2s;
+        font-family: var(--font-body);
+        height: 36px;
+        align-self: flex-end;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .filters-bar .btn-primary {
+        background: var(--turquoise);
+        color: #fff;
+    }
+    .filters-bar .btn-primary:hover { background: var(--turquoise-dark); }
+    .filters-bar .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .filters-bar .btn-secondary {
+        background: var(--sand);
+        color: var(--ink);
+        border: 1px solid var(--line);
+    }
+    .filters-bar .btn-secondary:hover { background: var(--line); }
+    .filters-bar .btn-danger {
+        background: var(--terracotta);
+        color: #fff;
+    }
+    .filters-bar .btn-danger:hover { background: var(--terracotta-dark); }
+
+    /* ── Tabla de logs ── */
+    .log-table-wrap {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-soft);
+    }
+    .log-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+        font-family: var(--font-mono);
+    }
+    .log-table thead {
+        background: var(--sand);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+    }
+    .log-table th {
+        padding: 10px 14px;
+        text-align: left;
+        font-weight: 700;
+        color: var(--ink);
+        border-bottom: 1px solid var(--line);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        white-space: nowrap;
+    }
+    .log-table td {
+        padding: 8px 14px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+        line-height: 1.5;
+    }
+    .log-table tbody tr { transition: background 0.1s; }
+    .log-table tbody tr:hover { background: rgba(47,156,149,0.04); }
+    .log-table tbody tr:last-child td { border-bottom: none; }
+
+    .log-level-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: var(--radius-sm);
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+    }
+    .log-timestamp {
+        color: var(--muted);
+        font-size: 0.78rem;
+        white-space: nowrap;
+    }
+    .log-module {
+        color: var(--turquoise-dark);
+        font-size: 0.78rem;
+        white-space: nowrap;
+    }
+    .log-message {
+        color: var(--ink);
+        word-break: break-word;
+    }
+    .log-raw {
+        color: var(--muted);
+        font-style: italic;
+    }
+
+    /* ── Paginación ── */
+    .pagination-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        background: var(--sand);
+        border-top: 1px solid var(--line);
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .pagination-info {
+        font-size: 0.82rem;
+        color: var(--muted);
+    }
+    .pagination-controls {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+    .pagination-controls button {
+        padding: 5px 12px;
+        border: 1px solid var(--line);
+        background: var(--paper);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-family: var(--font-body);
+        color: var(--ink);
+        transition: background 0.15s;
+    }
+    .pagination-controls button:hover:not(:disabled) {
+        background: var(--turquoise);
+        color: #fff;
+        border-color: var(--turquoise);
+    }
+    .pagination-controls button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+    .pagination-controls .page-current {
+        padding: 5px 12px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--ink);
+    }
+
+    /* ── Loading / Empty ── */
+    .log-loading, .log-empty {
+        padding: 60px 20px;
+        text-align: center;
+        color: var(--muted);
+    }
+    .log-loading .spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid var(--line);
+        border-top-color: var(--terracotta);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Toast ── */
+    .visor-toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        padding: 14px 22px;
+        border-radius: var(--radius-lg);
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: var(--shadow-lift);
+        transform: translateX(150%);
+        transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .visor-toast.show { transform: translateX(0); }
+    .visor-toast.error { background: #FDE8E4; color: #9A2A10; border: 1px solid #F5C0B3; }
+    .visor-toast.info  { background: #E6F4F1; color: #1A5E56; border: 1px solid #B3DDD6; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+        .filters-bar { flex-direction: column; }
+        .filters-bar .filter-group { min-width: 100%; }
+        .filters-bar .btn { width: 100%; justify-content: center; }
+        .log-table th, .log-table td { padding: 6px 8px; font-size: 0.75rem; }
+        .visor-header { flex-direction: column; }
+    }
+</style>
+{% endblock %}
+
+{% block admin_content %}
+<div class="visor-toast" id="visorToast" role="alert" aria-live="polite"></div>
+{% csrf_token %}
+
+<div class="visor-content">
+
+    <!-- Header -->
+    <div class="visor-header">
+        <div>
+            <h1>{% trans "Visor de logs" %}</h1>
+            <p>{% trans "Consulta, filtra y analiza los logs del sistema en tiempo real." %}</p>
+        </div>
+        <div class="visor-meta">
+            <span class="badge" id="logPathBadge">{{ log_path }}</span>
+            <span id="logSize">{{ log_size_human }}</span>
+            <span id="logStatus">
+                {% if log_exists %}
+                    <span style="color: var(--turquoise-dark);">●</span> {% trans "Activo" %}
+                {% else %}
+                    <span style="color: var(--terracotta);">●</span> {% trans "No encontrado" %}
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+            <div class="stat-value" style="color: var(--ink);">{{ stats.total_lines|default:"0" }}</div>
+            <div class="stat-label">{% trans "Lineas" %}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="color: {{ level_colors.DEBUG|default:"#6B7280" }}">{{ stats.DEBUG|default:"0" }}</div>
+            <div class="stat-label">DEBUG</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="color: {{ level_colors.INFO|default:"#3B82F6" }}">{{ stats.INFO|default:"0" }}</div>
+            <div class="stat-label">INFO</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="color: {{ level_colors.WARNING|default:"#F59E0B" }}">{{ stats.WARNING|default:"0" }}</div>
+            <div class="stat-label">WARNING</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="color: {{ level_colors.ERROR|default:"#EF4444" }}">{{ stats.ERROR|default:"0" }}</div>
+            <div class="stat-label">ERROR</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="color: {{ level_colors.CRITICAL|default:"#7C3AED" }}">{{ stats.CRITICAL|default:"0" }}</div>
+            <div class="stat-label">CRITICAL</div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters-bar" id="filtersBar">
+        <div class="filter-group">
+            <label for="filterLevel">{% trans "Nivel" %}</label>
+            <select id="filterLevel" aria-label="{% trans 'Filtrar por nivel' %}">
+                <option value="">{% trans "Todos" %}</option>
+                <option value="DEBUG">DEBUG</option>
+                <option value="INFO">INFO</option>
+                <option value="WARNING">WARNING</option>
+                <option value="ERROR">ERROR</option>
+                <option value="CRITICAL">CRITICAL</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="filterSearch">{% trans "Buscar" %}</label>
+            <input type="text" id="filterSearch" placeholder="{% trans 'Texto...' %}" aria-label="{% trans 'Buscar en logs' %}">
+        </div>
+        <div class="filter-group">
+            <label for="filterModule">{% trans "Modulo" %}</label>
+            <input type="text" id="filterModule" placeholder="{% trans 'ej: properties.views' %}" aria-label="{% trans 'Filtrar por modulo' %}">
+        </div>
+        <div class="filter-group">
+            <label for="filterDateFrom">{% trans "Desde" %}</label>
+            <input type="date" id="filterDateFrom" aria-label="{% trans 'Fecha desde' %}">
+        </div>
+        <div class="filter-group">
+            <label for="filterDateTo">{% trans "Hasta" %}</label>
+            <input type="date" id="filterDateTo" aria-label="{% trans 'Fecha hasta' %}">
+        </div>
+        <div class="filter-group" style="max-width: 100px;">
+            <label for="filterPerPage">{% trans "Por pagina" %}</label>
+            <select id="filterPerPage" aria-label="{% trans 'Lineas por pagina' %}">
+                <option value="50">50</option>
+                <option value="100" selected>100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+            </select>
+        </div>
+
+        <button class="btn btn-primary" id="applyFilters">
+            <span>{% trans "Aplicar" %}</span>
+        </button>
+        <button class="btn btn-secondary" id="resetFilters">
+            <span>{% trans "Limpiar" %}</span>
+        </button>
+        <button class="btn btn-secondary" id="refreshLogs">
+            <span>{% trans "Refrescar" %}</span>
+        </button>
+        <button class="btn btn-danger" id="clearLogs" title="{% trans 'Vaciar archivo de log' %}">
+            <span>{% trans "Vaciar" %}</span>
+        </button>
+        <a class="btn btn-secondary" href="{% url 'visor:download' %}" id="downloadLogs">
+            <span>{% trans "Descargar" %}</span>
+        </a>
+    </div>
+
+    <!-- Tabla -->
+    <div class="log-table-wrap">
+        <table class="log-table" id="logTable">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">{% trans "Nivel" %}</th>
+                    <th style="width: 160px;">{% trans "Fecha/Hora" %}</th>
+                    <th style="width: 180px;">{% trans "Modulo" %}</th>
+                    <th>{% trans "Mensaje" %}</th>
+                </tr>
+            </thead>
+            <tbody id="logTableBody">
+                <tr><td colspan="4" class="log-loading"><div class="spinner"></div> {% trans "Cargando logs..." %}</td></tr>
+            </tbody>
+        </table>
+
+        <!-- Paginacion -->
+        <div class="pagination-bar" id="paginationBar">
+            <div class="pagination-info" id="paginationInfo"></div>
+            <div class="pagination-controls" id="paginationControls"></div>
+        </div>
+    </div>
+</div>
+
+{{ level_colors|json_script:"level-colors-data" }}
+{{ level_bg|json_script:"level-bg-data" }}
+
+<script>
+(function() {
+    'use strict';
+
+    var currentPage = 1;
+    var totalPages = 1;
+    var currentData = null;
+
+    var LEVEL_COLORS = JSON.parse(document.getElementById('level-colors-data').textContent);
+    var LEVEL_BG = JSON.parse(document.getElementById('level-bg-data').textContent);
+
+    function showToast(message, type) {
+        type = type || 'error';
+        var toast = document.getElementById('visorToast');
+        toast.textContent = message;
+        toast.className = 'visor-toast ' + type;
+        toast.classList.add('show');
+        setTimeout(function() { toast.classList.remove('show'); }, 5000);
+    }
+
+    function setLoading(loading) {
+        var btn = document.getElementById('applyFilters');
+        if (btn) btn.disabled = loading;
+    }
+
+    function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function renderStats(stats) {
+        var grid = document.getElementById('statsGrid');
+        var levels = ['total_lines', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'];
+        var labels = {
+            'total_lines': '{% trans "Lineas" %}',
+            'DEBUG': 'DEBUG',
+            'INFO': 'INFO',
+            'WARNING': 'WARNING',
+            'ERROR': 'ERROR',
+            'CRITICAL': 'CRITICAL'
+        };
+        var colors = {
+            'total_lines': 'var(--ink)',
+            'DEBUG': LEVEL_COLORS.DEBUG || '#6B7280',
+            'INFO': LEVEL_COLORS.INFO || '#3B82F6',
+            'WARNING': LEVEL_COLORS.WARNING || '#F59E0B',
+            'ERROR': LEVEL_COLORS.ERROR || '#EF4444',
+            'CRITICAL': LEVEL_COLORS.CRITICAL || '#7C3AED'
+        };
+
+        grid.innerHTML = levels.map(function(lvl) {
+            var val = (stats && stats[lvl]) || 0;
+            return '<div class="stat-card">' +
+                '<div class="stat-value" style="color:' + colors[lvl] + '">' + val + '</div>' +
+                '<div class="stat-label">' + labels[lvl] + '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    function renderTable(lines) {
+        var tbody = document.getElementById('logTableBody');
+        if (!lines || lines.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="log-empty">{% trans "No se encontraron registros." %}</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = lines.map(function(entry) {
+            var color = LEVEL_COLORS[entry.level] || '#6B7280';
+            var bg = LEVEL_BG[entry.level] || 'transparent';
+            var ts = entry.timestamp ? escapeHtml(entry.timestamp) : '<span class="log-timestamp">—</span>';
+            var mod = entry.module ? escapeHtml(entry.module) : '<span class="log-module">—</span>';
+            var msg = entry.parsed
+                ? escapeHtml(entry.message)
+                : '<span class="log-raw">' + escapeHtml(entry.raw) + '</span>';
+
+            return '<tr>' +
+                '<td><span class="log-level-badge" style="background:' + bg + ';color:' + color + ';border:1px solid ' + color + '">' + entry.level + '</span></td>' +
+                '<td class="log-timestamp">' + ts + '</td>' +
+                '<td class="log-module">' + mod + '</td>' +
+                '<td class="log-message">' + msg + '</td>' +
+            '</tr>';
+        }).join('');
+    }
+
+    function renderPagination(total, page, perPage, totalPages) {
+        var info = document.getElementById('paginationInfo');
+        var controls = document.getElementById('paginationControls');
+
+        var start = total === 0 ? 0 : (page - 1) * perPage + 1;
+        var end = Math.min(page * perPage, total);
+        info.textContent = start + '–' + end + ' {% trans "de" %} ' + total + ' {% trans "registros" %}';
+
+        var html = '';
+        html += '<button ' + (page <= 1 ? 'disabled' : '') + ' data-page="' + (page - 1) + '">«</button>';
+
+        var maxButtons = 5;
+        var startPage = Math.max(1, page - Math.floor(maxButtons / 2));
+        var endPage = Math.min(totalPages, startPage + maxButtons - 1);
+        if (endPage - startPage < maxButtons - 1) {
+            startPage = Math.max(1, endPage - maxButtons + 1);
+        }
+
+        if (startPage > 1) {
+            html += '<button data-page="1">1</button>';
+            if (startPage > 2) html += '<span class="page-current">…</span>';
+        }
+
+        for (var i = startPage; i <= endPage; i++) {
+            if (i === page) {
+                html += '<span class="page-current">' + i + '</span>';
+            } else {
+                html += '<button data-page="' + i + '">' + i + '</button>';
+            }
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += '<span class="page-current">…</span>';
+            html += '<button data-page="' + totalPages + '">' + totalPages + '</button>';
+        }
+
+        html += '<button ' + (page >= totalPages ? 'disabled' : '') + ' data-page="' + (page + 1) + '">»</button>';
+        controls.innerHTML = html;
+
+        // Bind clicks
+        controls.querySelectorAll('button[data-page]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var p = parseInt(this.getAttribute('data-page'), 10);
+                if (p && p !== currentPage) {
+                    currentPage = p;
+                    loadLogs(false);
+                }
+            });
+        });
+    }
+
+    function buildParams() {
+        var params = new URLSearchParams();
+        params.set('page', currentPage);
+        params.set('per_page', document.getElementById('filterPerPage').value);
+
+        var level = document.getElementById('filterLevel').value;
+        if (level) params.set('level', level);
+
+        var search = document.getElementById('filterSearch').value.trim();
+        if (search) params.set('search', search);
+
+        var module = document.getElementById('filterModule').value.trim();
+        if (module) params.set('module', module);
+
+        var dateFrom = document.getElementById('filterDateFrom').value;
+        if (dateFrom) params.set('date_from', dateFrom);
+
+        var dateTo = document.getElementById('filterDateTo').value;
+        if (dateTo) params.set('date_to', dateTo);
+
+        return params;
+    }
+
+    function loadLogs(resetPage) {
+        if (resetPage) currentPage = 1;
+        setLoading(true);
+
+        var params = buildParams();
+        fetch('{% url "visor:api" %}?' + params.toString())
+            .then(function(r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            })
+            .then(function(data) {
+                if (data.error) throw new Error(data.error);
+                currentData = data;
+                totalPages = data.total_pages || 1;
+                renderTable(data.lines);
+                renderPagination(data.total, data.page, data.per_page, data.total_pages);
+            })
+            .catch(function(err) {
+                console.error(err);
+                showToast(err.message || '{% trans "Error cargando logs" %}', 'error');
+                document.getElementById('logTableBody').innerHTML =
+                    '<tr><td colspan="4" class="log-empty">{% trans "Error al cargar los datos." %}</td></tr>';
+            })
+            .finally(function() {
+                setLoading(false);
+            });
+    }
+
+    function refreshStats() {
+        fetch('{% url "visor:stats" %}')
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.stats) renderStats(data.stats);
+            })
+            .catch(function() { /* silencioso */ });
+    }
+
+    function setupFilters() {
+        document.getElementById('applyFilters').addEventListener('click', function() {
+            loadLogs(true);
+        });
+
+        document.getElementById('resetFilters').addEventListener('click', function() {
+            document.getElementById('filterLevel').value = '';
+            document.getElementById('filterSearch').value = '';
+            document.getElementById('filterModule').value = '';
+            document.getElementById('filterDateFrom').value = '';
+            document.getElementById('filterDateTo').value = '';
+            document.getElementById('filterPerPage').value = '100';
+            loadLogs(true);
+        });
+
+        document.getElementById('refreshLogs').addEventListener('click', function() {
+            loadLogs(false);
+            refreshStats();
+        });
+
+        // Enter en inputs de texto
+        ['filterSearch', 'filterModule'].forEach(function(id) {
+            document.getElementById(id).addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') loadLogs(true);
+            });
+        });
+    }
+
+    function setupClearButton() {
+        var btn = document.getElementById('clearLogs');
+        if (!btn) return;
+        btn.addEventListener('click', function() {
+            if (!confirm('{% trans "¿Estas seguro de que deseas vaciar todo el contenido del archivo de log? Esta accion no se puede deshacer." %}')) {
+                return;
+            }
+            btn.disabled = true;
+            fetch('{% url "visor:clear" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+                }
+            })
+            .then(function(r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            })
+            .then(function(data) {
+                if (data.error) throw new Error(data.error);
+                showToast(data.message || '{% trans "Log vaciado correctamente" %}', 'info');
+                loadLogs(true);
+                refreshStats();
+            })
+            .catch(function(err) {
+                showToast(err.message || '{% trans "Error al vaciar el log" %}', 'error');
+            })
+            .finally(function() {
+                btn.disabled = false;
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setupFilters();
+        setupClearButton();
+        loadLogs(true);
+        refreshStats();
+
+        // Auto-refresh cada 30s
+        setInterval(function() {
+            refreshStats();
+        }, 30000);
+    });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,146 @@
+/* ============================================================================
+   THEMES - Colores específicos por módulo
+   ============================================================================ */
+
+
+.theme-master {
+	--theme-header-bg: #47474d;
+    --theme-header-gradient: linear-gradient(135deg, #434446 0%, #0cdbf7 100%);
+    --theme-accent: #434446;
+    --theme-border: #c8e6c9;
+    --theme-icon: #434446;
+    --theme-header-datagrid: #434446;
+    --theme-header-datagrid-text: #fdfffd;
+    --theme-detail-bg: #f1f8e9;
+  
+}
+.theme-comunidad {
+	--theme-header-bg: #47474d;
+    --theme-header-gradient: linear-gradient(135deg, #434446 0%, #0cdbf7 100%);
+    --theme-accent: #434446;
+    --theme-border: #c8e6c9;
+    --theme-icon: #434446;
+    --theme-header-datagrid: #434446;
+    --theme-header-datagrid-text: #fdfffd;
+    --theme-detail-bg: #f1f8e9;
+  
+}
+
+/* Tema Categorías */
+.theme-categorias {
+    --theme-header-bg: #3b1c02;
+    --theme-header-gradient: linear-gradient(135deg, #3b1c02 0%, #f19f34 100%);
+    --theme-accent: #3b1c02;
+    --theme-border: rgba(0,0,0,0.15);
+    --theme-icon: #3b1c02;
+    --theme-header-datagrid: #3b1c02;
+    --theme-header-datagrid-text: #fff;
+    --theme-detail-bg: #fdf6f4;
+}
+
+/* Tema Incidencias */
+.theme-incidencia {
+    --theme-header-bg: #6b0e40;
+    --theme-header-gradient: linear-gradient(135deg, #6b0e40 0%, #f76797 100%);
+    --theme-accent: #880e4f;
+    --theme-border: #f48fb1;
+    --theme-icon: #880e4f;
+    --theme-header-datagrid: #6b0e40;
+    --theme-header-datagrid-text: #f8f7f8;
+    --theme-detail-bg: #fce4ec;
+}
+
+/* Tema Propietarios */
+.theme-persona {
+	--theme-header-bg: #47474d;
+    --theme-header-gradient: linear-gradient(135deg, #434446 0%, #0cdbf7 100%);
+    --theme-accent: #434446;
+    --theme-border: #c8e6c9;
+    --theme-icon: #434446;
+    --theme-header-datagrid: #434446;
+    --theme-header-datagrid-text: #fdfffd;
+    --theme-detail-bg: #f1f8e9;
+  
+}
+
+/* Tema Proveedores */
+.theme-proveedor {
+    --theme-header-bg: #505204;
+    --theme-header-gradient: linear-gradient(135deg, #505204 0%, #54aa5c 100%);
+    --theme-accent: #505204;
+    --theme-border: #fffd80;
+    --theme-icon: #505204;
+    --theme-header-datagrid: #505204;
+    --theme-header-datagrid-text: #fffbf8;
+    --theme-detail-bg: #fff8f0;
+}
+
+/* Tema Inmuebles */
+.theme-vivienda {
+    --theme-header-bg: #47474d;
+    --theme-header-gradient: linear-gradient(135deg, #434446 0%, #0cdbf7 100%);
+    --theme-accent: #434446;
+    --theme-border: #c8e6c9;
+    --theme-icon: #434446;
+    --theme-header-datagrid: #434446;
+    --theme-header-datagrid-text: #fdfffd;
+    --theme-detail-bg: #f1f8e9;
+}
+
+/* Tema Ocupantes */
+.theme-ocupante {
+    --theme-header-bg: #47474d;
+    --theme-header-gradient: linear-gradient(135deg, #47474d 0%, #b9a8f8 100%);
+    --theme-accent: #47474d;
+    --theme-border: #b9a8f8;
+    --theme-icon: #47474d;
+    --theme-header-datagrid: #47474d;
+    --theme-header-datagrid-text: #fdfffd;
+    --theme-detail-bg: #f1f8e9;
+}
+
+
+/* Tema gasto */
+.theme-gasto {
+    --theme-header-bg: #215205;
+    --theme-header-gradient: linear-gradient(135deg, #215205 0%, #faf880 100%);
+    --theme-accent: #215205;
+    --theme-border: #c8e6c9;
+    --theme-icon: ##215205;
+    --theme-header-datagrid: ##215205;
+    --theme-header-datagrid-text: #fdfffd;
+    --theme-detail-bg: #f1f8e9;
+}
+
+
+
+/* Aplicación de variables */
+.com-header {
+    background: var(--theme-header-gradient) !important;
+}
+
+.dx-datagrid-headers .dx-header-row > td {
+    background-color: var(--theme-header-datagrid) !important;
+    color: var(--theme-header-datagrid-text) !important;
+    border-bottom-color: var(--theme-border) !important;
+}
+
+.dx-datagrid-rowsview .dx-row-alt > td {
+    background-color: var(--theme-detail-bg) !important;
+}
+
+.detail-label i {
+    color: var(--theme-icon) !important;
+}
+
+.detail-value.highlight {
+    color: var(--theme-accent) !important;
+}
+
+.dx-popup-title {
+    background: var(--theme-header-gradient) !important;
+}
+
+.dx-form .dx-fieldset .dx-fieldset-header {
+    color: var(--theme-accent) !important;
+}

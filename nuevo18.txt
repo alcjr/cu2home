@@ -1,3 +1,0 @@
-edit     "fas fa-pencil-alt"
-Eliminar "fas fa-trash-alt"
-ver      ""

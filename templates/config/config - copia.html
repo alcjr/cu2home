@@ -7,9 +7,6 @@
 <!-- Estilos específicos de la página de Configuración (DevExtreme, tipografía, config.css) -->
 <link rel="stylesheet" href="{% static 'core/css/canonico.css' %}">
 <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/22.1.7/css/dx.light.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-<link rel="stylesheet" href="{% static 'core/css/core.css' %}" />
-<link rel="stylesheet" href="{% static 'core/css/themes.css' %}" />
 <link rel="stylesheet" href="{% static 'config/css/config.css' %}" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -111,24 +108,6 @@
         padding: 20px 24px;
     }
     .admin-card + .admin-card { margin-top: 16px; }
-
-    /* La cabecera (.admin-header) es lo único que debe distinguirse de
-       fingest. El resto del cuerpo (KPIs, filtros, listado de secciones
-       y panel de detalle) debe verse igual que en fingest, donde esos
-       bloques no van envueltos en ninguna "tarjeta" con fondo/borde/
-       sombra propios: se apoya en el fondo de la página directamente.
-       Neutralizamos aquí el aspecto de .admin-card SOLO dentro de esta
-       página (scope .theme-config) sin tocar su definición global, ya
-       que .admin-card se usa también en otras pantallas del panel.
-       Se conserva la clase/el nodo porque el script de más abajo
-       (adjustConfigMainAreaHeight) lo usa como referencia de layout. */
-    .theme-config .admin-card {
-        background: transparent;
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
-        padding: 0;
-    }
 
     /* ── Scroll: los KPIs y la barra de filtros (.config-top-toolbar)
          quedan siempre visibles, fuera de cualquier zona con scroll.
