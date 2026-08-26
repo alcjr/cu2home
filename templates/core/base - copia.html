@@ -763,13 +763,13 @@
                 <div class="lang-switch">
                     <form action="{% url 'set_language' %}" method="post">
                         {% csrf_token %}
-                        <input name="next" type="hidden" value="{{ lang_switch_next }}">
+                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
                         <input name="language" type="hidden" value="es">
                         <button type="submit" class="lang-flag {% if current_language == 'es' %}is-active{% endif %}" aria-label="{% trans 'Español' %}" title="Español">🇪🇸</button>
                     </form>
                     <form action="{% url 'set_language' %}" method="post">
                         {% csrf_token %}
-                        <input name="next" type="hidden" value="{{ lang_switch_next }}">
+                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
                         <input name="language" type="hidden" value="en">
                         <button type="submit" class="lang-flag {% if current_language == 'en' %}is-active{% endif %}" aria-label="English" title="English">🇺🇸</button>
                     </form>

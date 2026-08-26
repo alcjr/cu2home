@@ -3,3 +3,45 @@ INFO 2026-08-26 09:39:49,076 autoreload Watching for file changes with StatReloa
 INFO 2026-08-26 10:05:14,598 autoreload Watching for file changes with StatReloader
 WARNING 2026-08-26 10:05:49,795 log Not Found: /favicon.ico
 INFO 2026-08-26 10:19:31,008 autoreload Watching for file changes with StatReloader
+INFO 2026-08-26 10:21:27,387 autoreload Watching for file changes with StatReloader
+INFO 2026-08-26 10:45:19,647 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-26 10:45:46,144 log Not Found: /favicon.ico
+INFO 2026-08-26 13:29:03,919 autoreload C:\00_projects\cu2home\apps\core\context_processors.py changed, reloading.
+INFO 2026-08-26 13:29:05,347 autoreload Watching for file changes with StatReloader
+INFO 2026-08-26 13:31:27,494 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-26 13:32:05,177 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 13:32:11,356 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 13:32:26,763 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 13:32:35,024 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 13:32:51,948 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 13:32:55,919 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 13:32:59,889 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2026-08-26 14:12:28,631 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-26 14:12:33,309 log Not Found: /favicon.ico
+WARNING 2026-08-26 14:12:59,703 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 14:13:04,300 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 14:13:16,816 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 14:13:24,481 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 14:13:33,999 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 14:13:37,985 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 14:13:45,975 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 14:13:55,270 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 14:14:07,706 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 14:14:30,626 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2026-08-26 15:36:34,904 autoreload Watching for file changes with StatReloader
+INFO 2026-08-26 19:03:43,871 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-26 19:28:17,379 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 19:28:29,145 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 19:28:34,255 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 19:28:40,308 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 19:28:49,141 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 19:28:54,488 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 19:28:57,837 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 19:29:01,271 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 19:29:05,693 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 19:29:10,541 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 19:29:24,613 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 19:29:28,720 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 19:29:33,557 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-26 19:29:37,575 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2026-08-26 19:31:52,737 autoreload Watching for file changes with StatReloader

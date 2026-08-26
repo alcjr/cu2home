@@ -3,580 +3,2277 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: cu2home\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 15:23+0200\n"
+"POT-Creation-Date: 2026-08-26 13:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: .\apps\authentication\forms.py:16
 msgid "This account does not have access to the admin panel."
+msgstr "Esta cuenta no tiene acceso al panel de administración."
+
+#: .\apps\dashboard\views.py:256 .\apps\dashboard\views.py:289
+#, fuzzy
+#| msgid "Municipio"
+msgid "Sin municipio"
+msgstr "Municipio"
+
+#: .\apps\dashboard\views.py:393
+msgid "Error al cargar los datos del dashboard"
 msgstr ""
 
-#: .\apps\properties\admin.py:21
+#: .\apps\properties\admin.py:26
 msgid "Preview"
+msgstr "Vista previa"
+
+#: .\apps\properties\admin.py:87
+#, fuzzy
+#| msgid "Price"
+msgid "Pricing"
+msgstr "Precio"
+
+#: .\apps\properties\admin.py:91 .\apps\properties\models.py:56
+#: .\apps\properties\models.py:188
+msgid "Location"
+msgstr "Ubicación"
+
+#: .\apps\properties\admin.py:94
+msgid "Details"
 msgstr ""
 
-#: .\apps\properties\admin.py:45 .\apps\properties\models.py:102
+#: .\apps\properties\admin.py:97 .\apps\users\admin.py:20
+msgid "Metadata"
+msgstr "Metadatos"
+
+#: .\apps\properties\admin.py:111 .\apps\properties\models.py:336
 msgid "Images"
-msgstr ""
+msgstr "Imágenes"
 
 #: .\apps\properties\constants.py:4
 msgid "Apartment"
-msgstr ""
+msgstr "Apartamento"
 
 #: .\apps\properties\constants.py:5
 msgid "House"
-msgstr ""
+msgstr "Casa"
 
-#: .\apps\properties\constants.py:6
+#: .\apps\properties\constants.py:6 .\templates\dashboard\dashboard.html:566
 msgid "Villa"
-msgstr ""
+msgstr "Villa"
 
 #: .\apps\properties\constants.py:7
 msgid "Commercial"
-msgstr ""
+msgstr "Local comercial"
 
 #: .\apps\properties\constants.py:8
 msgid "Land"
-msgstr ""
+msgstr "Terreno"
 
 #: .\apps\properties\constants.py:9
 msgid "Other"
+msgstr "Otro"
+
+#: .\apps\properties\constants.py:13 .\apps\properties\models.py:94
+#: .\apps\properties\models.py:284 .\apps\properties\views.py:203
+msgid "Sale"
 msgstr ""
 
-#: .\apps\properties\constants.py:12
+#: .\apps\properties\constants.py:14 .\apps\properties\models.py:95
+#: .\apps\properties\models.py:286
+msgid "Rent"
+msgstr "Alquilar"
+
+#: .\apps\properties\constants.py:15 .\apps\properties\models.py:96
+msgid "Swap"
+msgstr ""
+
+#: .\apps\properties\constants.py:16 .\apps\properties\models.py:97
+msgid "Sale or Rent"
+msgstr ""
+
+#: .\apps\properties\constants.py:19
 msgid "My favorites"
+msgstr "Mis favoritos"
+
+#: .\apps\properties\forms.py:36
+msgid "Título"
 msgstr ""
 
-#: .\apps\properties\forms.py:8 .\apps\properties\models.py:38
-msgid "City"
+#: .\apps\properties\forms.py:37 .\templates\properties\detail.html:888
+#: .\templates\properties\detail.html:1096
+#, fuzzy
+#| msgid "Description"
+msgid "Descripción"
+msgstr "Descripción"
+
+#: .\apps\properties\forms.py:38 .\apps\properties\forms.py:135
+#, fuzzy
+#| msgid "propiedades"
+msgid "Tipo de propiedad"
+msgstr "propiedades"
+
+#: .\apps\properties\forms.py:39 .\apps\properties\forms.py:128
+msgid "Tipo de oferta"
 msgstr ""
 
-#: .\apps\properties\forms.py:10
-msgid "Min price"
+#: .\apps\properties\forms.py:40
+#, fuzzy
+#| msgid "Precio max."
+msgid "Precio de venta"
+msgstr "Precio max."
+
+#: .\apps\properties\forms.py:41
+msgid "Precio de alquiler (mensual)"
 msgstr ""
 
-#: .\apps\properties\forms.py:11
-msgid "Max price"
+#: .\apps\properties\forms.py:42
+msgid "Precio de alquiler temporal (diario)"
 msgstr ""
 
-#: .\apps\properties\forms.py:13
-msgid "Min surface (m²)"
+#: .\apps\properties\forms.py:43
+msgid "Depósito"
 msgstr ""
 
-#: .\apps\properties\forms.py:14
-msgid "Max surface (m²)"
+#: .\apps\properties\forms.py:44
+msgid "Código postal"
 msgstr ""
 
-#: .\apps\properties\forms.py:16
-msgid "Min rooms"
+#: .\apps\properties\forms.py:45 .\apps\properties\forms.py:112
+#: .\templates\core\_translations.html:30 .\templates\core\index.html:1102
+#: .\templates\dashboard\dashboard.html:293
+msgid "Provincia"
+msgstr "Provincia"
+
+#: .\apps\properties\forms.py:46 .\apps\properties\forms.py:120
+#: .\templates\core\_translations.html:31 .\templates\core\index.html:1115
+#: .\templates\dashboard\dashboard.html:303
+msgid "Municipio"
+msgstr "Municipio"
+
+#: .\apps\properties\forms.py:47
+msgid "Dirección"
 msgstr ""
 
-#: .\apps\properties\forms.py:17
-msgid "Min bathrooms"
+#: .\apps\properties\forms.py:48
+#, fuzzy
+#| msgid "Surface (m²)"
+msgid "Superficie (m²)"
+msgstr "Superficie (m²)"
+
+#: .\apps\properties\forms.py:49 .\templates\properties\detail.html:898
+#: .\templates\properties\detail.html:1076
+msgid "Habitaciones"
 msgstr ""
 
-#: .\apps\properties\forms.py:21 .\apps\properties\models.py:36
-msgid "Property type"
+#: .\apps\properties\forms.py:50 .\templates\properties\detail.html:899
+#: .\templates\properties\detail.html:1080
+msgid "Baños"
 msgstr ""
 
-#: .\apps\properties\forms.py:22
-msgid "All"
+#: .\apps\properties\forms.py:51 .\apps\properties\forms.py:206
+msgid "Ascensor"
 msgstr ""
 
-#: .\apps\properties\forms.py:25 .\apps\properties\models.py:46
-msgid "Elevator"
+#: .\apps\properties\forms.py:52 .\apps\properties\forms.py:212
+msgid "Calefacción"
 msgstr ""
 
-#: .\apps\properties\forms.py:26 .\apps\properties\models.py:47
-msgid "Heating"
+#: .\apps\properties\forms.py:53 .\apps\properties\forms.py:218
+#, fuzzy
+#| msgid "Air conditioning"
+msgid "Aire acondicionado"
+msgstr "Aire acondicionado"
+
+#: .\apps\properties\forms.py:54 .\templates\users\saved_searches.html:203
+msgid "Estado"
 msgstr ""
 
-#: .\apps\properties\forms.py:27 .\apps\properties\models.py:48
-msgid "Air conditioning"
+#: .\apps\properties\forms.py:55 .\templates\visor\visor.html:336
+#, fuzzy
+#| msgid "Active"
+msgid "Activo"
+msgstr "Activo"
+
+#: .\apps\properties\forms.py:58
+msgid "Requerido si la propiedad está en venta"
 msgstr ""
 
-#: .\apps\properties\forms.py:34
-msgid "Max price must be greater than or equal to min price."
+#: .\apps\properties\forms.py:59
+msgid "Requerido si la propiedad está en alquiler"
 msgstr ""
 
-#: .\apps\properties\forms.py:38
-msgid "Max surface must be greater than or equal to min surface."
+#: .\apps\properties\forms.py:60
+msgid "Precio por día para alquileres temporales"
 msgstr ""
 
-#: .\apps\properties\models.py:22
-msgid "Available"
+#: .\apps\properties\forms.py:61
+msgid "Depósito de garantía para alquileres"
 msgstr ""
+
+#: .\apps\properties\forms.py:62
+msgid "Código postal donde se ubica la propiedad"
+msgstr ""
+
+#: .\apps\properties\forms.py:92
+msgid "El precio de venta es obligatorio para ofertas de venta."
+msgstr ""
+
+#: .\apps\properties\forms.py:95
+msgid "El precio de alquiler es obligatorio para ofertas de alquiler."
+msgstr ""
+
+#: .\apps\properties\forms.py:105 .\templates\visor\visor.html:386
+msgid "Buscar"
+msgstr "Buscar"
+
+#: .\apps\properties\forms.py:106
+msgid "Buscar por título o descripción..."
+msgstr ""
+
+#: .\apps\properties\forms.py:113
+#, fuzzy
+#| msgid "Explora por provincia"
+msgid "Todas las provincias"
+msgstr "Explora por provincia"
+
+#: .\apps\properties\forms.py:121
+msgid "Todos los municipios"
+msgstr ""
+
+#: .\apps\properties\forms.py:126 .\apps\properties\forms.py:133
+msgid "Todos los tipos"
+msgstr ""
+
+#: .\apps\properties\forms.py:142
+msgid "Precio mínimo (venta)"
+msgstr ""
+
+#: .\apps\properties\forms.py:148
+msgid "Precio máximo (venta)"
+msgstr ""
+
+#: .\apps\properties\forms.py:156
+msgid "Precio mínimo (alquiler)"
+msgstr ""
+
+#: .\apps\properties\forms.py:162
+msgid "Precio máximo (alquiler)"
+msgstr ""
+
+#: .\apps\properties\forms.py:170
+#, fuzzy
+#| msgid "Precio max."
+msgid "Precio máximo"
+msgstr "Precio max."
+
+#: .\apps\properties\forms.py:178
+#, fuzzy
+#| msgid "Surface (m²)"
+msgid "Superficie mínima (m²)"
+msgstr "Superficie (m²)"
+
+#: .\apps\properties\forms.py:184
+#, fuzzy
+#| msgid "Surface (m²)"
+msgid "Superficie máxima (m²)"
+msgstr "Superficie (m²)"
+
+#: .\apps\properties\forms.py:192
+msgid "Habitaciones mínimas"
+msgstr ""
+
+#: .\apps\properties\forms.py:199
+msgid "Baños mínimos"
+msgstr ""
+
+#: .\apps\properties\models.py:18 .\apps\properties\models.py:22
+#: .\apps\properties\models.py:36 .\apps\properties\models.py:167
+msgid "Province"
+msgstr "Provincia"
+
+#: .\apps\properties\models.py:19 .\apps\properties\models.py:38
+#: .\apps\properties\models.py:195
+msgid "Slug"
+msgstr "Slug"
 
 #: .\apps\properties\models.py:23
-msgid "Reserved"
-msgstr ""
+#, fuzzy
+#| msgid "Province"
+msgid "Provinces"
+msgstr "Provincia"
 
-#: .\apps\properties\models.py:24
-msgid "Sold"
-msgstr ""
-
-#: .\apps\properties\models.py:29
-msgid "Title"
-msgstr ""
-
-#: .\apps\properties\models.py:30
-msgid "Description"
-msgstr ""
-
-#: .\apps\properties\models.py:39
-msgid "Province"
-msgstr ""
-
-#: .\apps\properties\models.py:40
-msgid "Address"
-msgstr ""
-
-#: .\apps\properties\models.py:41
-msgid "Location"
-msgstr ""
-
-#: .\apps\properties\models.py:42
-msgid "Price"
-msgstr ""
-
-#: .\apps\properties\models.py:43
-msgid "Surface (m²)"
-msgstr ""
-
-#: .\apps\properties\models.py:44
-msgid "Rooms"
-msgstr ""
+#: .\apps\properties\models.py:37 .\apps\properties\models.py:62
+#: .\apps\properties\models.py:176
+#, fuzzy
+#| msgid "Municipio"
+msgid "Municipality"
+msgstr "Municipio"
 
 #: .\apps\properties\models.py:45
-msgid "Bathrooms"
+msgid "Latitude"
 msgstr ""
 
-#: .\apps\properties\models.py:49
-msgid "Slug"
+#: .\apps\properties\models.py:52
+msgid "Longitude"
 msgstr ""
 
-#: .\apps\properties\models.py:50 .\apps\properties\models.py:123
-msgid "Active"
-msgstr ""
+#: .\apps\properties\models.py:63
+#, fuzzy
+#| msgid "Municipio"
+msgid "Municipalities"
+msgstr "Municipio"
 
-#: .\apps\properties\models.py:51
-msgid "Views"
-msgstr ""
+#: .\apps\properties\models.py:88
+msgid "Available"
+msgstr "Disponible"
 
-#: .\apps\properties\models.py:58 .\apps\users\admin.py:18
-#: .\apps\users\models.py:14
-msgid "Agent"
-msgstr ""
+#: .\apps\properties\models.py:89
+msgid "Reserved"
+msgstr "Reservada"
 
-#: .\apps\properties\models.py:64
-msgid "Status"
-msgstr ""
+#: .\apps\properties\models.py:90
+msgid "Sold"
+msgstr "Vendida"
 
-#: .\apps\properties\models.py:70 .\apps\properties\models.py:90
-msgid "Property"
-msgstr ""
+#: .\apps\properties\models.py:102
+msgid "Title"
+msgstr "Título"
 
-#: .\apps\properties\models.py:71
-msgid "Properties"
-msgstr ""
+#: .\apps\properties\models.py:103
+msgid "Description"
+msgstr "Descripción"
 
-#: .\apps\properties\models.py:94 .\apps\properties\models.py:101
-msgid "Image"
-msgstr ""
+#: .\apps\properties\models.py:109
+msgid "Property type"
+msgstr "Tipo de propiedad"
 
-#: .\apps\properties\models.py:96
-msgid "Order"
-msgstr ""
+#: .\apps\properties\models.py:118
+#, fuzzy
+#| msgid "Property type"
+msgid "Offer type"
+msgstr "Tipo de propiedad"
 
-#: .\apps\properties\models.py:97
-msgid "Cover image"
-msgstr ""
-
-#: .\apps\properties\models.py:111
-msgid "Immediate"
-msgstr ""
-
-#: .\apps\properties\models.py:112
-msgid "Daily"
-msgstr ""
-
-#: .\apps\properties\models.py:113
-msgid "Weekly"
-msgstr ""
-
-#: .\apps\properties\models.py:119 .\apps\users\models.py:20
-msgid "User"
-msgstr ""
-
-#: .\apps\properties\models.py:121
-msgid "Name"
-msgstr ""
-
-#: .\apps\properties\models.py:122
-msgid "Search parameters"
-msgstr ""
-
-#: .\apps\properties\models.py:128
-msgid "Frequency"
-msgstr ""
+#: .\apps\properties\models.py:128 .\apps\properties\models.py:271
+#, fuzzy
+#| msgid "Max price"
+msgid "Sale price"
+msgstr "Precio máximo"
 
 #: .\apps\properties\models.py:130
-msgid "Last sent"
+msgid "Required if offering for sale"
 msgstr ""
 
-#: .\apps\properties\models.py:135
+#: .\apps\properties\models.py:138 .\apps\properties\models.py:273
+msgid "Rent price (monthly)"
+msgstr ""
+
+#: .\apps\properties\models.py:140
+msgid "Required if offering for rent"
+msgstr ""
+
+#: .\apps\properties\models.py:148
+msgid "Seasonal rent price (daily)"
+msgstr ""
+
+#: .\apps\properties\models.py:149
+msgid "Price per day for seasonal rentals"
+msgstr ""
+
+#: .\apps\properties\models.py:157
+msgid "Deposit amount"
+msgstr ""
+
+#: .\apps\properties\models.py:158
+msgid "Security deposit for rentals"
+msgstr ""
+
+#: .\apps\properties\models.py:179
+msgid "Address"
+msgstr "Dirección"
+
+#: .\apps\properties\models.py:184
+msgid "Postal code"
+msgstr ""
+
+#: .\apps\properties\models.py:186
+msgid "Postal code where the property is located"
+msgstr ""
+
+#: .\apps\properties\models.py:189
+msgid "Surface (m²)"
+msgstr "Superficie (m²)"
+
+#: .\apps\properties\models.py:190
+msgid "Rooms"
+msgstr "Habitaciones"
+
+#: .\apps\properties\models.py:191
+msgid "Bathrooms"
+msgstr "Baños"
+
+#: .\apps\properties\models.py:192
+msgid "Elevator"
+msgstr "Ascensor"
+
+#: .\apps\properties\models.py:193
+msgid "Heating"
+msgstr "Calefacción"
+
+#: .\apps\properties\models.py:194
+msgid "Air conditioning"
+msgstr "Aire acondicionado"
+
+#: .\apps\properties\models.py:196 .\apps\properties\models.py:357
+msgid "Active"
+msgstr "Activo"
+
+#: .\apps\properties\models.py:197
+msgid "Views"
+msgstr "Visitas"
+
+#: .\apps\properties\models.py:204 .\apps\users\admin.py:18
+#: .\apps\users\models.py:16
+msgid "Agent"
+msgstr "Agente"
+
+#: .\apps\properties\models.py:210
+msgid "Status"
+msgstr "Estado"
+
+#: .\apps\properties\models.py:217 .\apps\properties\models.py:324
+#: .\apps\users\models.py:126
+msgid "Property"
+msgstr "Propiedad"
+
+#: .\apps\properties\models.py:218
+msgid "Properties"
+msgstr "Propiedades"
+
+#: .\apps\properties\models.py:275 .\apps\properties\views.py:212
+msgid "Sale / Rent"
+msgstr ""
+
+#: .\apps\properties\models.py:276
+msgid "Price"
+msgstr "Precio"
+
+#: .\apps\properties\models.py:304
+msgid "Sale price is required for sale offers"
+msgstr ""
+
+#: .\apps\properties\models.py:308
+msgid "Rent price is required for rent offers"
+msgstr ""
+
+#: .\apps\properties\models.py:328 .\apps\properties\models.py:335
+msgid "Image"
+msgstr "Imagen"
+
+#: .\apps\properties\models.py:330
+msgid "Order"
+msgstr "Orden"
+
+#: .\apps\properties\models.py:331
+msgid "Cover image"
+msgstr "Imagen de portada"
+
+#: .\apps\properties\models.py:345
+msgid "Immediate"
+msgstr "Inmediata"
+
+#: .\apps\properties\models.py:346
+msgid "Daily"
+msgstr "Diaria"
+
+#: .\apps\properties\models.py:347
+msgid "Weekly"
+msgstr "Semanal"
+
+#: .\apps\properties\models.py:353 .\apps\users\models.py:22
+#: .\apps\users\models.py:119
+msgid "User"
+msgstr "Usuario"
+
+#: .\apps\properties\models.py:355
+msgid "Name"
+msgstr "Nombre"
+
+#: .\apps\properties\models.py:356
+msgid "Search parameters"
+msgstr "Parámetros de búsqueda"
+
+#: .\apps\properties\models.py:362
+msgid "Frequency"
+msgstr "Frecuencia"
+
+#: .\apps\properties\models.py:364
+#, fuzzy
+#| msgid "Last sent"
+msgid "Last notified"
+msgstr "Último envío"
+
+#: .\apps\properties\models.py:369
 msgid "Saved search"
-msgstr ""
+msgstr "Búsqueda guardada"
 
-#: .\apps\properties\models.py:136
+#: .\apps\properties\models.py:370
 msgid "Saved searches"
+msgstr "Búsquedas guardadas"
+
+#: .\apps\properties\views.py:206
+msgid "Rent / month"
 msgstr ""
 
-#: .\apps\users\admin.py:17 .\templates\core\core.html:95
+#: .\apps\users\admin.py:17
 msgid "Contact"
-msgstr ""
+msgstr "Contacto"
 
 #: .\apps\users\admin.py:19
 msgid "Notifications"
+msgstr "Notificaciones"
+
+#: .\apps\users\forms.py:20 .\apps\users\forms.py:71
+#: .\templates\properties\detail.html:945
+msgid "Email"
 msgstr ""
 
-#: .\apps\users\admin.py:20
-msgid "Metadata"
+#: .\apps\users\forms.py:21
+#, fuzzy
+#| msgid "List name"
+msgid "First name"
+msgstr "Nombre de la lista"
+
+#: .\apps\users\forms.py:22
+#, fuzzy
+#| msgid "List name"
+msgid "Last name"
+msgstr "Nombre de la lista"
+
+#: .\apps\users\forms.py:31
+msgid "A user with that email already exists."
 msgstr ""
 
-#: .\apps\users\forms.py:23
+#: .\apps\users\forms.py:59
 msgid "List name"
-msgstr ""
+msgstr "Nombre de la lista"
 
-#: .\apps\users\models.py:13
+#: .\apps\users\models.py:15
 msgid "Buyer / visitor"
-msgstr ""
+msgstr "Comprador / visitante"
 
-#: .\apps\users\models.py:27
+#: .\apps\users\models.py:29
 msgid "Account type"
-msgstr ""
+msgstr "Tipo de cuenta"
 
-#: .\apps\users\models.py:33
+#: .\apps\users\models.py:35
 msgid "Phone"
-msgstr ""
+msgstr "Teléfono"
 
-#: .\apps\users\models.py:40
+#: .\apps\users\models.py:42 .\templates\users\my_data.html:44
+#: .\templates\users\my_data.html:58
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
-#: .\apps\users\models.py:45
+#: .\apps\users\models.py:47
 msgid "Bio"
-msgstr ""
+msgstr "Biografía"
 
-#: .\apps\users\models.py:51
+#: .\apps\users\models.py:53
 msgid "Agency name"
-msgstr ""
+msgstr "Nombre de la agencia"
 
-#: .\apps\users\models.py:56
+#: .\apps\users\models.py:58
 msgid "Receive email alerts"
-msgstr ""
+msgstr "Recibir alertas por correo"
 
-#: .\apps\users\models.py:63
+#: .\apps\users\models.py:65
 msgid "User profile"
-msgstr ""
+msgstr "Perfil de usuario"
 
-#: .\apps\users\models.py:64
+#: .\apps\users\models.py:66
 msgid "User profiles"
+msgstr "Perfiles de usuario"
+
+#: .\apps\users\models.py:132
+#, fuzzy
+#| msgid "My favorites"
+msgid "Favorite"
+msgstr "Mis favoritos"
+
+#: .\apps\users\models.py:133
+#, fuzzy
+#| msgid "My favorites"
+msgid "Favorites"
+msgstr "Mis favoritos"
+
+#: .\apps\users\views.py:67
+#, fuzzy
+#| msgid "Welcome"
+msgid "Welcome back!"
+msgstr "Bienvenido"
+
+#: .\apps\users\views.py:76
+msgid "Welcome to cu2home! Your account has been created."
 msgstr ""
 
-#: .\apps\users\views.py:30 .\templates\users\favorites.html:4
-#: .\templates\users\favorites.html:8
+#: .\apps\users\views.py:103
+msgid "You have been logged out."
+msgstr ""
+
+#: .\apps\users\views.py:158
+#, fuzzy
+#| msgid "My favorites"
+msgid "Added to favorites."
+msgstr "Mis favoritos"
+
+#: .\apps\users\views.py:160
+msgid "Removed from favorites."
+msgstr ""
+
+#: .\apps\users\views.py:181 .\templates\core\base.html:736
 msgid "Mis favoritos"
+msgstr "Mis favoritos"
+
+#: .\apps\users\views.py:336 .\templates\core\base.html:734
+msgid "Mis inmuebles"
 msgstr ""
 
-#: .\apps\users\views.py:49
+#: .\apps\users\views.py:377 .\apps\users\views.py:448
+#: .\apps\users\views.py:775 .\apps\users\views.py:801
+msgid "Invalid JSON payload."
+msgstr ""
+
+#: .\apps\users\views.py:480
+#, python-format
+msgid "Maximum number of images reached (%(max)s)."
+msgstr ""
+
+#: .\apps\users\views.py:486
+msgid "No image file provided."
+msgstr ""
+
+#: .\apps\users\views.py:557
 msgid "Search saved successfully."
-msgstr ""
+msgstr "Búsqueda guardada correctamente."
 
-#: .\apps\users\views.py:60
+#: .\apps\users\views.py:569
 msgid "Search deleted."
-msgstr ""
+msgstr "Búsqueda eliminada."
 
-#: .\apps\users\views.py:69
+#: .\apps\users\views.py:579
 msgid "activated"
+msgstr "activada"
+
+#: .\apps\users\views.py:579
+msgid "deactivated"
+msgstr "desactivada"
+
+#: .\apps\users\views.py:696
+msgid "Invalid frequency."
 msgstr ""
 
-#: .\apps\users\views.py:69
-msgid "deactivated"
+#: .\apps\users\views.py:722 .\templates\core\base.html:735
+#, fuzzy
+#| msgid "Mis favoritos"
+msgid "Mis alertas"
+msgstr "Mis favoritos"
+
+#: .\apps\users\views.py:833
+msgid "Your cu2home username"
+msgstr ""
+
+#: .\apps\users\views.py:872
+msgid "Este correo electrónico ya está registrado por otro usuario."
+msgstr ""
+
+#: .\apps\users\views.py:898
+msgid "Tus datos han sido actualizados correctamente."
+msgstr ""
+
+#: .\apps\users\views.py:902 .\templates\core\base.html:733
+#: .\templates\users\my_data.html:4 .\templates\users\my_data.html:10
+#, fuzzy
+#| msgid "Mis favoritos"
+msgid "Mis datos"
+msgstr "Mis favoritos"
+
+#: .\apps\visor\models.py:7
+msgid "nombre"
+msgstr ""
+
+#: .\apps\visor\models.py:9
+msgid "nivel"
+msgstr ""
+
+#: .\apps\visor\models.py:13 .\templates\core\_municipality_options.html:2
+#: .\templates\core\_translations.html:15 .\templates\core\index.html:1118
+#: .\templates\core\index.html:1201 .\templates\dashboard\dashboard.html:285
+#: .\templates\dashboard\dashboard.html:305 .\templates\visor\visor.html:377
+msgid "Todos"
+msgstr ""
+
+#: .\apps\visor\models.py:21
+msgid "búsqueda"
+msgstr ""
+
+#: .\apps\visor\models.py:22
+msgid "líneas por página"
+msgstr ""
+
+#: .\apps\visor\models.py:23
+msgid "creado"
+msgstr ""
+
+#: .\apps\visor\models.py:26
+msgid "preset de filtro"
+msgstr ""
+
+#: .\apps\visor\models.py:27
+msgid "presets de filtros"
+msgstr ""
+
+#: .\apps\visor\views.py:138 .\apps\visor\views.py:218
+#: .\apps\visor\views.py:260 .\apps\visor\views.py:279
+msgid "Archivo de log no encontrado"
+msgstr ""
+
+#: .\apps\visor\views.py:275
+msgid "Metodo no permitido"
+msgstr ""
+
+#: .\apps\visor\views.py:287
+msgid "Archivo de log vaciado correctamente"
+msgstr ""
+
+#: .\apps\visor\views.py:292
+msgid "Error al vaciar el archivo de log"
 msgstr ""
 
 #: .\templates\authentication\login.html:6
 #: .\templates\authentication\login.html:13
 msgid "Panel access"
-msgstr ""
+msgstr "Acceso al panel"
 
 #: .\templates\authentication\login.html:27
 msgid "Username"
-msgstr ""
+msgstr "Nombre de usuario"
 
 #: .\templates\authentication\login.html:35
 msgid "Password"
-msgstr ""
+msgstr "Contraseña"
 
 #: .\templates\authentication\login.html:44 .\templates\users\login.html:4
 #: .\templates\users\login.html:7 .\templates\users\login.html:13
-#: .\templates\users\register.html:18
 msgid "Log in"
-msgstr ""
+msgstr "Iniciar sesión"
 
-#: .\templates\authentication\register.html:4
+#: .\templates\authentication\register.html:4 .\templates\core\base.html:760
 msgid "Registro"
-msgstr ""
+msgstr "Registro"
 
-#: .\templates\authentication\register.html:8
+#: .\templates\authentication\register.html:8 .\templates\users\auth.html:5
+#: .\templates\users\auth.html:155 .\templates\users\auth.html:220
+#: .\templates\users\register.html:4 .\templates\users\register.html:121
 msgid "Crear cuenta"
-msgstr ""
+msgstr "Crear cuenta"
 
 #: .\templates\authentication\register.html:12
 msgid "Registrarse"
-msgstr ""
+msgstr "Registrarse"
 
 #: .\templates\authentication\register.html:14
 msgid "¿Ya tienes cuenta?"
-msgstr ""
+msgstr "¿Ya tienes cuenta?"
 
-#: .\templates\authentication\register.html:14
+#: .\templates\authentication\register.html:14 .\templates\core\base.html:757
+#: .\templates\users\auth.html:5 .\templates\users\auth.html:152
+#: .\templates\users\auth.html:184
+#: .\templates\users\password_reset_complete.html:24
 msgid "Iniciar sesión"
+msgstr "Iniciar sesión"
+
+#: .\templates\config\config.html:4 .\templates\core\sidebar.html:45
+#, fuzzy
+#| msgid "Configuration"
+msgid "Configuración"
+msgstr "Configuración"
+
+#: .\templates\config\config.html:159
+msgid "Configuración del sistema"
 msgstr ""
 
-#: .\templates\core\core.html:7
-msgid "Properties in Cuba"
+#: .\templates\config\config.html:160
+msgid "config.ini · parámetros de la aplicación cu2home"
 msgstr ""
 
-#: .\templates\core\core.html:27 .\templates\core\core.html:69
-msgid "Buy"
+#: .\templates\core\_translations.html:6 .\templates\core\index.html:1375
+msgid "Cargando detalle…"
 msgstr ""
 
-#: .\templates\core\core.html:28 .\templates\core\core.html:70
-msgid "Rent"
+#: .\templates\core\_translations.html:7 .\templates\core\index.html:1314
+#: .\templates\core\index.html:1319
+msgid "/mes"
 msgstr ""
 
-#: .\templates\core\core.html:29 .\templates\core\core.html:71
-#: .\templates\dashboard\index.html:56
-msgid "Agents"
+#: .\templates\core\_translations.html:8 .\templates\core\index.html:1323
+msgid "A convenir"
 msgstr ""
 
-#: .\templates\core\core.html:30 .\templates\core\core.html:72
-msgid "Blog"
+#: .\templates\core\_translations.html:9
+msgid "No hay propiedades que coincidan con los filtros seleccionados."
 msgstr ""
 
-#: .\templates\core\core.html:51
-msgid "List your property"
+#: .\templates\core\_translations.html:10
+msgid "Sin fotos"
 msgstr ""
 
-#: .\templates\core\core.html:53 .\templates\core\core.html:75
-#: .\templates\dashboard\index.html:7
-msgid "Dashboard"
+#: .\templates\core\_translations.html:11
+msgid "Este inmueble aún no tiene fotos"
 msgstr ""
 
-#: .\templates\core\core.html:54 .\templates\core\core.html:76
-msgid "Logout"
+#: .\templates\core\_translations.html:14 .\templates\core\index.html:1108
+#: .\templates\core\index.html:1200
+msgid "Toda Cuba"
 msgstr ""
 
-#: .\templates\core\core.html:56 .\templates\core\core.html:78
-msgid "Login"
+#: .\templates\core\_translations.html:16 .\templates\core\index.html:1125
+#, fuzzy
+#| msgid "Alquiler"
+msgid "Cualquiera"
+msgstr "Alquiler"
+
+#: .\templates\core\_translations.html:17 .\templates\core\index.html:1134
+msgid "Sin límite"
 msgstr ""
 
-#: .\templates\core\core.html:57 .\templates\core\core.html:79
-msgid "Sign Up"
+#: .\templates\core\_translations.html:18 .\templates\core\index.html:1138
+msgid "Reiniciar búsqueda"
 msgstr ""
 
-#: .\templates\core\core.html:92
-msgid "All rights reserved"
+#: .\templates\core\_translations.html:21 .\templates\core\index.html:1183
+msgid "Selecciona una provincia para ver sus municipios"
 msgstr ""
 
-#: .\templates\core\core.html:94
-msgid "About"
+#: .\templates\core\_translations.html:22
+msgid "No hay municipios registrados para esta provincia."
 msgstr ""
 
-#: .\templates\core\core.html:96
-msgid "Privacy"
+#: .\templates\core\_translations.html:23
+msgid "Cargando municipios…"
 msgstr ""
 
-#: .\templates\core\core.html:99
-msgid "Map data"
+#: .\templates\core\_translations.html:24
+#, fuzzy
+#| msgid "No hay propiedades destacadas disponibles."
+msgid "propiedades disponibles"
+msgstr "No hay propiedades destacadas disponibles."
+
+#: .\templates\core\_translations.html:25
+#, fuzzy
+#| msgid "Lista de propiedades favoritas:"
+msgid "Sin datos de propiedades todavía"
+msgstr "Lista de propiedades favoritas:"
+
+#: .\templates\core\_translations.html:28 .\templates\core\index.html:1204
+msgid "Ver todas"
+msgstr "Ver todas"
+
+#: .\templates\core\_translations.html:29
+#, fuzzy
+#| msgid "No hay propiedades destacadas disponibles."
+msgid "Propiedades Destacadas"
+msgstr "No hay propiedades destacadas disponibles."
+
+#: .\templates\core\_translations.html:32 .\templates\core\index.html:1122
+#: .\templates\properties\detail.html:896
+#: .\templates\properties\detail.html:1089
+msgid "Tipo"
+msgstr "Tipo"
+
+#: .\templates\core\_translations.html:33 .\templates\core\index.html:1132
+#, fuzzy
+#| msgid "Precio max."
+msgid "Precio máx."
+msgstr "Precio max."
+
+#: .\templates\core\_translations.html:36 .\templates\core\index.html:1093
+#, fuzzy
+#| msgid "Compra"
+msgid "Comprar"
+msgstr "Compra"
+
+#: .\templates\core\_translations.html:37 .\templates\core\index.html:1094
+#, fuzzy
+#| msgid "Alquiler"
+msgid "Alquilar"
+msgstr "Alquiler"
+
+#: .\templates\core\_translations.html:38 .\templates\core\index.html:1095
+msgid "Permutar"
 msgstr ""
+
+#: .\templates\core\_translations.html:39
+#: .\templates\properties\detail.html:891
+#: .\templates\properties\detail.html:996
+msgid "Venta"
+msgstr "Venta"
+
+#: .\templates\core\_translations.html:40
+msgid "Alquiler"
+msgstr "Alquiler"
+
+#: .\templates\core\_translations.html:43
+msgid "hab."
+msgstr ""
+
+#: .\templates\core\_translations.html:44
+msgid "baños"
+msgstr ""
+
+#: .\templates\core\_translations.html:45
+msgid "m²"
+msgstr ""
+
+#: .\templates\core\_translations.html:46
+msgid "vistas"
+msgstr ""
+
+#: .\templates\core\_translations.html:49
+#: .\templates\dashboard\dashboard.html:573
+msgid "Disponible"
+msgstr ""
+
+#: .\templates\core\_translations.html:50
+#: .\templates\dashboard\dashboard.html:575
+msgid "Vendido"
+msgstr ""
+
+#: .\templates\core\_translations.html:51
+#, fuzzy
+#| msgid "Alquiler"
+msgid "Alquilado"
+msgstr "Alquiler"
+
+#: .\templates\core\_translations.html:52
+#: .\templates\dashboard\dashboard.html:574
+#, fuzzy
+#| msgid "Reserved"
+msgid "Reservado"
+msgstr "Reservada"
+
+#: .\templates\core\_translations.html:55
+msgid "No se pudo cargar el detalle de esta propiedad."
+msgstr ""
+
+#: .\templates\core\_translations.html:56
+msgid "No se pudieron cargar los municipios."
+msgstr ""
+
+#: .\templates\core\_translations.html:57
+msgid "Error al cargar el mapa"
+msgstr ""
+
+#: .\templates\core\_translations.html:58
+msgid "Ubicación no disponible"
+msgstr ""
+
+#: .\templates\core\_translations.html:61
+msgid "Publicado por"
+msgstr ""
+
+#: .\templates\core\_translations.html:62
+msgid "Anuncio publicado por el equipo de cu2home."
+msgstr ""
+
+#: .\templates\core\_translations.html:63
+#, fuzzy
+#| msgid "Contact"
+msgid "Contactar agente"
+msgstr "Contacto"
+
+#: .\templates\core\_translations.html:64
+msgid "Ver ficha completa"
+msgstr ""
+
+#: .\templates\core\base.html:714
+msgid "Abrir panel de administración"
+msgstr ""
+
+#: .\templates\core\base.html:742 .\templates\core\sidebar.html:4
+msgid "Panel de administración"
+msgstr ""
+
+#: .\templates\core\base.html:750 .\templates\core\sidebar.html:81
+#, fuzzy
+#| msgid "Iniciar sesión"
+msgid "Cerrar sesión"
+msgstr "Iniciar sesión"
+
+#: .\templates\core\base.html:768
+msgid "Español"
+msgstr ""
+
+#: .\templates\core\includes\cuba_map_leaflet.html:29
+#, fuzzy
+#| msgid "Explora por provincia"
+msgid "Mapa de Cuba por provincias"
+msgstr "Explora por provincia"
+
+#: .\templates\core\includes\cuba_map_leaflet.html:32
+msgid "Cuba en un vistazo"
+msgstr ""
+
+#: .\templates\core\includes\cuba_map_leaflet.html:33
+#, fuzzy
+#| msgid "Explora por provincia"
+msgid "Toca una provincia"
+msgstr "Explora por provincia"
+
+#: .\templates\core\includes\cuba_map_leaflet.html:36
+msgid "Haz clic o pulsa Intro sobre una provincia para ver sus municipios"
+msgstr ""
+
+#: .\templates\core\includes\cuba_map_leaflet.html:42
+#: .\templates\core\index.html:1161
+#, fuzzy
+#| msgid "Provincia"
+msgid "Provincias"
+msgstr "Provincia"
+
+#: .\templates\core\includes\cuba_map_leaflet.html:49
+#: .\templates\core\index.html:1169 .\templates\dashboard\dashboard.html:666
+#: .\templates\dashboard\dashboard.html:678
+#: .\templates\dashboard\dashboard.html:690
+#: .\templates\dashboard\dashboard.html:702
+#: .\templates\dashboard\dashboard.html:714
+#: .\templates\dashboard\dashboard.html:726
+#: .\templates\dashboard\dashboard.html:771
+#: .\templates\dashboard\dashboard.html:802
+#: .\templates\dashboard\dashboard.html:832
+msgid "propiedades"
+msgstr "propiedades"
+
+#: .\templates\core\includes\cuba_map_leaflet.html:54
+#: .\templates\core\index.html:1174
+msgid "No hay provincias disponibles."
+msgstr "No hay provincias disponibles."
 
 #: .\templates\core\index.html:4
 msgid "Portal inmobiliario de Cuba"
+msgstr "Portal inmobiliario de Cuba"
+
+#: .\templates\core\index.html:1075
+#, fuzzy
+#| msgid "Portal inmobiliario de Cuba"
+msgid "Portal inmobiliario · Cuba"
+msgstr "Portal inmobiliario de Cuba"
+
+#: .\templates\core\index.html:1076
+#, fuzzy
+#| msgid "Encuentra tu hogar en Cuba"
+msgid "Encuentra tu"
+msgstr "Encuentra tu hogar en Cuba"
+
+#: .\templates\core\index.html:1076
+msgid "hogar"
 msgstr ""
 
-#: .\templates\core\index.html:419
-msgid "Encuentra tu hogar en Cuba"
+#: .\templates\core\index.html:1076
+msgid "en cualquier rincón de la isla"
 msgstr ""
 
-#: .\templates\core\index.html:420
-msgid "Más de 1.500 propiedades en venta y alquiler en todo el país"
+#: .\templates\core\index.html:1077
+msgid ""
+"Compra, alquila o permuta propiedades en las 15 provincias cubanas y la Isla "
+"de la Juventud. Busca por mapa, filtra por municipio y contacta directo con "
+"el propietario."
 msgstr ""
 
-#: .\templates\core\index.html:423
-msgid "Compra"
+#: .\templates\core\index.html:1082
+msgid "provincias + Isla de la Juventud"
 msgstr ""
 
-#: .\templates\core\index.html:424
-msgid "Alquiler"
+#: .\templates\core\index.html:1086
+#, fuzzy
+#| msgid "Municipio"
+msgid "municipios"
+msgstr "Municipio"
+
+#: .\templates\core\index.html:1152
+msgid ""
+"Selecciona una provincia en el mapa para ver sus municipios y propiedades "
+"disponibles"
 msgstr ""
 
-#: .\templates\core\index.html:425
-msgid "Venta"
+#: .\templates\core\index.html:1195
+#, fuzzy
+#| msgid "Destacados"
+msgid "Resultados"
+msgstr "Destacados"
+
+#: .\templates\core\index.html:1197
+#, fuzzy
+#| msgid "Venta"
+msgid "Venta:"
+msgstr "Venta"
+
+#: .\templates\core\index.html:1198
+#, fuzzy
+#| msgid "Alquiler"
+msgid "Alquiler:"
+msgstr "Alquiler"
+
+#: .\templates\core\index.html:1199
+msgid "Permuta:"
 msgstr ""
 
-#: .\templates\core\index.html:432
-msgid "Provincia"
+#: .\templates\core\index.html:1200
+#, fuzzy
+#| msgid "Provincia"
+msgid "Provincia:"
+msgstr "Provincia"
+
+#: .\templates\core\index.html:1201
+#, fuzzy
+#| msgid "Municipio"
+msgid "Municipio:"
+msgstr "Municipio"
+
+#: .\templates\core\panel.html:4 .\templates\core\panel.html:9
+#: .\templates\core\sidebar.html:53 .\templates\dashboard\dashboard.html:842
+msgid "Base de datos"
 msgstr ""
 
-#: .\templates\core\index.html:441
-msgid "Municipio"
+#: .\templates\core\panel.html:10
+msgid "Acceso directo al panel de administración de Django."
 msgstr ""
 
-#: .\templates\core\index.html:450
-msgid "Tipo"
+#: .\templates\core\panel.html:13
+msgid ""
+"Gestiona directamente los modelos registrados en el admin de Django "
+"(usuarios, inmuebles, provincias, etc.)."
 msgstr ""
 
-#: .\templates\core\index.html:458
-msgid "Precio max."
+#: .\templates\core\panel.html:15
+msgid "Abrir el admin de Django"
 msgstr ""
 
-#: .\templates\core\index.html:461
-msgid "Buscar"
+#: .\templates\core\sidebar.html:13
+msgid "Admin"
 msgstr ""
 
-#: .\templates\core\index.html:471
-msgid "Destacados"
+#: .\templates\core\sidebar.html:23 .\templates\dashboard\dashboard.html:4
+msgid "Dashboard"
+msgstr "Panel"
+
+#: .\templates\core\sidebar.html:34 .\templates\visor\visor.html:4
+#: .\templates\visor\visor.html:328
+msgid "Visor de logs"
 msgstr ""
 
-#: .\templates\core\index.html:471
-msgid "Las mejores propiedades"
+#: .\templates\core\sidebar.html:62
+msgid "Versión"
 msgstr ""
 
-#: .\templates\core\index.html:472
-msgid "Ver todas"
+#: .\templates\core\sidebar.html:66 .\templates\properties\detail.html:1153
+#: .\templates\properties\detail.html:1155
+msgid "Usuario"
 msgstr ""
 
-#: .\templates\core\index.html:497
-msgid "No hay propiedades destacadas disponibles."
+#: .\templates\core\sidebar.html:70
+msgid "Último acceso"
 msgstr ""
 
-#: .\templates\core\index.html:507
-msgid "Explora por provincia"
+#: .\templates\core\sidebar.html:87
+msgid "Cerrar menú"
 msgstr ""
 
-#: .\templates\core\index.html:514
-msgid "propiedades"
+#: .\templates\core\su_base.html:163
+msgid "Acceso restringido"
 msgstr ""
 
-#: .\templates\core\index.html:517
-msgid "No hay provincias disponibles."
+#: .\templates\core\su_base.html:164
+msgid "Esta sección del sitio es solo para superusuarios."
 msgstr ""
 
-#: .\templates\dashboard\config.html:6
-msgid "Configuration"
+#: .\templates\core\su_base.html:166 .\templates\users\my_data.html:299
+msgid "Volver al inicio"
 msgstr ""
 
-#: .\templates\dashboard\config.html:21
-msgid "Save"
+#: .\templates\dashboard\dashboard.html:275
+msgid "Cuadro de mando"
 msgstr ""
 
-#: .\templates\dashboard\index.html:8
-msgid "Welcome"
+#: .\templates\dashboard\dashboard.html:276
+msgid "Visualiza los indicadores y estadísticas clave del portal."
 msgstr ""
 
-#: .\templates\dashboard\index.html:19
-msgid "Properties trend (30 days)"
+#: .\templates\dashboard\dashboard.html:283
+msgid "Año"
 msgstr ""
 
-#: .\templates\dashboard\index.html:23
-msgid "Properties by city"
+#: .\templates\dashboard\dashboard.html:284
+msgid "Filtrar por año"
 msgstr ""
 
-#: .\templates\dashboard\index.html:44
-msgid "Total properties"
+#: .\templates\dashboard\dashboard.html:294
+#, fuzzy
+#| msgid "Explora por provincia"
+msgid "Filtrar por provincia"
+msgstr "Explora por provincia"
+
+#: .\templates\dashboard\dashboard.html:295
+msgid "Todas"
 msgstr ""
 
-#: .\templates\dashboard\index.html:48
-msgid "New (7 days)"
+#: .\templates\dashboard\dashboard.html:304
+msgid "Filtrar por municipio"
 msgstr ""
 
-#: .\templates\dashboard\index.html:52
-msgid "Avg. price (€)"
+#: .\templates\dashboard\dashboard.html:315
+#: .\templates\dashboard\dashboard.html:602
+msgid "Aplicar filtros"
 msgstr ""
 
-#: .\templates\users\favorites.html:10
-msgid "Lista de propiedades favoritas:"
+#: .\templates\dashboard\dashboard.html:317 .\templates\visor\visor.html:415
+msgid "Limpiar"
 msgstr ""
 
-#: .\templates\users\favorites.html:13
-msgid "No tienes propiedades favoritas aún."
+#: .\templates\dashboard\dashboard.html:322
+msgid "Cargando indicadores…"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:330
+msgid "Ventas por mes"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:331
+msgid "Propiedades en venta registradas por mes"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:335
+#: .\templates\dashboard\dashboard.html:347
+#: .\templates\dashboard\dashboard.html:359
+#: .\templates\dashboard\dashboard.html:372
+#: .\templates\dashboard\dashboard.html:384
+#: .\templates\dashboard\dashboard.html:396
+#: .\templates\dashboard\dashboard.html:409
+#: .\templates\dashboard\dashboard.html:421
+#: .\templates\dashboard\dashboard.html:434
+#: .\templates\dashboard\dashboard.html:446
+#: .\templates\dashboard\dashboard.html:458
+#: .\templates\dashboard\dashboard.html:471
+#: .\templates\dashboard\dashboard.html:601
+msgid "Cargando…"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:342
+#, fuzzy
+#| msgid "Alquiler"
+msgid "Alquileres por mes"
+msgstr "Alquiler"
+
+#: .\templates\dashboard\dashboard.html:343
+msgid "Propiedades en alquiler registradas por mes"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:354
+msgid "Permutas por mes"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:355
+msgid "Propiedades en permuta registradas por mes"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:367
+msgid "Ventas por municipio"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:368
+msgid "Top municipios con propiedades en venta"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:379
+msgid "Alquileres por municipio"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:380
+msgid "Top municipios con propiedades en alquiler"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:391
+msgid "Permutas por municipio"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:392
+msgid "Top municipios con propiedades en permuta"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:404
+#, fuzzy
+#| msgid "Precio max."
+msgid "Precio m² - Ventas"
+msgstr "Precio max."
+
+#: .\templates\dashboard\dashboard.html:405
+msgid "Precio estimado del metro cuadrado por municipio (venta)"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:416
+msgid "Precio m² - Alquiler"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:417
+msgid "Precio estimado del metro cuadrado por municipio (alquiler)"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:429
+msgid "Distribución por tipo"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:430
+msgid "Propiedades por tipo de inmueble"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:441
+msgid "Distribución por estado"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:442
+#, fuzzy
+#| msgid "propiedades"
+msgid "Propiedades por estado"
+msgstr "propiedades"
+
+#: .\templates\dashboard\dashboard.html:453
+#, fuzzy
+#| msgid "Provincia"
+msgid "Top provincias"
+msgstr "Provincia"
+
+#: .\templates\dashboard\dashboard.html:454
+#, fuzzy
+#| msgid "Las mejores propiedades"
+msgid "Provincias con más propiedades"
+msgstr "Las mejores propiedades"
+
+#: .\templates\dashboard\dashboard.html:466
+msgid "Uso de almacenamiento"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:467
+msgid "Tamaño en MB de la base de datos y de las imágenes"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:557
+msgid "Ene"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:557
+msgid "Feb"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:557
+msgid "Mar"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:557
+msgid "Abr"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:558
+msgid "May"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:558
+msgid "Jun"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:558
+msgid "Jul"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:558
+msgid "Ago"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:559
+msgid "Sep"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:559
+msgid "Oct"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:559
+msgid "Nov"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:559
+msgid "Dic"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:564
+#, fuzzy
+#| msgid "Apartment"
+msgid "Apartamento"
+msgstr "Apartamento"
+
+#: .\templates\dashboard\dashboard.html:565
+msgid "Casa"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:567
+msgid "Penthouse"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:568
+msgid "Estudio"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:569
+#, fuzzy
+#| msgid "Commercial"
+msgid "Local comercial"
+msgstr "Local comercial"
+
+#: .\templates\dashboard\dashboard.html:612
+msgid "Total inmuebles"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:613
+#, fuzzy
+#| msgid "Active"
+msgid "Activos"
+msgstr "Activo"
+
+#: .\templates\dashboard\dashboard.html:614
+msgid "Disponibles"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:615
+#, fuzzy
+#| msgid "Reserved"
+msgid "Reservados"
+msgstr "Reservada"
+
+#: .\templates\dashboard\dashboard.html:616
+msgid "Vendidos"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:617
+#, fuzzy
+#| msgid "Venta"
+msgid "En venta"
+msgstr "Venta"
+
+#: .\templates\dashboard\dashboard.html:618
+#, fuzzy
+#| msgid "Alquiler"
+msgid "En alquiler"
+msgstr "Alquiler"
+
+#: .\templates\dashboard\dashboard.html:619
+#: .\templates\dashboard\dashboard.html:689
+#: .\templates\dashboard\dashboard.html:725
+msgid "Permutas"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:620
+#, fuzzy
+#| msgid "Alquiler"
+msgid "Venta/Alquiler"
+msgstr "Alquiler"
+
+#: .\templates\dashboard\dashboard.html:664
+#: .\templates\dashboard\dashboard.html:676
+#: .\templates\dashboard\dashboard.html:688
+#: .\templates\dashboard\dashboard.html:700
+#: .\templates\dashboard\dashboard.html:712
+#: .\templates\dashboard\dashboard.html:724
+#: .\templates\dashboard\dashboard.html:826
+msgid "Cantidad"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:665
+#: .\templates\dashboard\dashboard.html:701
+#, fuzzy
+#| msgid "Venta"
+msgid "Ventas"
+msgstr "Venta"
+
+#: .\templates\dashboard\dashboard.html:677
+#: .\templates\dashboard\dashboard.html:713
+#, fuzzy
+#| msgid "Alquiler"
+msgid "Alquileres"
+msgstr "Alquiler"
+
+#: .\templates\dashboard\dashboard.html:736
+#: .\templates\dashboard\dashboard.html:748
+#, fuzzy
+#| msgid "Precio max."
+msgid "Precio m²"
+msgstr "Precio max."
+
+#: .\templates\dashboard\dashboard.html:737
+#, fuzzy
+#| msgid "Precio max."
+msgid "Precio m² (Venta)"
+msgstr "Precio max."
+
+#: .\templates\dashboard\dashboard.html:749
+msgid "Precio m² (Alquiler)"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:761
+#: .\templates\dashboard\dashboard.html:792
+#: .\templates\dashboard\dashboard.html:828
+#: .\templates\properties\detail.html:960
+#, fuzzy
+#| msgid "propiedades"
+msgid "Propiedades"
+msgstr "propiedades"
+
+#: .\templates\dashboard\dashboard.html:823
+#, fuzzy
+#| msgid "Provincia"
+msgid "Sin provincia"
+msgstr "Provincia"
+
+#: .\templates\dashboard\dashboard.html:842
+msgid "Imágenes"
+msgstr ""
+
+#: .\templates\dashboard\dashboard.html:889
+msgid "Error al cargar los datos"
+msgstr ""
+
+#: .\templates\properties\detail.html:879
+msgid "Impreso el"
+msgstr ""
+
+#: .\templates\properties\detail.html:884
+msgid "Ficha del inmueble"
+msgstr ""
+
+#: .\templates\properties\detail.html:892
+#: .\templates\properties\detail.html:1002
+#, fuzzy
+#| msgid "Alquiler"
+msgid "Alquiler/mes"
+msgstr "Alquiler"
+
+#: .\templates\properties\detail.html:897
+msgid "Operación"
+msgstr ""
+
+#: .\templates\properties\detail.html:900
+msgid "Superficie"
+msgstr ""
+
+#: .\templates\properties\detail.html:901
+#: .\templates\properties\detail.html:1107
+msgid "Ubicación"
+msgstr ""
+
+#: .\templates\properties\detail.html:905
+#: .\templates\properties\detail.html:1254
+msgid "Ref."
+msgstr ""
+
+#: .\templates\properties\detail.html:911
+#: .\templates\properties\detail.html:1101
+msgid "No hay descripción disponible para esta propiedad."
+msgstr ""
+
+#: .\templates\properties\detail.html:918
+msgid "Fotos"
+msgstr ""
+
+#: .\templates\properties\detail.html:927
+#, fuzzy
+#| msgid "No hay propiedades destacadas disponibles."
+msgid "Esta propiedad no tiene imágenes disponibles"
+msgstr "No hay propiedades destacadas disponibles."
+
+#: .\templates\properties\detail.html:934
+msgid "Datos del agente/promotor"
+msgstr ""
+
+#: .\templates\properties\detail.html:937 .\templates\users\my_data.html:91
+#: .\templates\users\saved_searches.html:164
+#: .\templates\users\saved_searches.html:199
+msgid "Nombre"
+msgstr ""
+
+#: .\templates\properties\detail.html:939
+#, fuzzy
+#| msgid "Agency name"
+msgid "Agencia"
+msgstr "Nombre de la agencia"
+
+#: .\templates\properties\detail.html:942 .\templates\users\my_data.html:151
+msgid "Teléfono"
+msgstr ""
+
+#: .\templates\properties\detail.html:966
+#: .\templates\users\saved_searches.html:226
+msgid "Imprimir"
+msgstr ""
+
+#: .\templates\properties\detail.html:969
+msgid "Cerrar"
+msgstr ""
+
+#: .\templates\properties\detail.html:1024
+msgid "Sin imágenes disponibles"
+msgstr ""
+
+#: .\templates\properties\detail.html:1072
+msgid "Características"
+msgstr ""
+
+#: .\templates\properties\detail.html:1084
+msgid "superficie"
+msgstr ""
+
+#: .\templates\properties\detail.html:1171
+msgid "Equipo cu2home"
+msgstr ""
+
+#: .\templates\properties\detail.html:1227
+msgid "Llamar"
+msgstr ""
+
+#: .\templates\properties\detail.html:1230
+msgid "WhatsApp"
+msgstr ""
+
+#: .\templates\properties\detail.html:1234
+msgid "Contactar anunciante"
+msgstr ""
+
+#: .\templates\properties\detail.html:1243
+msgid "Guardado en favoritos"
+msgstr ""
+
+#: .\templates\properties\detail.html:1243
+#: .\templates\properties\detail.html:1248
+#, fuzzy
+#| msgid "Mis favoritos"
+msgid "Guardar en favoritos"
+msgstr "Mis favoritos"
+
+#: .\templates\properties\detail.html:1456
+msgid "Coordenadas no disponibles para este municipio"
+msgstr ""
+
+#: .\templates\properties\partials\list_results.html:10
+#, python-format
+msgid ""
+"\n"
+"        %(counter)s propiedad encontrada\n"
+"    "
+msgid_plural ""
+"\n"
+"        %(counter)s propiedades encontradas\n"
+"    "
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\templates\properties\partials\list_results.html:21
+msgid "No se encontraron propiedades con los filtros seleccionados."
+msgstr ""
+
+#: .\templates\properties\partials\list_results.html:26
+msgid "Paginación de resultados"
+msgstr ""
+
+#: .\templates\properties\partials\list_results.html:31
+msgid "Página anterior"
+msgstr ""
+
+#: .\templates\properties\partials\list_results.html:52
+msgid "Página siguiente"
+msgstr ""
+
+#: .\templates\users\auth.html:161
+msgid "Bienvenido de nuevo"
+msgstr ""
+
+#: .\templates\users\auth.html:162
+msgid "Inicia sesión con tu cuenta de cu2home."
+msgstr ""
+
+#: .\templates\users\auth.html:188
+#: .\templates\users\password_reset_form.html:13
+msgid "¿Olvidaste tu contraseña?"
+msgstr ""
+
+#: .\templates\users\auth.html:190 .\templates\users\forgot_username.html:13
+msgid "¿Olvidaste tu usuario?"
+msgstr ""
+
+#: .\templates\users\auth.html:196 .\templates\users\register.html:98
+#, fuzzy
+#| msgid "Crear cuenta"
+msgid "Crea tu cuenta"
+msgstr "Crear cuenta"
+
+#: .\templates\users\auth.html:197 .\templates\users\register.html:99
+msgid ""
+"Regístrate para guardar búsquedas, marcar favoritos y contactar directamente "
+"con los anunciantes."
+msgstr ""
+
+#: .\templates\users\emails\forgot_username_email.txt:2
+#, python-format
+msgid ""
+"Hola,\n"
+"\n"
+"Solicitaste recordar tu nombre de usuario en %(site_name)s.\n"
+"\n"
+"Tu(s) nombre(s) de usuario asociado(s) a este correo electrónico son:\n"
+"\n"
+"%(usernames)s\n"
+"\n"
+"Si no solicitaste esta información, puedes ignorar este mensaje.\n"
+"\n"
+"Gracias,\n"
+"El equipo de %(site_name)s\n"
+msgstr ""
+
+#: .\templates\users\emails\password_reset_email.txt:2
+#, python-format
+msgid ""
+"Hola,\n"
+"\n"
+"Recibiste este correo porque solicitaste restablecer la contraseña de tu "
+"cuenta en %(site_name)s.\n"
+"\n"
+"Para elegir una nueva contraseña, haz clic en el siguiente enlace:"
+msgstr ""
+
+#: .\templates\users\emails\password_reset_email.txt:10
+#, python-format
+msgid ""
+"Si no solicitaste este cambio, puedes ignorar este mensaje y tu contraseña "
+"no cambiará.\n"
+"\n"
+"Tu nombre de usuario es: %(user.get_username)s\n"
+"\n"
+"Gracias,\n"
+"El equipo de %(site_name)s"
+msgstr ""
+
+#: .\templates\users\emails\password_reset_subject.txt:1
+#, python-format
+msgid "Restablecimiento de contraseña en %(site_name)s"
+msgstr ""
+
+#: .\templates\users\forgot_username.html:4
+msgid "Recuperar usuario"
+msgstr ""
+
+#: .\templates\users\forgot_username.html:14
+msgid ""
+"Introduce el correo electrónico de tu cuenta y te enviaremos tu nombre de "
+"usuario."
+msgstr ""
+
+#: .\templates\users\forgot_username.html:36
+msgid "Enviar usuario"
+msgstr ""
+
+#: .\templates\users\forgot_username.html:41
+#: .\templates\users\password_reset_confirm.html:78
+#: .\templates\users\password_reset_done.html:22
+#: .\templates\users\password_reset_form.html:42
+msgid "Volver al inicio de sesión"
 msgstr ""
 
 #: .\templates\users\list.html:4 .\templates\users\list.html:7
 msgid "My saved searches"
-msgstr ""
+msgstr "Mis búsquedas guardadas"
 
 #: .\templates\users\list.html:15
 msgid "paused"
-msgstr ""
+msgstr "pausada"
 
 #: .\templates\users\list.html:20
 msgid "Pause"
-msgstr ""
+msgstr "Pausar"
 
 #: .\templates\users\list.html:20
 msgid "Resume"
-msgstr ""
+msgstr "Reanudar"
 
 #: .\templates\users\list.html:26
 msgid "Delete"
-msgstr ""
+msgstr "Eliminar"
 
 #: .\templates\users\list.html:32
 msgid "You don't have any saved searches yet."
-msgstr ""
+msgstr "Todavía no tienes búsquedas guardadas."
 
 #: .\templates\users\list.html:33
 msgid ""
 "Save a search from the property listing to get email alerts about new "
 "matches."
 msgstr ""
+"Guarda una búsqueda desde el listado de propiedades para recibir alertas por "
+"correo sobre nuevas coincidencias."
 
 #: .\templates\users\login.html:18
 msgid "No account yet?"
-msgstr ""
+msgstr "¿Aún no tienes cuenta?"
 
-#: .\templates\users\login.html:19 .\templates\users\register.html:13
+#: .\templates\users\login.html:19
 msgid "Register"
+msgstr "Registrarse"
+
+#: .\templates\users\my_alerts.html:16 .\templates\users\my_favorites.html:16
+#: .\templates\users\my_properties.html:16
+#: .\templates\users\saved_searches.html:112
+msgid "Volver al portal"
 msgstr ""
 
-#: .\templates\users\register.html:4 .\templates\users\register.html:7
-msgid "Create account"
+#: .\templates\users\my_data.html:13
+msgid "Consulta y actualiza tu información personal."
 msgstr ""
 
-#: .\templates\users\register.html:17
-msgid "Already have an account?"
+#: .\templates\users\my_data.html:72
+msgid "Eliminar avatar actual"
 msgstr ""
 
-#: .\templates\users\saved_search_alert.txt:1
+#: .\templates\users\my_data.html:76
+msgid "Formatos permitidos: JPG, PNG. Tamaño máximo: 2MB."
+msgstr ""
+
+#: .\templates\users\my_data.html:110
+msgid "Apellidos"
+msgstr ""
+
+#: .\templates\users\my_data.html:132
+#: .\templates\users\password_reset_form.html:25
+msgid "Correo electrónico"
+msgstr ""
+
+#: .\templates\users\my_data.html:173
+#, fuzzy
+#| msgid "Crear cuenta"
+msgid "Tipo de cuenta"
+msgstr "Crear cuenta"
+
+#: .\templates\users\my_data.html:191
+msgid ""
+"Comprador/Visitante: solo puedes guardar favoritos y alertas. Agente: puedes "
+"publicar inmuebles."
+msgstr ""
+
+#: .\templates\users\my_data.html:203
+msgid "Nombre de la agencia"
+msgstr ""
+
+#: .\templates\users\my_data.html:215
+msgid "Opcional. Si trabajas con una inmobiliaria, indícala aquí."
+msgstr ""
+
+#: .\templates\users\my_data.html:227
+msgid "Biografía / Presentación"
+msgstr ""
+
+#: .\templates\users\my_data.html:241
+msgid "Cuéntanos algo sobre ti. Esto aparecerá en tu perfil público."
+msgstr ""
+
+#: .\templates\users\my_data.html:261
+msgid "Recibir alertas por correo electrónico"
+msgstr ""
+
+#: .\templates\users\my_data.html:264
+msgid ""
+"Recibe notificaciones cuando se publiquen inmuebles que coincidan con tus "
+"búsquedas guardadas."
+msgstr ""
+
+#: .\templates\users\my_data.html:285
+msgid "Guardar cambios"
+msgstr ""
+
+#: .\templates\users\password_reset_complete.html:4
+msgid "Contraseña cambiada"
+msgstr ""
+
+#: .\templates\users\password_reset_complete.html:18
+msgid "¡Contraseña cambiada!"
+msgstr ""
+
+#: .\templates\users\password_reset_complete.html:20
+msgid ""
+"Tu contraseña ha sido restablecida correctamente. Ahora puedes iniciar "
+"sesión con tu nueva contraseña."
+msgstr ""
+
+#: .\templates\users\password_reset_confirm.html:4
+#: .\templates\users\password_reset_confirm.html:30
+msgid "Nueva contraseña"
+msgstr ""
+
+#: .\templates\users\password_reset_confirm.html:15
+msgid "Elige una nueva contraseña"
+msgstr ""
+
+#: .\templates\users\password_reset_confirm.html:16
+msgid "Tu nueva contraseña debe tener al menos 8 caracteres."
+msgstr ""
+
+#: .\templates\users\password_reset_confirm.html:39
+msgid ""
+"Mínimo 8 caracteres. No puede ser demasiado común ni similar a tu nombre."
+msgstr ""
+
+#: .\templates\users\password_reset_confirm.html:43
+msgid "Confirmar nueva contraseña"
+msgstr ""
+
+#: .\templates\users\password_reset_confirm.html:56
+msgid "Cambiar contraseña"
+msgstr ""
+
+#: .\templates\users\password_reset_confirm.html:66
+msgid ""
+"El enlace de restablecimiento de contraseña no es válido. Puede que ya haya "
+"sido usado o que haya expirado."
+msgstr ""
+
+#: .\templates\users\password_reset_confirm.html:70
+msgid "Solicitar nuevo enlace"
+msgstr ""
+
+#: .\templates\users\password_reset_done.html:4
+msgid "Enlace enviado"
+msgstr ""
+
+#: .\templates\users\password_reset_done.html:16
+msgid "¡Revisa tu correo!"
+msgstr ""
+
+#: .\templates\users\password_reset_done.html:18
+msgid ""
+"Te hemos enviado un enlace para restablecer tu contraseña. Si no recibes el "
+"correo en unos minutos, revisa tu carpeta de spam."
+msgstr ""
+
+#: .\templates\users\password_reset_form.html:4
+msgid "Recuperar contraseña"
+msgstr ""
+
+#: .\templates\users\password_reset_form.html:14
+msgid ""
+"Escribe el email de tu cuenta y te enviaremos un enlace para elegir una "
+"contraseña nueva."
+msgstr ""
+
+#: .\templates\users\password_reset_form.html:29
+msgid "tu@email.com"
+msgstr ""
+
+#: .\templates\users\password_reset_form.html:37
+msgid "Enviar enlace"
+msgstr ""
+
+#: .\templates\users\saved_searches.html:123
+msgid "Todavía no has guardado ninguna búsqueda."
+msgstr ""
+
+#: .\templates\users\saved_searches.html:149
+msgid "¿Seguro que quieres borrar esta alerta?"
+msgstr ""
+
+#: .\templates\users\saved_searches.html:165
+#: .\templates\users\saved_searches.html:200
+#, fuzzy
+#| msgid "Frequency"
+msgid "Frecuencia"
+msgstr "Frecuencia"
+
+#: .\templates\users\saved_searches.html:166
+#: .\templates\users\saved_searches.html:216
+msgid "Creada"
+msgstr ""
+
+#: .\templates\users\saved_searches.html:167
+#: .\templates\users\saved_searches.html:217
+msgid "Último envío"
+msgstr ""
+
+#: .\templates\users\saved_searches.html:197
+#, fuzzy
+#| msgid "Buscar"
+msgid "Buscar..."
+msgstr "Buscar"
+
+#: .\templates\users\saved_searches.html:209
+#, fuzzy
+#| msgid "activated"
+msgid "Inactiva"
+msgstr "activada"
+
+#: .\templates\users\saved_searches.html:211
+#, fuzzy
+#| msgid "Active"
+msgid "Activa"
+msgstr "Activo"
+
+#: .\templates\users\saved_searches.html:219
+msgid "Acciones"
+msgstr ""
+
+#: .\templates\users\saved_searches.html:232
+msgid "Borrar"
+msgstr ""
+
+#: .\templates\visor\visor.html:329
+msgid "Consulta, filtra y analiza los logs del sistema en tiempo real."
+msgstr ""
+
+#: .\templates\visor\visor.html:338
+msgid "No encontrado"
+msgstr ""
+
+#: .\templates\visor\visor.html:348 .\templates\visor\visor.html:490
+msgid "Lineas"
+msgstr ""
+
+#: .\templates\visor\visor.html:375 .\templates\visor\visor.html:433
+msgid "Nivel"
+msgstr ""
+
+#: .\templates\visor\visor.html:376
+msgid "Filtrar por nivel"
+msgstr ""
+
+#: .\templates\visor\visor.html:387
+msgid "Texto..."
+msgstr ""
+
+#: .\templates\visor\visor.html:387
+#, fuzzy
+#| msgid "Buscar"
+msgid "Buscar en logs"
+msgstr "Buscar"
+
+#: .\templates\visor\visor.html:390 .\templates\visor\visor.html:435
+msgid "Modulo"
+msgstr ""
+
+#: .\templates\visor\visor.html:391
+#, fuzzy
+#| msgid "Total properties"
+msgid "ej: properties.views"
+msgstr "Total de propiedades"
+
+#: .\templates\visor\visor.html:391
+msgid "Filtrar por modulo"
+msgstr ""
+
+#: .\templates\visor\visor.html:394
+msgid "Desde"
+msgstr ""
+
+#: .\templates\visor\visor.html:395
+msgid "Fecha desde"
+msgstr ""
+
+#: .\templates\visor\visor.html:398
+msgid "Hasta"
+msgstr ""
+
+#: .\templates\visor\visor.html:399
+msgid "Fecha hasta"
+msgstr ""
+
+#: .\templates\visor\visor.html:402
+msgid "Por pagina"
+msgstr ""
+
+#: .\templates\visor\visor.html:403
+msgid "Lineas por pagina"
+msgstr ""
+
+#: .\templates\visor\visor.html:412
+msgid "Aplicar"
+msgstr ""
+
+#: .\templates\visor\visor.html:418
+msgid "Refrescar"
+msgstr ""
+
+#: .\templates\visor\visor.html:420
+msgid "Vaciar archivo de log"
+msgstr ""
+
+#: .\templates\visor\visor.html:421
+msgid "Vaciar"
+msgstr ""
+
+#: .\templates\visor\visor.html:424
+msgid "Descargar"
+msgstr ""
+
+#: .\templates\visor\visor.html:434
+msgid "Fecha/Hora"
+msgstr ""
+
+#: .\templates\visor\visor.html:436
+msgid "Mensaje"
+msgstr ""
+
+#: .\templates\visor\visor.html:440
+msgid "Cargando logs..."
+msgstr ""
+
+#: .\templates\visor\visor.html:518
+msgid "No se encontraron registros."
+msgstr ""
+
+#: .\templates\visor\visor.html:546
+msgid "de"
+msgstr ""
+
+#: .\templates\visor\visor.html:546
+#, fuzzy
+#| msgid "Registro"
+msgid "registros"
+msgstr "Registro"
+
+#: .\templates\visor\visor.html:633
+msgid "Error cargando logs"
+msgstr ""
+
+#: .\templates\visor\visor.html:635
+msgid "Error al cargar los datos."
+msgstr ""
+
+#: .\templates\visor\visor.html:683
+msgid ""
+"¿Estas seguro de que deseas vaciar todo el contenido del archivo de log? "
+"Esta accion no se puede deshacer."
+msgstr ""
+
+#: .\templates\visor\visor.html:699
+msgid "Log vaciado correctamente"
+msgstr ""
+
+#: .\templates\visor\visor.html:704
+msgid "Error al vaciar el log"
+msgstr ""
+
+#~ msgid "City"
+#~ msgstr "Ciudad"
+
+#~ msgid "Min price"
+#~ msgstr "Precio mínimo"
+
+#~ msgid "Min surface (m²)"
+#~ msgstr "Superficie mínima (m²)"
+
+#~ msgid "Max surface (m²)"
+#~ msgstr "Superficie máxima (m²)"
+
+#~ msgid "Min rooms"
+#~ msgstr "Habitaciones mínimas"
+
+#~ msgid "Min bathrooms"
+#~ msgstr "Baños mínimos"
+
+#~ msgid "All"
+#~ msgstr "Todos"
+
+#~ msgid "Max price must be greater than or equal to min price."
+#~ msgstr "El precio máximo debe ser mayor o igual que el precio mínimo."
+
+#~ msgid "Max surface must be greater than or equal to min surface."
+#~ msgstr ""
+#~ "La superficie máxima debe ser mayor o igual que la superficie mínima."
+
+#~ msgid "Properties in Cuba"
+#~ msgstr "Propiedades en Cuba"
+
+#~ msgid "Buy"
+#~ msgstr "Comprar"
+
+#~ msgid "Agents"
+#~ msgstr "Agentes"
+
+#~ msgid "Blog"
+#~ msgstr "Blog"
+
+#~ msgid "List your property"
+#~ msgstr "Publica tu propiedad"
+
+#~ msgid "Logout"
+#~ msgstr "Cerrar sesión"
+
+#~ msgid "Login"
+#~ msgstr "Iniciar sesión"
+
+#~ msgid "Sign Up"
+#~ msgstr "Registrarse"
+
+#~ msgid "All rights reserved"
+#~ msgstr "Todos los derechos reservados"
+
+#~ msgid "About"
+#~ msgstr "Acerca de"
+
+#~ msgid "Privacy"
+#~ msgstr "Privacidad"
+
+#~ msgid "Map data"
+#~ msgstr "Datos del mapa"
+
+#~ msgid "Más de 1.500 propiedades en venta y alquiler en todo el país"
+#~ msgstr "Más de 1.500 propiedades en venta y alquiler en todo el país"
+
+#~ msgid "Save"
+#~ msgstr "Guardar"
+
+#~ msgid "Properties trend (30 days)"
+#~ msgstr "Tendencia de propiedades (30 días)"
+
+#~ msgid "Properties by city"
+#~ msgstr "Propiedades por ciudad"
+
+#~ msgid "New (7 days)"
+#~ msgstr "Nuevas (7 días)"
+
+#~ msgid "Avg. price (€)"
+#~ msgstr "Precio medio (€)"
+
+#~ msgid "No tienes propiedades favoritas aún."
+#~ msgstr "No tienes propiedades favoritas aún."
+
+#~ msgid "Create account"
+#~ msgstr "Crear cuenta"
+
+#~ msgid "Already have an account?"
+#~ msgstr "¿Ya tienes una cuenta?"
+
 #, python-format
-msgid "New matches for your saved search \"%(name)s\""
-msgstr ""
+#~ msgid "New matches for your saved search \"%(name)s\""
+#~ msgstr "Nuevas coincidencias para tu búsqueda guardada «%(name)s»"
 
-#: .\templates\users\saved_search_alert.txt:6
-msgid "You are receiving this because you saved this search on cu2home."
-msgstr ""
+#~ msgid "You are receiving this because you saved this search on cu2home."
+#~ msgstr "Recibes este mensaje porque guardaste esta búsqueda en cu2home."

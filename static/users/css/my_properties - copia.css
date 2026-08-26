@@ -307,16 +307,20 @@
         box-sizing: border-box;
     }
 
-    /* FIX: el intento anterior de "overflow: visible" en el contenedor
-       exterior para liberar el borde inferior de los botones tenía un
-       efecto secundario no deseado: también desactivaba el recorte que
-       mantiene las esquinas redondeadas del popup, dejando asomar el
-       fondo de la página por debajo (ver captura: franja beige bajo
-       Guardar/Cancelar). La causa real del truncamiento era un
-       presupuesto de altura insuficiente (ver JS, editing.popup.height,
-       ahora con suelo mínimo), así que ya no hace falta forzar overflow
-       visible aquí: se mantiene el recorte por defecto (oculto), que es
-       precisamente lo que preserva las esquinas redondeadas del popup.
+    /* FIX: el contenedor exterior del popup (dx-overlay-content /
+       dx-popup-normal) recorta (overflow oculto) cualquier hijo que se
+       pase por unos pocos píxeles de la altura fija del popup. Con
+       box-sizing ya corregido arriba esto no debería ocurrir, pero
+       dejamos el contenido exterior en overflow visible como red de
+       seguridad: el único bloque que debe hacer scroll interno sigue
+       siendo .dx-popup-content (overflow-y:auto, ver más abajo), así
+       que esto no reintroduce scroll de página ni cambia el tamaño
+       del popup, solo evita que un desajuste de 1-2px corte el borde
+       inferior de la barra de botones. */
+    .property-edit-popup .dx-overlay-content,
+    .property-edit-popup .dx-popup-normal {
+        overflow: visible !important;
+    }
     
     .property-edit-popup .dx-popup-content {
         background: #f8f6f4;
@@ -379,7 +383,12 @@
         background: #fff;
         border-top: 1px solid var(--line);
         padding: 10px 24px !important;
+        /* FIX (truncamiento del borde inferior de Guardar/Cancelar):
+           un pequeño colchón extra evita que la sombra/borde redondeado
+           de los botones quede justo en el límite exacto del popup. */
+        padding-bottom: 12px !important;
         border-radius: 0 0 20px 20px;
+        overflow: visible;
     }
 
     .property-edit-popup .dx-popup-bottom .dx-button {

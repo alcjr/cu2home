@@ -732,21 +732,21 @@
                 // sigue siendo el único bloque que hace scroll interno si
                 // una pestaña no cabe -- título y barra Guardar/Cancelar
                 // quedan siempre en la misma posición, cambie o no de tab.
-                // FIX: el fix anterior (Math.min(vh*0.7, 460)) sin SUELO
-                // mínimo se rompía en ventanas bajas -- ahí vh*0.7 podía
-                // dar un valor menor que 460 y ganaba el Math.min(), dejando
-                // el popup con MENOS altura de la que su contenido
-                // necesita (ver captura: la card de "General" se corta a
-                // media fila de "Estado/Activo", sin scroll visible).
-                // Con Math.max(SUELO, Math.min(techo, vh)) el popup nunca
-                // baja de SUELO (calculado para que quepan sin scroll el
-                // título + tabs + la card más alta -- "Datos generales"/
-                // "Descripción", 3 filas de campos -- + la barra inferior),
-                // sube con el viewport hasta el techo, y solo si aun así
-                // sobra contenido entra en juego el scroll interno de
-                // .dx-popup-content (ver CSS) como red de seguridad.
+                // FIX: 780 y luego 640 seguían dejando demasiado hueco vacío
+                // (ver capturas: "Características" y "Fotos" quedaban con
+                // ~40% de la altura del popup en blanco). El contenido real
+                // de la pestaña más alta ("General", con el textarea de
+                // descripción) cabe en ~460px totales (título + tabs +
+                // card + barra inferior), así que se baja el techo a ese
+                // valor. Sigue siendo una altura EXPLÍCITA e idéntica para
+                // las 4 pestañas (mismo motivo que el fix anterior: evitar
+                // el "salto" de tamaño al cambiar de tab), solo que ahora
+                // ajustada al contenido real en vez de un margen arbitrario.
+                // El scroll interno de .dx-popup-content (ver CSS) sigue
+                // cubriendo el caso de que algún dato (p.ej. descripciones
+                // muy largas) no quepa, sin mover título ni botones.
                 height: function () {
-                    return Math.max(460, Math.min(window.innerHeight * 0.82, 520));
+                    return Math.min(window.innerHeight * 0.7, 460);
                 },
                 wrapperAttr: { class: 'property-edit-popup' },
                 // FIX: NO se debe sustituir editing.popup.toolbarItems por un
