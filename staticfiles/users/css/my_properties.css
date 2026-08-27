@@ -294,10 +294,37 @@
         border-radius: 20px !important;
         box-shadow: 0 20px 60px rgba(31, 26, 23, 0.25) !important;
     }
-    
+
+    /* FIX: box-sizing consistente en todo el popup. Sin esto, bordes y
+       paddings de algún elemento (p.ej. el propio .dx-popup-bottom o sus
+       botones) pueden sumarse POR ENCIMA de la altura fija que fijamos
+       en JS (editing.popup.height), y como el contenedor exterior del
+       popup recorta su contenido a esa altura exacta (ver siguiente
+       regla), el sobrante -- típicamente el borde/esquina inferior de
+       los botones Guardar/Cancelar -- queda truncado en línea recta. */
+    .property-edit-popup,
+    .property-edit-popup * {
+        box-sizing: border-box;
+    }
+
+    /* FIX: el intento anterior de "overflow: visible" en el contenedor
+       exterior para liberar el borde inferior de los botones tenía un
+       efecto secundario no deseado: también desactivaba el recorte que
+       mantiene las esquinas redondeadas del popup, dejando asomar el
+       fondo de la página por debajo (ver captura: franja beige bajo
+       Guardar/Cancelar). La causa real del truncamiento era un
+       presupuesto de altura insuficiente, así que ya no hace falta
+       forzar overflow visible aquí: se mantiene el recorte por defecto
+       (oculto), que es precisamente lo que preserva las esquinas
+       redondeadas del popup. */
+
     .property-edit-popup .dx-popup-content {
         background: #f8f6f4;
-        padding: 20px 24px 16px !important;
+        /* FIX (espacio en blanco): con el popup ajustándose a su
+           contenido real (ver JS, editing.popup.height:'auto'), un
+           padding menor deja más área útil para las cards y menos
+           margen "muerto" alrededor. */
+        padding: 14px 20px 12px !important;
         overflow-y: auto !important;
         /* FIX: sin flex + min-height:0 este bloque crece a su altura
            natural en vez de encogerse dentro del layout flex del popup
@@ -305,7 +332,9 @@
            Guardar/Cancelar más allá del max-height del popup, que la
            recortaba por abajo (truncamiento de un par de píxeles en el
            borde). Con esto, .dx-popup-content es el único que hace scroll
-           y el toolbar inferior queda siempre dentro del área visible. */
+           y el toolbar inferior queda siempre dentro del área visible.
+           Con height:'auto' esto normalmente no llega a activarse -- solo
+           entra en juego si algún día el contenido supera maxHeight. */
         flex: 1 1 auto !important;
         min-height: 0 !important;
     }
@@ -416,12 +445,30 @@
         border-left: 4px solid var(--terracotta);
         border-radius: 14px;
         padding: 14px 16px 6px 18px;
-        margin-bottom: 14px;
+        /* FIX (cards "pegadas"): antes solo había margin-bottom, pensado
+           para cards apiladas verticalmente. Cuando dos cards conviven
+           en la misma fila (colCount:2, p.ej. "Datos generales" +
+           "Descripción"), DevExtreme las coloca en celdas del 50% SIN
+           gutter propio -- el borde derecho de una tocaba literalmente
+           el borde izquierdo de la otra. Un margin horizontal simétrico
+           en la propia card (que es un div interno de ancho automático,
+           no la celda del 50% en sí) abre un hueco entre ambas sin
+           afectar el cálculo de columnas de DevExtreme. */
+        margin: 0 8px 16px 8px;
         box-shadow: 0 1px 3px rgba(31, 26, 23, 0.04);
     }
 
     .property-edit-popup .property-form-card:last-child {
         margin-bottom: 0;
+    }
+
+    /* Card de la pestaña "Fotos" (itemType:'item' con template propio,
+       cssClass:'property-form-card' reutilizado -- ver JS): el caption
+       se inserta a mano dentro del template con la misma clase
+       dx-form-group-caption que generan las cards de tipo 'group', así
+       que hereda el mismo estilo sin reglas adicionales. */
+    .property-edit-popup .property-form-card--fotos {
+        padding-bottom: 14px;
     }
 
     /* Grupos anidados (ninguno actualmente, pero por si acaso -- mismo
@@ -563,32 +610,54 @@
         margin-top: 0 !important;
     }
 
+    /* FIX (pestañas con estilo por defecto de DevExtreme, no el
+       terracota previsto): este es el único bloque del archivo que no
+       usaba !important. dx.light.css define el borde/color de acento
+       azul de las pestañas con selectores de especificidad igual o
+       mayor, así que ganaba la cascada y las pestañas se veían con la
+       caja azul del tema por defecto en vez del texto+subrayado
+       terracota. Mismo criterio que el resto del fichero: !important
+       en cada propiedad que deba vencer al tema base. */
     .property-edit-popup .dx-tabpanel .dx-tabs {
-        background: transparent;
-        border-bottom: 1px solid var(--line);
-        margin-bottom: 12px;
+        background: transparent !important;
+        border-bottom: 1px solid var(--line) !important;
+        margin-bottom: 10px !important;
+    }
+
+    .property-edit-popup .dx-tab {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
     }
 
     .property-edit-popup .dx-tab,
     .property-edit-popup .dx-tabs-item-text {
-        font-weight: 600;
-        font-size: 0.95rem;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
         letter-spacing: 0.2px;
-        color: var(--muted);
-        padding: 12px 18px !important;
+        color: var(--muted) !important;
+        padding: 10px 18px !important;
     }
 
     .property-edit-popup .dx-tab-selected {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: var(--terracotta) !important;
+    }
+
+    .property-edit-popup .dx-tab-selected .dx-tabs-item-text {
         color: var(--terracotta) !important;
     }
 
     .property-edit-popup .dx-tabs-wrapper .dx-tab.dx-tab-selected::after,
     .property-edit-popup .dx-tab-indicator {
         background: var(--terracotta) !important;
+        height: 2px !important;
     }
 
     .property-edit-popup .dx-tab:hover {
-        background: rgba(192, 82, 45, 0.06);
+        background: rgba(192, 82, 45, 0.06) !important;
     }
 
     .property-edit-popup .dx-multiview-wrapper {
@@ -599,15 +668,26 @@
         padding: 2px 2px 0 !important;
     }
 
-    .property-edit-popup.dx-popup-wrapper {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
+    /* FIX (cambio de enfoque, ver JS: popup.height ahora es 'auto'):
+       antes se forzaba el panel de pestañas a ocupar el 100% de
+       .dx-popup-content para que las 4 pestañas midieran igual, pero
+       eso exigía que .dx-popup-content tuviera una altura FIJA de la
+       que calcular ese 100% -- precisamente lo que causaba los
+       recortes (título/card/botones no cabían siempre en esa cifra
+       fija). Con el popup creciendo según su contenido real, cada
+       pestaña ocupa su alto natural sin forzar nada; no hace falta
+       (ni tiene sentido) un 100% aquí. */
 
-    .property-edit-popup .dx-popup-content {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
+    /* FIX: se retiran los forzados width:100%!important que habia aqui
+       antes en .dx-popup-wrapper y .dx-popup-content. Competian sin
+       necesidad con la funcion popup.width (ver JS) -- el form calcula el
+       ancho de sus columnas (colCount) midiendo el contenedor en el
+       momento del render, y estos !important terminaban pisando ese
+       cálculo (o el ancho inline que DevExtreme ya fija según popup.width),
+       lo que dejaba a la card de la derecha calculada más ancha de lo que
+       el popup realmente mostraba -- de ahí el borde derecho cortado.
+       Sin estas reglas, el ancho real vuelve a ser el que define
+       popup.width y el layout de columnas coincide con él. */
 
     @media (max-width: 992px) {
         .property-edit-popup .dx-popup-content {

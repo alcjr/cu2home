@@ -307,23 +307,27 @@
         box-sizing: border-box;
     }
 
-    /* FIX: el intento anterior de "overflow: visible" en el contenedor
-       exterior para liberar el borde inferior de los botones tenía un
-       efecto secundario no deseado: también desactivaba el recorte que
-       mantiene las esquinas redondeadas del popup, dejando asomar el
-       fondo de la página por debajo (ver captura: franja beige bajo
-       Guardar/Cancelar). La causa real del truncamiento era un
-       presupuesto de altura insuficiente, así que ya no hace falta
-       forzar overflow visible aquí: se mantiene el recorte por defecto
-       (oculto), que es precisamente lo que preserva las esquinas
-       redondeadas del popup. */
-
+    /* FIX: el contenedor exterior del popup (dx-overlay-content /
+       dx-popup-normal) recorta (overflow oculto) cualquier hijo que se
+       pase por unos pocos píxeles de la altura fija del popup. Con
+       box-sizing ya corregido arriba esto no debería ocurrir, pero
+       dejamos el contenido exterior en overflow visible como red de
+       seguridad: el único bloque que debe hacer scroll interno sigue
+       siendo .dx-popup-content (overflow-y:auto, ver más abajo), así
+       que esto no reintroduce scroll de página ni cambia el tamaño
+       del popup, solo evita que un desajuste de 1-2px corte el borde
+       inferior de la barra de botones. */
+    .property-edit-popup .dx-overlay-content,
+    .property-edit-popup .dx-popup-normal {
+        overflow: visible !important;
+    }
+    
     .property-edit-popup .dx-popup-content {
         background: #f8f6f4;
-        /* FIX (espacio en blanco): con el popup ajustándose a su
-           contenido real (ver JS, editing.popup.height:'auto'), un
-           padding menor deja más área útil para las cards y menos
-           margen "muerto" alrededor. */
+        /* FIX (espacio en blanco): con el popup ya reducido a su altura
+           de contenido real (ver JS, editing.popup.height), un padding
+           menor deja más área útil para las cards y menos margen
+           "muerto" alrededor. */
         padding: 14px 20px 12px !important;
         overflow-y: auto !important;
         /* FIX: sin flex + min-height:0 este bloque crece a su altura
@@ -332,9 +336,7 @@
            Guardar/Cancelar más allá del max-height del popup, que la
            recortaba por abajo (truncamiento de un par de píxeles en el
            borde). Con esto, .dx-popup-content es el único que hace scroll
-           y el toolbar inferior queda siempre dentro del área visible.
-           Con height:'auto' esto normalmente no llega a activarse -- solo
-           entra en juego si algún día el contenido supera maxHeight. */
+           y el toolbar inferior queda siempre dentro del área visible. */
         flex: 1 1 auto !important;
         min-height: 0 !important;
     }
@@ -381,7 +383,12 @@
         background: #fff;
         border-top: 1px solid var(--line);
         padding: 10px 24px !important;
+        /* FIX (truncamiento del borde inferior de Guardar/Cancelar):
+           un pequeño colchón extra evita que la sombra/borde redondeado
+           de los botones quede justo en el límite exacto del popup. */
+        padding-bottom: 12px !important;
         border-radius: 0 0 20px 20px;
+        overflow: visible;
     }
 
     .property-edit-popup .dx-popup-bottom .dx-button {
@@ -668,15 +675,21 @@
         padding: 2px 2px 0 !important;
     }
 
-    /* FIX (cambio de enfoque, ver JS: popup.height ahora es 'auto'):
-       antes se forzaba el panel de pestañas a ocupar el 100% de
-       .dx-popup-content para que las 4 pestañas midieran igual, pero
-       eso exigía que .dx-popup-content tuviera una altura FIJA de la
-       que calcular ese 100% -- precisamente lo que causaba los
-       recortes (título/card/botones no cabían siempre en esa cifra
-       fija). Con el popup creciendo según su contenido real, cada
-       pestaña ocupa su alto natural sin forzar nada; no hace falta
-       (ni tiene sentido) un 100% aquí. */
+    /* FIX (altura de contenido distinta según la pestaña): el popup ya
+       tiene una altura EXPLÍCITA e idéntica para las 4 pestañas (ver
+       JS, editing.popup.height), pero por defecto dxTabPanel podía
+       dejar que cada página de contenido creciera a su propia altura
+       natural. Forzamos a que el panel de pestañas y la página activa
+       ocupen siempre el 100% de la altura disponible en
+       .dx-popup-content, así el área de contenido es igual de alta
+       cambie o no de pestaña, y no depende de cuánto contenido tenga
+       cada una. */
+    .property-edit-popup .dx-tabpanel,
+    .property-edit-popup .dx-multiview,
+    .property-edit-popup .dx-multiview-wrapper,
+    .property-edit-popup .dx-multiview-item-content {
+        height: 100% !important;
+    }
 
     /* FIX: se retiran los forzados width:100%!important que habia aqui
        antes en .dx-popup-wrapper y .dx-popup-content. Competian sin

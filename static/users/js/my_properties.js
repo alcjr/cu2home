@@ -717,36 +717,25 @@
                 width: function () {
                     return Math.min(window.innerWidth * 0.94, 1500);
                 },
-                // FIX: antes height:'auto' + maxHeight -- el popup medía su
-                // altura contra el contenido de la pestaña ACTIVA, así que
-                // el resultado dependía de cuál pestaña estuviera abierta
-                // (p.ej. "General" quedaba bajo, "Fotos" o "Precio y
-                // ubicación" altos), dando el efecto de "salto" de tamaño
-                // al cambiar de tab. Mismo fix que en my_alerts.js: una
-                // altura EXPLÍCITA e idéntica para todas las pestañas
-                // (proporción del viewport, con techo). El techo (780) es
-                // algo mayor que el de alerts (700) porque aquí hay más
-                // contenido por pestaña (textarea de descripción, 4-6
-                // campos por card, galería de fotos). Con esto,
-                // .dx-popup-content (ver CSS, flex:1 1 auto + min-height:0)
-                // sigue siendo el único bloque que hace scroll interno si
-                // una pestaña no cabe -- título y barra Guardar/Cancelar
-                // quedan siempre en la misma posición, cambie o no de tab.
-                // FIX: el fix anterior (Math.min(vh*0.7, 460)) sin SUELO
-                // mínimo se rompía en ventanas bajas -- ahí vh*0.7 podía
-                // dar un valor menor que 460 y ganaba el Math.min(), dejando
-                // el popup con MENOS altura de la que su contenido
-                // necesita (ver captura: la card de "General" se corta a
-                // media fila de "Estado/Activo", sin scroll visible).
-                // Con Math.max(SUELO, Math.min(techo, vh)) el popup nunca
-                // baja de SUELO (calculado para que quepan sin scroll el
-                // título + tabs + la card más alta -- "Datos generales"/
-                // "Descripción", 3 filas de campos -- + la barra inferior),
-                // sube con el viewport hasta el techo, y solo si aun así
-                // sobra contenido entra en juego el scroll interno de
-                // .dx-popup-content (ver CSS) como red de seguridad.
-                height: function () {
-                    return Math.max(460, Math.min(window.innerHeight * 0.82, 520));
+                // FIX (cambio de enfoque): los intentos anteriores fijaban
+                // una altura EXPLÍCITA al popup (a mano, o medida por JS) y
+                // forzaban todo el contenido a encajar ahí dentro vía
+                // flexbox + overflow:hidden. Cualquier pequeño desajuste en
+                // esa cuenta (una fuente que carga con métricas distintas,
+                // un dato más largo, etc.) se traducía en un recorte --ya
+                // fuera el borde inferior de una card o el de los botones--
+                // porque la caja exterior tenía un tamaño fijo del que nada
+                // podía sobresalir. Se abandona ese enfoque: el popup ahora
+                // crece según su contenido real (height:'auto', el
+                // comportamiento normal de cualquier caja HTML), sin forzar
+                // nada a encajar. maxHeight es solo un techo de seguridad
+                // para pantallas muy bajas o contenido excepcionalmente
+                // largo -- el único caso en el que debe aparecer scroll
+                // interno (dentro de .dx-popup-content, ver CSS), y no
+                // debería activarse en ninguna de las 4 pestañas actuales.
+                height: 'auto',
+                maxHeight: function () {
+                    return window.innerHeight * 0.92;
                 },
                 wrapperAttr: { class: 'property-edit-popup' },
                 // FIX: NO se debe sustituir editing.popup.toolbarItems por un

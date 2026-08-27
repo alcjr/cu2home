@@ -1,53 +1,40 @@
-INFO 2026-08-26 09:38:08,654 views visor.views Log file cleared by user cu2home_su
-INFO 2026-08-26 09:39:49,076 autoreload Watching for file changes with StatReloader
-INFO 2026-08-26 10:05:14,598 autoreload Watching for file changes with StatReloader
-WARNING 2026-08-26 10:05:49,795 log Not Found: /favicon.ico
-INFO 2026-08-26 10:19:31,008 autoreload Watching for file changes with StatReloader
-INFO 2026-08-26 10:21:27,387 autoreload Watching for file changes with StatReloader
-INFO 2026-08-26 10:45:19,647 autoreload Watching for file changes with StatReloader
-WARNING 2026-08-26 10:45:46,144 log Not Found: /favicon.ico
-INFO 2026-08-26 13:29:03,919 autoreload C:\00_projects\cu2home\apps\core\context_processors.py changed, reloading.
-INFO 2026-08-26 13:29:05,347 autoreload Watching for file changes with StatReloader
-INFO 2026-08-26 13:31:27,494 autoreload Watching for file changes with StatReloader
-WARNING 2026-08-26 13:32:05,177 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 13:32:11,356 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 13:32:26,763 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 13:32:35,024 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 13:32:51,948 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 13:32:55,919 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 13:32:59,889 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-INFO 2026-08-26 14:12:28,631 autoreload Watching for file changes with StatReloader
-WARNING 2026-08-26 14:12:33,309 log Not Found: /favicon.ico
-WARNING 2026-08-26 14:12:59,703 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 14:13:04,300 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 14:13:16,816 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 14:13:24,481 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 14:13:33,999 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 14:13:37,985 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 14:13:45,975 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 14:13:55,270 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 14:14:07,706 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 14:14:30,626 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-INFO 2026-08-26 15:36:34,904 autoreload Watching for file changes with StatReloader
-INFO 2026-08-26 19:03:43,871 autoreload Watching for file changes with StatReloader
-WARNING 2026-08-26 19:28:17,379 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 19:28:29,145 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 19:28:34,255 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 19:28:40,308 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 19:28:49,141 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 19:28:54,488 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 19:28:57,837 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 19:29:01,271 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 19:29:05,693 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 19:29:10,541 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 19:29:24,613 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 19:29:28,720 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 19:29:33,557 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-WARNING 2026-08-26 19:29:37,575 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
-INFO 2026-08-26 19:31:52,737 autoreload Watching for file changes with StatReloader
-INFO 2026-08-26 19:38:06,774 autoreload Watching for file changes with StatReloader
-INFO 2026-08-26 19:38:47,109 autoreload Watching for file changes with StatReloader
-INFO 2026-08-27 08:53:43,160 autoreload Watching for file changes with StatReloader
-INFO 2026-08-27 09:22:27,471 autoreload Watching for file changes with StatReloader
-WARNING 2026-08-27 09:22:33,547 log Not Found: /favicon.ico
-INFO 2026-08-27 09:35:14,362 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 10:03:41,842 views visor.views Log file cleared by user cu2home_su
+WARNING 2026-08-27 10:05:53,507 log Not Found: /favicon.ico
+INFO 2026-08-27 10:14:34,667 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-27 10:14:55,390 log Not Found: /favicon.ico
+INFO 2026-08-27 10:22:45,640 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 10:34:12,517 autoreload C:\00_projects\cu2home\apps\core\context_processors.py changed, reloading.
+INFO 2026-08-27 10:34:13,991 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 10:34:47,368 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-27 10:35:19,507 log Not Found: /favicon.ico
+WARNING 2026-08-27 10:36:01,785 log Not Found: /favicon.ico
+WARNING 2026-08-27 10:36:42,405 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-27 10:38:51,299 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2026-08-27 10:43:55,942 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 10:44:24,818 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-27 10:49:15,218 log Not Found: /media/properties/323/images/323_1.jpg
+WARNING 2026-08-27 10:49:15,221 log Not Found: /media/properties/321/images/321_1.jpg
+WARNING 2026-08-27 10:49:15,418 log Not Found: /media/properties/326/images/326_1.jpg
+WARNING 2026-08-27 10:49:15,443 log Not Found: /media/properties/327/images/327_1.jpg
+WARNING 2026-08-27 10:49:15,469 log Not Found: /media/properties/316/images/316_1.jpg
+WARNING 2026-08-27 10:49:15,501 log Not Found: /media/properties/315/images/315_1.jpg
+WARNING 2026-08-27 10:49:15,527 log Not Found: /media/properties/278/images/278_1.jpg
+WARNING 2026-08-27 10:49:15,552 log Not Found: /media/properties/285/images/285_1.jpg
+WARNING 2026-08-27 10:49:15,553 log Not Found: /media/properties/300/images/300_1.jpg
+WARNING 2026-08-27 10:49:15,558 log Not Found: /media/properties/277/images/277_1.jpg
+WARNING 2026-08-27 10:49:15,564 log Not Found: /media/properties/290/images/290_1.jpg
+WARNING 2026-08-27 10:49:15,569 log Not Found: /media/properties/283/images/283_1.jpg
+WARNING 2026-08-27 10:49:21,491 log Not Found: /media/properties/299/images/299_1.jpg
+WARNING 2026-08-27 10:49:21,497 log Not Found: /media/properties/297/images/297_1.jpg
+WARNING 2026-08-27 10:49:21,500 log Not Found: /media/properties/296/images/296_1.jpg
+WARNING 2026-08-27 10:49:21,503 log Not Found: /media/properties/300/images/300_1.jpg
+WARNING 2026-08-27 10:49:27,657 log Not Found: /media/properties/300/images/300_5.jpg
+WARNING 2026-08-27 10:49:27,658 log Not Found: /media/properties/300/images/300_1.jpg
+WARNING 2026-08-27 10:49:27,670 log Not Found: /media/properties/300/images/300_6.jpg
+WARNING 2026-08-27 10:49:27,681 log Not Found: /media/properties/300/images/300_2.jpg
+WARNING 2026-08-27 10:49:27,694 log Not Found: /media/properties/300/images/300_3.jpg
+WARNING 2026-08-27 10:49:27,708 log Not Found: /media/properties/300/images/300_4.jpg
+WARNING 2026-08-27 10:49:27,799 log Not Found: /media/properties/300/images/300_8.jpg
+WARNING 2026-08-27 10:49:27,815 log Not Found: /media/properties/300/images/300_7.jpg
+WARNING 2026-08-27 10:49:27,829 log Not Found: /media/properties/300/images/300_9.jpg
+WARNING 2026-08-27 10:49:27,888 log Not Found: /media/properties/300/images/300_1.jpg

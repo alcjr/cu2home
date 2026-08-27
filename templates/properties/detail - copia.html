@@ -1479,34 +1479,33 @@
             map.setMinZoom(6);
             map.setMaxZoom(18);
 
-            // FIX (mapa "mejorando" activamente hacia CartoDB, log
-            // "✅ Cambiado a CartoDB"): este bloque añadía OSM primero
-            // (capa correcta) pero luego escuchaba el evento 'load' de
-            // una segunda capa CartoDB para SUSTITUIRLA por esa -- bajo
-            // el supuesto de que si las teselas cargan (HTTP 200),
-            // CartoDB es la opción "mejor". El problema es que CARTO
-            // retiró el acceso anónimo/gratuito a basemaps.cartocdn.com:
-            // sin API key propia, el servidor sigue devolviendo HTTP 200
-            // (por eso 'load' se disparaba siempre, nunca 'error') pero
-            // estampa la marca de agua "API KEY REQUIRED" en vez de un
-            // mapa real. Resultado: el código quitaba la capa buena
-            // (OSM) y la cambiaba por la rota, siempre, sin falta.
-            //
-            // Se retira la capa CartoDB y toda su lógica de "mejora", y
-            // se usa tile_layer_url/tile_layer_attribution -- expuestas
-            // por site_settings (apps/core/context_processors.py),
-            // calculadas en settings.py desde config.ini, con fallback a
-            // las teselas estándar de OpenStreetMap -- como única capa,
-            // igual que en el quick view de index.html.
-            const tileLayerUrl = "{{ tile_layer_url|default:'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'|escapejs }}";
-            const tileLayerAttribution = "{{ tile_layer_attribution|default:'&copy; OpenStreetMap contributors'|escapejs }}";
-
-            L.tileLayer(tileLayerUrl, {
-                attribution: tileLayerAttribution,
+            const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
                 maxZoom: 19,
                 minZoom: 6,
                 className: 'map-tiles'
             }).addTo(map);
+
+            const cartoLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; CartoDB',
+                maxZoom: 19,
+                minZoom: 6,
+                className: 'map-tiles'
+            });
+
+            cartoLayer.on('load', function() {
+                map.removeLayer(osmLayer);
+                map.addLayer(cartoLayer);
+                console.log('✅ Cambiado a CartoDB');
+            });
+
+            cartoLayer.on('error', function() {
+                console.log('ℹ️ Usando OpenStreetMap como fallback');
+            });
+
+            setTimeout(() => {
+                map.addLayer(cartoLayer);
+            }, 500);
 
             const icon = L.divIcon({
                 className: 'cu-pin',

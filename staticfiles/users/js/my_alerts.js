@@ -712,8 +712,32 @@
                 allowReordering: false,
                 allowHiding: false,
                 buttons: [
-                    { name: 'edit', hint: gettext('Editar'), icon: 'fas fa-pen', cssClass: 'rbtn rbtn-edit' },
-                    { name: 'delete', hint: gettext('Borrar'), icon: 'fas fa-trash', cssClass: 'rbtn rbtn-delete' }
+                    {
+                        name: 'edit',
+                        hint: gettext('Editar'),
+                        // FIX: usaba 'fas fa-pen' (Font Awesome), un glifo
+                        // distinto al que se ve en la grilla de
+                        // my_properties. Ahí el botón de editar usa el
+                        // icono propio de DevExtreme ('edit') precisamente
+                        // porque es el que coincide con el resto de iconos
+                        // nativos de la UI (toolbar, refresh, etc.) -- ver
+                        // comentario en my_properties.js. Se alinea aquí
+                        // con el mismo criterio para que ambas grillas
+                        // usen el mismo estilo de icono.
+                        icon: 'edit',
+                        cssClass: 'rbtn rbtn-edit'
+                    },
+                    {
+                        name: 'delete',
+                        hint: gettext('Borrar'),
+                        // Mismo criterio que 'edit': icono built-in de
+                        // DevExtreme en vez de Font Awesome, para que
+                        // ambos botones de esta columna compartan el
+                        // mismo estilo de trazo que el resto de iconos DX
+                        // de la página.
+                        icon: 'trash',
+                        cssClass: 'rbtn rbtn-delete'
+                    }
                 ]
             }
         ],

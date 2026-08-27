@@ -26,4 +26,22 @@ def site_settings(request):
         'LANGUAGES': settings.LANGUAGES,
         'LANGUAGE_CODE': getattr(request, 'LANGUAGE_CODE', settings.LANGUAGE_CODE),
         'lang_switch_next': full_path or '/',
+        # FIX (mapas mostrando "API KEY REQUIRED"): settings.py ya
+        # calcula estos valores desde config.ini (con fallback a las
+        # teselas estándar de OpenStreetMap, gratuitas y sin API key),
+        # pero no llegaban a los templates porque este processor nunca
+        # los incluía en el diccionario devuelto -- cualquier plantilla
+        # que los usara (p.ej. el mapa de "Ubicación" o el quick view
+        # del listado) tenía que codificar su propio proveedor de
+        # teselas a mano, que es como se coló CartoDB (cuyo acceso
+        # gratuito ya no existe) en index.html.
+        'tile_layer_url': getattr(
+            settings, 'TILE_LAYER_URL', 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+        ),
+        'tile_layer_attribution': getattr(
+            settings, 'TILE_LAYER_ATTRIBUTION', '&copy; OpenStreetMap contributors'
+        ),
+        'default_map_center_lat': getattr(settings, 'DEFAULT_MAP_CENTER_LAT', 23.0),
+        'default_map_center_lng': getattr(settings, 'DEFAULT_MAP_CENTER_LNG', -82.0),
+        'default_map_zoom': getattr(settings, 'DEFAULT_MAP_ZOOM', 7),
     }

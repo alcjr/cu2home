@@ -1,0 +1,53 @@
+/* Patrones identificados en todas las plantillas */
+
+/* Estructura de página */
+html, body { height: 100%; }
+.com-header { position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; color: white; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+.com-header h1 { margin: 0; font-size: 22px; font-weight: 600; }
+.com-content { padding: 15px 20px; }
+.grid-scroll { max-height: calc(100vh - 180px); overflow-y: auto; overflow-x: hidden; background: white; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); padding: 10px; }
+
+/* Cabeceras DataGrid */
+.dx-datagrid-headers .dx-header-row > td { font-weight: 700 !important; font-size: 13px !important; border-bottom: 2px solid; }
+.dx-datagrid-rowsview .dx-row-alt > td { background-color: #fdf6f4; }
+.dx-master-detail-cell { background-color: #fef9f7 !important; padding: 12px !important; }
+
+/* Badges/Etiquetas */
+.badge-estado { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; color: white; }
+.badge-sla { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+.badge-interno { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 10px; font-weight: 700; background: #f59e0b; color: white; }
+.ia-badge { display: inline-flex; align-items: center; gap: 3px; background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+
+/* Botones de acción */
+.row-actions { display: flex; gap: 3px; justify-content: center; align-items: center; }
+.rbtn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; border: none; background: transparent; font-size: 13px; transition: background 0.15s, transform 0.12s; }
+.rbtn:hover { transform: scale(1.18); }
+.rbtn-edit { color: #3b82f6; } .rbtn-edit:hover { background: #eff6ff; }
+.rbtn-print { color: #6b7280; } .rbtn-print:hover { background: #f3f4f6; }
+.rbtn-del { color: #ef4444; } .rbtn-del:hover { background: #fef2f2; }
+.rbtn-link { color: #10b981; } .rbtn-link:hover { background: #e6f7f0; }
+.rbtn-kanban { color: #880e4f; } .rbtn-kanban:hover { background: #fce4ec; }
+.btn-ellipsis { cursor: pointer; padding: 5px 8px; border-radius: 4px; transition: background 0.2s; }
+.action-btn-wrap { display: flex; justify-content: center; }
+
+/* Popup detalle */
+.dx-popup-title { border-radius: 8px 8px 0 0 !important; color: white !important; font-weight: 600 !important; font-size: 17px !important; padding: 14px 20px !important; }
+.detail-tab-panel { height: 520px !important; overflow: hidden; }
+.detail-tab-content { padding: 20px; background: #fdfdfd; height: calc(100% - 50px); overflow-y: auto; font-size: 14px; }
+.detail-row { display: flex; padding: 10px 0; border-bottom: 1px dashed #e8e8e8; align-items: flex-start; }
+.detail-row:last-child { border-bottom: none; }
+.detail-label { font-weight: 600; color: #444; width: 180px; flex-shrink: 0; display: flex; align-items: center; gap: 8px; }
+.detail-value { color: #222; flex: 1; line-height: 1.5; word-break: break-word; }
+
+/* Popup CRUD */
+.dx-popup-wrapper .dx-overlay-content { border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.22); overflow: hidden; }
+.dx-popup-wrapper .dx-popup-content { padding: 0; background: #f8f9fa; }
+.dx-form { background: white; padding: 24px 30px; }
+.dx-popup-bottom { position: absolute !important; bottom: 0 !important; left: 0 !important; right: 0 !important; background: white; border-top: 1px solid #ddd; box-shadow: 0 -2px 5px rgba(0,0,0,0.08); padding: 10px !important; z-index: 1100 !important; }
+.dx-popup-content .dx-scrollable-content { padding-bottom: 80px !important; }
+
+/* SLA Progress */
+.sla-progress { width: 80px; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; display: inline-block; margin-right: 5px; }
+.sla-progress-fill { height: 100%; border-radius: 3px; }
+.sla-progress-fill.warning { background: #f59e0b; }
+.sla-progress-fill.critical { background: #ef4444; }
