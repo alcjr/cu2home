@@ -3,3 +3,4 @@
 "*.pyc" 
 ".env" 
 "*.dll"    # optional extra safety
+venv/
