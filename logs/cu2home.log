@@ -38,3 +38,15 @@ WARNING 2026-08-27 10:49:27,799 log Not Found: /media/properties/300/images/300_
 WARNING 2026-08-27 10:49:27,815 log Not Found: /media/properties/300/images/300_7.jpg
 WARNING 2026-08-27 10:49:27,829 log Not Found: /media/properties/300/images/300_9.jpg
 WARNING 2026-08-27 10:49:27,888 log Not Found: /media/properties/300/images/300_1.jpg
+INFO 2026-08-27 10:54:21,267 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 11:31:20,055 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-27 11:31:29,267 log Not Found: /favicon.ico
+WARNING 2026-08-27 11:37:48,856 log Not Found: /media/properties/229/images/229_1.jpg
+WARNING 2026-08-27 11:37:48,859 log Not Found: /media/properties/230/images/230_1.jpg
+WARNING 2026-08-27 11:37:48,860 log Not Found: /media/properties/227/images/227_1.jpg
+WARNING 2026-08-27 11:37:48,863 log Not Found: /media/properties/224/images/224_1.jpg
+WARNING 2026-08-27 11:37:48,865 log Not Found: /media/properties/223/images/223_1.jpg
+WARNING 2026-08-27 11:37:48,866 log Not Found: /media/properties/222/images/222_1.jpg
+WARNING 2026-08-27 11:37:48,893 log Not Found: /media/properties/269/images/269_1.jpg
+WARNING 2026-08-27 11:37:48,896 log Not Found: /media/properties/265/images/265_1.jpg
+INFO 2026-08-28 10:02:13,976 autoreload Watching for file changes with StatReloader
