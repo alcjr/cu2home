@@ -3,15 +3,13 @@ from django.utils.html import escape
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import F, Q, Count
+from django.db.models import F, Q
 from django.urls import reverse
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_GET
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.decorators import login_required
 
 from .forms import PropertyFilterForm
 from .models import Property, Province, Municipality, PropertyOfferType
-from apps.users.models import Favorite
 
 from .constants import PROPERTY_TYPES
 
@@ -78,8 +76,10 @@ def _filtered_properties(request):
             elif current_offer_type == 'rent':
                 properties = properties.filter(rent_price__lte=max_price)
             elif current_offer_type == 'swap':
+                # Para permuta no aplica filtro de precio
                 pass
             else:
+                # Si no hay oferta específica, filtrar cualquiera
                 properties = properties.filter(
                     Q(sale_price__lte=max_price) | Q(rent_price__lte=max_price)
                 )
@@ -161,10 +161,16 @@ def property_detail(request, pk, slug):
         pk=pk,
         is_active=True,
     )
-    
     Property.objects.filter(pk=obj.pk).update(views_count=F('views_count') + 1)
     obj.refresh_from_db(fields=['views_count'])
 
+    # property.images.all() ya viene precargado por prefetch_related, así
+    # que esto no dispara una consulta adicional. Se antepone la portada
+    # (is_cover) al resto, independientemente de su 'order': así la
+    # imagen grande de la galería, la miniatura marcada como activa por
+    # defecto y el bloque de fotos de la maqueta de impresión son siempre
+    # coherentes entre sí, aunque alguien cambie la portada desde el
+    # admin sin reordenar las imágenes.
     property_images = list(obj.images.all())
     cover_image = obj.cover_image
     if cover_image and property_images and property_images[0] != cover_image:
@@ -184,8 +190,14 @@ def _serialize_property_for_grid(obj, request):
     if cover:
         image_url = request.build_absolute_uri(cover.image.url)
     else:
+        # Sin fotos reales todavía: no inventamos una imagen de stock
+        # externa (picsum.photos) que el usuario nunca subió y que el
+        # frontend acababa mostrando como si fuera la portada real del
+        # inmueble. Se manda None y es el frontend quien decide cómo
+        # representar "sin foto" (ver buildResultCard en index.html).
         image_url = None
 
+    # Determinar qué precio mostrar según la oferta
     if obj.offer_type == PropertyOfferType.SALE:
         price = float(obj.sale_price) if obj.sale_price else None
         price_label = _('Sale')
@@ -284,6 +296,11 @@ def _serialize_agent(agent, request):
 
 
 def _serialize_property_detail(obj, request):
+    # Misma convención que la vista HTML (property_detail): la portada va
+    # siempre primero en la lista, independientemente de su 'order', para
+    # que el quick view de index.html no dependa de que el JS cliente
+    # vuelva a buscarla por is_cover (que hoy hace como salvaguarda, pero
+    # así ambos caminos quedan alineados en el origen).
     property_images = list(obj.images.all())
     cover = obj.cover_image
     if cover and property_images and property_images[0] != cover:
@@ -297,7 +314,13 @@ def _serialize_property_detail(obj, request):
         }
         for img in property_images
     ]
+    # Si el inmueble todavía no tiene ninguna foto real, se deja la lista
+    # vacía en vez de rellenarla con una imagen de stock de picsum.photos:
+    # esa imagen no la subió nadie y el frontend la mostraba como si
+    # fuera una foto real del inmueble (ver renderQuickViewGallery en
+    # index.html, que ahora sabe pintar el estado "sin fotos").
 
+    # Determinar precios para el detail
     sale_price = float(obj.sale_price) if obj.sale_price else None
     rent_price = float(obj.rent_price) if obj.rent_price else None
     seasonal_rent_price = float(obj.seasonal_rent_price) if obj.seasonal_rent_price else None
@@ -332,8 +355,6 @@ def _serialize_property_detail(obj, request):
         'views_count': obj.views_count,
         'detail_url': reverse('properties:detail', args=[obj.pk, obj.slug]),
         'agent': _serialize_agent(obj.agent, request),
-        'email_contacts_count': obj.email_contacts_count,
-        'favorite_count': obj.favorite_count,
     }
 
 
@@ -347,48 +368,3 @@ def property_detail_json(request, pk):
         is_active=True,
     )
     return JsonResponse(_serialize_property_detail(obj, request))
-
-
-@require_POST
-@login_required
-def toggle_favorite(request, pk):
-    """Alternar estado de favorito para una propiedad usando el modelo Favorite de users"""
-    property_obj = get_object_or_404(Property, pk=pk)
-    user = request.user
-    
-    favorite, created = Favorite.objects.get_or_create(
-        user=user,
-        property=property_obj,
-        defaults={'created_at': timezone.now()}
-    )
-    
-    if not created:
-        favorite.delete()
-        is_favorite = False
-    else:
-        is_favorite = True
-    
-    favorite_count = Favorite.objects.filter(property=property_obj).count()
-    
-    return JsonResponse({
-        'success': True,
-        'is_favorite': is_favorite,
-        'favorite_count': favorite_count,
-    })
-
-
-@require_POST
-def increment_email_contact(request, pk):
-    """Incrementar el contador de contactos por email para una propiedad"""
-    property_obj = get_object_or_404(Property, pk=pk)
-    
-    Property.objects.filter(pk=pk).update(
-        email_contacts_count=F('email_contacts_count') + 1
-    )
-    
-    property_obj.refresh_from_db(fields=['email_contacts_count'])
-    
-    return JsonResponse({
-        'success': True,
-        'email_contacts_count': property_obj.email_contacts_count,
-    })

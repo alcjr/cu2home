@@ -359,29 +359,131 @@
     }
 
     /* ============================================================
-       GRID PRINCIPAL - align-items: stretch (por defecto)
-       para que la sidebar tenga la misma altura que la columna
-       principal y el sticky funcione correctamente.
+       RESTO DE LA PÁGINA
        ============================================================ */
     .detail-grid {
         display: grid;
         grid-template-columns: 1fr 360px;
         gap: 32px;
         padding-bottom: 64px;
-        /* align-items: stretch es el valor por defecto,
-           no es necesario declararlo explícitamente */
+        align-items: start;
     }
 
-    /* ============================================================
-       SIDEBAR - CONTENEDOR CON ALTURA PARA STICKY
-       ============================================================ */
-    .sidebar-wrapper {
+    .panel {
+        background: #fff;
+        border: 1px solid var(--linea);
+        border-radius: 18px;
+        padding: 26px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 20px rgba(18,34,46,0.05);
+    }
+    .panel h2 {
+        font-family: 'Fraunces', serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--tinta);
+        margin-bottom: 18px;
         display: flex;
-        flex-direction: column;
-        gap: 16px;
-        height: 100%;
-        /* Ocupa toda la altura de la celda del grid */
+        align-items: center;
+        gap: 10px;
+    }
+    .panel h2 i { color: var(--terracota); font-size: 1rem; }
+
+    .specs {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 14px;
+    }
+    .spec {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid var(--linea);
+        border-radius: 14px;
+        background: #faf7f0;
+    }
+    .spec .ic {
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+        border-radius: 11px;
+        background: #fff;
+        border: 1px solid var(--linea);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--azul-malecon);
+        font-size: 1rem;
+    }
+    .spec .meta .v {
+        font-family: 'IBM Plex Mono', monospace;
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: var(--tinta);
+    }
+    .spec .meta .l {
+        font-size: 0.78rem;
+        color: var(--texto-suave);
+    }
+
+    .description {
+        color: var(--tinta);
+        line-height: 1.7;
+        font-size: 0.96rem;
+    }
+    .description p { margin-bottom: 12px; }
+
+    .amenities {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 10px;
+    }
+    .amenity {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.9rem;
+        color: var(--tinta);
+    }
+    .amenity i { color: var(--verde-almendares); width: 18px; }
+
+    #detailMap {
+        height: 400px;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 2px solid var(--linea);
+        background: #f0f2f5;
         position: relative;
+        z-index: 1;
+    }
+    .map-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 400px;
+        background: #f8f9fa;
+        border-radius: 14px;
+        border: 2px solid var(--linea);
+        color: var(--texto-suave);
+        font-size: 1rem;
+        font-family: 'Inter', sans-serif;
+    }
+    .map-loading i {
+        margin-right: 10px;
+        color: var(--terracota);
+        font-size: 1.5rem;
+    }
+    .map-label {
+        margin-top: 8px;
+        font-size: 0.85rem;
+        color: var(--texto-suave);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .map-label i {
+        color: var(--terracota);
     }
 
     /* ============================================================
@@ -390,13 +492,6 @@
     .contact-card {
         position: sticky;
         top: 90px;
-        background: #fff;
-        border: 1px solid var(--linea);
-        border-radius: 18px;
-        padding: 26px;
-        box-shadow: 0 4px 20px rgba(18,34,46,0.05);
-        z-index: 10;
-        flex-shrink: 0;
     }
     .agent {
         display: flex;
@@ -610,8 +705,7 @@
         border-radius: 18px;
         padding: 20px 22px;
         box-shadow: 0 4px 20px rgba(18,34,46,0.05);
-        /* IMPORTANTE: NO usar position: sticky aquí */
-        flex-shrink: 0;
+        margin-top: 16px;
     }
 
     .stats-title {
@@ -702,143 +796,10 @@
         color: var(--terracota);
     }
 
-    /* ============================================================
-       PANELES DEL CONTENIDO PRINCIPAL
-       ============================================================ */
-    .panel {
-        background: #fff;
-        border: 1px solid var(--linea);
-        border-radius: 18px;
-        padding: 26px;
-        margin-bottom: 24px;
-        box-shadow: 0 4px 20px rgba(18,34,46,0.05);
-    }
-    .panel h2 {
-        font-family: 'Fraunces', serif;
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: var(--tinta);
-        margin-bottom: 18px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .panel h2 i { color: var(--terracota); font-size: 1rem; }
-
-    .specs {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-        gap: 14px;
-    }
-    .spec {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 14px;
-        border: 1px solid var(--linea);
-        border-radius: 14px;
-        background: #faf7f0;
-    }
-    .spec .ic {
-        width: 42px;
-        height: 42px;
-        flex-shrink: 0;
-        border-radius: 11px;
-        background: #fff;
-        border: 1px solid var(--linea);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--azul-malecon);
-        font-size: 1rem;
-    }
-    .spec .meta .v {
-        font-family: 'IBM Plex Mono', monospace;
-        font-weight: 700;
-        font-size: 1.05rem;
-        color: var(--tinta);
-    }
-    .spec .meta .l {
-        font-size: 0.78rem;
-        color: var(--texto-suave);
-    }
-
-    .description {
-        color: var(--tinta);
-        line-height: 1.7;
-        font-size: 0.96rem;
-    }
-    .description p { margin-bottom: 12px; }
-
-    .amenities {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 10px;
-    }
-    .amenity {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 0.9rem;
-        color: var(--tinta);
-    }
-    .amenity i { color: var(--verde-almendares); width: 18px; }
-
-    #detailMap {
-        height: 400px;
-        border-radius: 14px;
-        overflow: hidden;
-        border: 2px solid var(--linea);
-        background: #f0f2f5;
-        position: relative;
-        z-index: 1;
-    }
-    .map-loading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 400px;
-        background: #f8f9fa;
-        border-radius: 14px;
-        border: 2px solid var(--linea);
-        color: var(--texto-suave);
-        font-size: 1rem;
-        font-family: 'Inter', sans-serif;
-    }
-    .map-loading i {
-        margin-right: 10px;
-        color: var(--terracota);
-        font-size: 1.5rem;
-    }
-    .map-label {
-        margin-top: 8px;
-        font-size: 0.85rem;
-        color: var(--texto-suave);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .map-label i {
-        color: var(--terracota);
-    }
-
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
     @media (max-width: 992px) {
-        .detail-grid { 
-            grid-template-columns: 1fr; 
-        }
-        .contact-card { 
-            position: static !important;
-            top: auto !important;
-        }
-        .sidebar-wrapper {
-            display: block;
-        }
-        .stats-card { 
-            margin-top: 16px !important; 
-        }
+        .detail-grid { grid-template-columns: 1fr; }
+        .contact-card { position: static; }
+        .stats-card { margin-top: 16px !important; }
         .gallery-main { height: 380px; }
     }
     @media (max-width: 640px) {
@@ -864,9 +825,6 @@
         .gallery-nav.next { right: 8px; }
         .gallery-thumbs { padding: 10px 12px; }
         .thumb-scroll-btn { display: none; }
-        .contact-card {
-            padding: 18px !important;
-        }
         .stats-card {
             padding: 16px;
         }
@@ -886,12 +844,6 @@
             flex-direction: column;
             align-items: flex-start;
             gap: 4px;
-        }
-        .panel {
-            padding: 18px;
-        }
-        .specs {
-            grid-template-columns: 1fr 1fr;
         }
     }
 
@@ -1233,7 +1185,6 @@
 <!-- ===== CONTENIDO ===== -->
 <div class="container">
     <div class="detail-grid">
-        <!-- COLUMNA PRINCIPAL -->
         <div class="detail-main">
             <div class="panel">
                 <h2><i class="fas fa-clipboard-list"></i> {% trans "Características" %}</h2>
@@ -1298,9 +1249,9 @@
         </div>
 
         <!-- ===== SIDEBAR ===== -->
-        <aside class="sidebar-wrapper">
+        <aside>
             <!-- Card del Agente (sticky) -->
-            <div class="contact-card">
+            <div class="panel contact-card">
                 {% with agent=property.agent profile=property.agent.profile %}
                     {% if agent %}
                         {% with agent_name=agent.get_full_name|default:agent.username %}

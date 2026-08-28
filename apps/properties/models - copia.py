@@ -213,14 +213,6 @@ class Property(TranslatableModel):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # === ESTADÍSTICAS ===
-    email_contacts_count = models.PositiveIntegerField(
-        default=0, 
-        verbose_name=_('Email contacts'),
-        db_index=True,
-        help_text=_('Number of times this property has been contacted via email')
-    )
-
     class Meta:
         verbose_name = _('Property')
         verbose_name_plural = _('Properties')
@@ -228,7 +220,6 @@ class Property(TranslatableModel):
         indexes = [
             models.Index(fields=['province', 'municipality']),
             models.Index(fields=['sale_price', 'rent_price']),
-            models.Index(fields=['email_contacts_count']),
         ]
 
     def __str__(self):
@@ -247,6 +238,15 @@ class Property(TranslatableModel):
         Devuelve la PropertyImage marcada como portada (is_cover=True); si
         ninguna lo está, cae a la primera según Meta.ordering (`order`).
         None si el inmueble no tiene ninguna imagen.
+
+        Fuente única de verdad para "qué imagen se muestra como portada":
+        la usan tanto los templates (ficha de detalle) como los
+        serializadores JSON (grid/quick-view) para no duplicar este
+        criterio en varios sitios y evitar que diverjan.
+
+        Si la relación 'images' ya fue precargada con prefetch_related,
+        list(self.images.all()) reutiliza esa caché y no dispara consulta
+        adicional.
         """
         images = list(self.images.all())
         if not images:
@@ -286,15 +286,6 @@ class Property(TranslatableModel):
                 parts.append(f"{_('Rent')}: {self.rent_price}/mes")
             return " | ".join(parts)
         return str(self.display_price)
-
-    @property
-    def favorite_count(self):
-        """
-        Número de usuarios que tienen esta propiedad en favoritos.
-        Utiliza el modelo Favorite de la app users.
-        """
-        from apps.users.models import Favorite
-        return Favorite.objects.filter(property=self).count()
 
     def get_price_for_offer_type(self, offer_type):
         """Obtiene el precio según el tipo de oferta"""
@@ -385,7 +376,28 @@ class SavedSearch(models.Model):
         """
         Devuelve el queryset de Property activos que casan con
         self.query_params, opcionalmente restringido a los publicados
-        después de `since`.
+        después de `since` (para no re-notificar en cada tick del beat
+        los mismos inmuebles ya avisados).
+
+        FIX: este método no existía -- tasks.py.dispatch_saved_search_alerts()
+        lo llama sin ningún try/except alrededor, así que CUALQUIER
+        SavedSearch activa hacía reventar todo el dispatch con
+        AttributeError antes de llegar siquiera a encolar un solo email
+        (ver deliver_saved_search_alert). El sistema de alertas estaba
+        roto de raíz, no solo sin frontend de edición.
+
+        Reutiliza PropertyFilterForm (apps/properties/forms.py) -- el
+        MISMO form que ya valida los filtros de la búsqueda pública en
+        _filtered_properties() (apps/properties/views.py) -- para
+        interpretar query_params, en vez de duplicar las reglas de
+        filtrado con una lectura manual del dict. Si PropertyFilterForm
+        cambia, esto queda alineado solo.
+
+        Un query_params inválido u obsoleto (p.ej. un property_type que
+        ya no existe en PROPERTY_TYPES) no rompe el envío: el form
+        simplemente lo trata como filtro no aplicado, así que
+        get_matches() nunca lanza excepción por datos guardados en su
+        día con un esquema distinto.
         """
         from .forms import PropertyFilterForm
 
@@ -427,6 +439,13 @@ class SavedSearch(models.Model):
             if data.get('has_air_conditioning'):
                 qs = qs.filter(has_air_conditioning=True)
 
+        # Sin 'since' (primer envío, last_notified_at aún None): se
+        # consideran coincidencia TODOS los inmuebles activos que casen
+        # con el filtro, no solo los futuros -- es la única forma de que
+        # una alerta recién creada tenga algo que notificar la primera
+        # vez. A partir de ahí, dispatch_saved_search_alerts() actualiza
+        # last_notified_at y las siguientes pasadas ya solo cuentan lo
+        # publicado después de esa fecha.
         if since:
             qs = qs.filter(created_at__gt=since)
 

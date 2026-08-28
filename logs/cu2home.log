@@ -171,3 +171,23 @@ LINE 1: ...te"."property_id", "users_favorite"."created_at", "users_fav...
 WARNING 2026-08-28 16:26:22,631 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
 INFO 2026-08-28 16:28:04,216 autoreload Watching for file changes with StatReloader
 WARNING 2026-08-28 16:28:10,732 log Not Found: /favicon.ico
+INFO 2026-08-28 17:04:59,354 autoreload Watching for file changes with StatReloader
+INFO 2026-08-28 17:19:40,251 autoreload C:\00_projects\cu2home\apps\properties\models.py changed, reloading.
+INFO 2026-08-28 17:19:41,435 autoreload Watching for file changes with StatReloader
+INFO 2026-08-28 17:20:01,384 autoreload C:\00_projects\cu2home\apps\properties\views.py changed, reloading.
+INFO 2026-08-28 17:20:02,865 autoreload Watching for file changes with StatReloader
+INFO 2026-08-28 17:20:45,397 autoreload C:\00_projects\cu2home\apps\properties\urls.py changed, reloading.
+INFO 2026-08-28 17:20:46,537 autoreload Watching for file changes with StatReloader
+INFO 2026-08-28 17:27:22,529 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-28 17:27:34,919 log Not Found: /favicon.ico
+INFO 2026-08-28 17:36:34,869 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-28 17:36:50,140 log Not Found: /favicon.ico
+WARNING 2026-08-28 17:37:04,915 log Not Found: /favicon.ico
+INFO 2026-08-28 17:38:40,227 autoreload Watching for file changes with StatReloader
+INFO 2026-08-28 17:44:08,052 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-28 17:44:16,594 log Not Found: /favicon.ico
+WARNING 2026-08-28 17:44:24,493 log Not Found: /favicon.ico
+WARNING 2026-08-28 17:45:00,247 log Not Found: /favicon.ico
+INFO 2026-08-28 18:04:15,818 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-28 18:04:38,684 log Not Found: /favicon.ico
+WARNING 2026-08-28 18:04:41,649 log Not Found: /favicon.ico
