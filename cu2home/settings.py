@@ -278,6 +278,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'apps.users.tasks.dispatch_saved_search_alerts',
         'schedule': 60 * 60,
     },
+    'dispatch-favorite-change-alerts': {
+        'task': 'apps.users.tasks.dispatch_favorite_change_alerts',
+        'schedule': 60 * 60,
+    },
 }
 
 MAX_IMAGES_PER_PROPERTY = get_config_int('Properties', 'max_images_per_property', 10)

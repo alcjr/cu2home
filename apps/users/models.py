@@ -128,6 +128,28 @@ class Favorite(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    # === Seguimiento de cambios (Ago 2026) ===
+    # Snapshot del estado del inmueble en el momento de marcar como
+    # favorito (o del último aviso enviado). dispatch_favorite_change_alerts
+    # (apps/users/tasks.py) compara esto contra el estado ACTUAL de
+    # `property` para detectar "se vendió" o "bajó de precio".
+    #
+    # blank=True + default='' en snapshot_status (en vez de null=True) es
+    # a propósito: '' es un valor imposible para PropertyStatus.choices,
+    # así que sirve de centinela para "todavía no se ha capturado ningún
+    # snapshot" -- distingue un Favorite legacy (creado antes de este
+    # cambio, sin snapshot) de uno que sí tiene un estado real guardado.
+    # El propio dispatch_favorite_change_alerts se encarga de rellenar
+    # ese snapshot vacío la primera vez que lo encuentra, sin notificar.
+    snapshot_status = models.CharField(max_length=20, blank=True, default='')
+    snapshot_sale_price = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True,
+    )
+    snapshot_rent_price = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True,
+    )
+    notified_change_at = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         verbose_name = _('Favorite')
         verbose_name_plural = _('Favorites')

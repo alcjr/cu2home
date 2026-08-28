@@ -7,7 +7,9 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from apps.properties.models import Property, SavedSearch
+from apps.properties.models import Property, SavedSearch, PropertyStatus
+
+from .models import Favorite
 
 logger = logging.getLogger(__name__)
 
@@ -138,4 +140,145 @@ def dispatch_saved_search_alerts():
         dispatched += 1
 
     logger.info('Alertas encoladas: %s. Búsquedas omitidas: %s.', dispatched, skipped)
+    return {'dispatched': dispatched, 'skipped': skipped}
+
+
+# =====================================================================
+# Notificación de cambios en favoritos (Ago 2026)
+# =====================================================================
+# Mismo patrón que dispatch_saved_search_alerts / deliver_saved_search_alert
+# de arriba: un orquestador que decide QUÉ enviar (siempre in-process, sin
+# depender de un worker) y una tarea de envío individual que sí requiere
+# un worker de Celery consumiendo la cola de Redis.
+
+@shared_task(
+    bind=True,
+    # Solo se reintenta ante fallos de SMTP, igual que
+    # deliver_saved_search_alert -- un Favorite.DoesNotExist es un bug,
+    # no algo transitorio.
+    autoretry_for=(SMTPException,),
+    retry_backoff=True,
+    retry_backoff_max=600,
+    retry_jitter=True,
+    max_retries=5,
+)
+def deliver_favorite_change_alert(self, favorite_id, change_type):
+    """
+    Envía el email de UN cambio ya detectado en un favorito.
+
+    change_type: 'sold' o 'price_drop' -- determina el asunto/cuerpo del
+    email. Se recibe ya calculado (no se recalcula aquí) por el mismo
+    motivo que match_ids en deliver_saved_search_alert: congelar la
+    decisión tomada en el dispatch, para que un reintento no reevalúe
+    contra un estado del inmueble que pudo cambiar de nuevo mientras
+    tanto.
+    """
+    try:
+        favorite = Favorite.objects.select_related('user', 'property').get(pk=favorite_id)
+    except Favorite.DoesNotExist:
+        logger.warning('Favorite %s ya no existe, se omite el envío.', favorite_id)
+        return
+
+    property_obj = favorite.property
+    if change_type == 'sold':
+        subject = f'cu2home · "{property_obj}" se ha vendido'
+    else:
+        subject = f'cu2home · "{property_obj}" bajó de precio'
+
+    body = render_to_string('properties/emails/favorite_change_alert.txt', {
+        'favorite': favorite,
+        'property': property_obj,
+        'change_type': change_type,
+    })
+
+    send_mail(
+        subject=subject,
+        message=body,
+        from_email=None,  # usa settings.DEFAULT_FROM_EMAIL
+        recipient_list=[favorite.user.email],
+        fail_silently=False,
+    )
+
+
+@shared_task
+def dispatch_favorite_change_alerts():
+    """
+    Orquestador análogo a dispatch_saved_search_alerts: recorre TODOS
+    los Favorite (sin filtrar por property.is_active -- un inmueble
+    puede desactivarse justo AL venderse, y es precisamente ese caso el
+    que interesa notificar) y compara el snapshot guardado en el
+    momento de marcar como favorito (o del último aviso) contra el
+    estado actual del Property. Encola un email por cada cambio real
+    detectado: pasó a 'vendido', o bajó el precio de venta o alquiler.
+
+    Se dispara cada hora vía CELERY_BEAT_SCHEDULE (ver settings.py),
+    igual que dispatch_saved_search_alerts.
+    """
+    dispatched = 0
+    skipped = 0
+
+    favorites = Favorite.objects.select_related('user', 'user__profile', 'property')
+
+    for favorite in favorites:
+        if not favorite.user.email:
+            skipped += 1
+            continue
+
+        # Mismo opt-out global que dispatch_saved_search_alerts -- no se
+        # crea uno separado solo para favoritos a menos que se pida.
+        profile = getattr(favorite.user, 'profile', None)
+        if profile is not None and not profile.receive_email_alerts:
+            skipped += 1
+            continue
+
+        property_obj = favorite.property
+
+        if favorite.snapshot_status == '':
+            # Favorito legacy (creado antes de este seguimiento) o
+            # snapshot nunca inicializado por algún otro motivo: se toma
+            # el estado actual como línea base SIN notificar, para no
+            # lanzar un aviso falso de "vendido"/"bajó de precio" por un
+            # cambio que ya había ocurrido antes de empezar a rastrearlo.
+            favorite.snapshot_status = property_obj.status
+            favorite.snapshot_sale_price = property_obj.sale_price
+            favorite.snapshot_rent_price = property_obj.rent_price
+            favorite.save(update_fields=[
+                'snapshot_status', 'snapshot_sale_price', 'snapshot_rent_price',
+            ])
+            continue
+
+        change_type = None
+        if (
+            property_obj.status == PropertyStatus.SOLD
+            and favorite.snapshot_status != PropertyStatus.SOLD
+        ):
+            change_type = 'sold'
+        elif (
+            (favorite.snapshot_sale_price is not None and property_obj.sale_price is not None
+             and property_obj.sale_price < favorite.snapshot_sale_price)
+            or
+            (favorite.snapshot_rent_price is not None and property_obj.rent_price is not None
+             and property_obj.rent_price < favorite.snapshot_rent_price)
+        ):
+            change_type = 'price_drop'
+
+        if change_type is None:
+            continue
+
+        deliver_favorite_change_alert.delay(favorite.pk, change_type)
+
+        # Igual que dispatch_saved_search_alerts: el snapshot se
+        # actualiza AQUÍ, en el dispatch, no dentro de la tarea de
+        # envío, para no re-detectar el mismo cambio en el siguiente
+        # tick del beat mientras el email sigue en cola o reintentando.
+        favorite.snapshot_status = property_obj.status
+        favorite.snapshot_sale_price = property_obj.sale_price
+        favorite.snapshot_rent_price = property_obj.rent_price
+        favorite.notified_change_at = timezone.now()
+        favorite.save(update_fields=[
+            'snapshot_status', 'snapshot_sale_price', 'snapshot_rent_price', 'notified_change_at',
+        ])
+        dispatched += 1
+
+    logger.info('Alertas de favoritos encoladas: %s. Favoritos omitidos: %s.', dispatched, skipped)
     return {'dispatched': dispatched, 'skipped': skipped}

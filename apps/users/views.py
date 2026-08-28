@@ -140,7 +140,15 @@ def toggle_favorite(request, property_id):
     """
     property_obj = get_object_or_404(Property, pk=property_id, is_active=True)
 
-    favorite, created = Favorite.objects.get_or_create(user=request.user, property=property_obj)
+    favorite, created = Favorite.objects.get_or_create(
+        user=request.user,
+        property=property_obj,
+        defaults={
+            'snapshot_status': property_obj.status,
+            'snapshot_sale_price': property_obj.sale_price,
+            'snapshot_rent_price': property_obj.rent_price,
+        },
+    )
     if not created:
         favorite.delete()
         is_favorite = False

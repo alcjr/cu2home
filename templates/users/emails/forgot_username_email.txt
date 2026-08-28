@@ -1,14 +1,10 @@
-{% load i18n %}{% autoescape off %}
-{% blocktranslate %}Hola,
+{% load i18n %}{% if change_type == 'sold' %}{% blocktrans with title=property.title %}Hola,
 
-Solicitaste recordar tu nombre de usuario en {{ site_name }}.
+El inmueble que marcaste como favorito, "{{ title }}", se ha vendido.{% endblocktrans %}{% else %}{% blocktrans with title=property.title %}Hola,
 
-Tu(s) nombre(s) de usuario asociado(s) a este correo electrónico son:
+El inmueble que marcaste como favorito, "{{ title }}", ha bajado de precio.{% endblocktrans %}{% endif %}
 
-{{ usernames }}
+{% trans "Ver ficha completa" %}: {{ property.get_absolute_url }}
 
-Si no solicitaste esta información, puedes ignorar este mensaje.
-
-Gracias,
-El equipo de {{ site_name }}
-{% endblocktranslate %}{% endautoescape %}
+{% trans "Gracias" %},
+{% trans "El equipo de cu2home" %}
