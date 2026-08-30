@@ -8,8 +8,7 @@
         return;
     }
 
-    // Idioma activo del sitio (base.html ya pone <html lang="{{ LANGUAGE_CODE }}">),
-    // en vez de forzar siempre español.
+    // Idioma activo del sitio
     DevExpress.localization.locale(document.documentElement.lang || 'es');
 
     const csrfToken = window.csrfToken || '';
@@ -39,8 +38,6 @@
         return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
     }
 
-    // Mismo motivo que en my_properties.js/favorites.js: .replace() con
-    // string literal sustituye solo la PRIMERA ocurrencia de "/0/".
     function buildUrl(baseUrl, ...args) {
         let url = baseUrl;
         for (const arg of args) {
@@ -88,18 +85,17 @@
         }).join(' | ');
     }
 
-    // ===== DATOS DE REFERENCIA (server-rendered vía json_script) =====
     function readJson(id, fallback) {
         const el = document.getElementById(id);
         if (!el) return fallback;
         try { return JSON.parse(el.textContent); } catch (e) { return fallback; }
     }
 
-    const PROPERTY_TYPES = readJson('property-types-data', []);   // [[code, label], ...]
+    const PROPERTY_TYPES = readJson('property-types-data', []);
     const OFFER_TYPES = readJson('offer-types-data', []);
     const FREQUENCIES = readJson('frequencies-data', []);
-    const PROVINCES = readJson('provinces-data', []);             // [{id, name}, ...]
-    const MUNICIPALITIES = readJson('municipalities-data', []);   // [{id, name, province_id}, ...]
+    const PROVINCES = readJson('provinces-data', []);
+    const MUNICIPALITIES = readJson('municipalities-data', []);
 
     const provinceLookup = PROVINCES.map(p => ({ id: p.id, name: p.name }));
     const municipalityLookupAll = MUNICIPALITIES.map(m => ({ id: m.id, name: m.name, province_id: m.province_id }));
@@ -107,11 +103,6 @@
     const offerTypeLookup = [{ code: '', label: gettext('Cualquiera') }, ...OFFER_TYPES.map(([code, label]) => ({ code, label }))];
     const frequencyLookup = FREQUENCIES.map(([code, label]) => ({ code, label }));
 
-    const PROPERTY_TYPE_LABELS = Object.fromEntries(PROPERTY_TYPES);
-    const OFFER_TYPE_LABELS = Object.fromEntries(OFFER_TYPES);
-
-    // ===== CAMPOS EDITABLES (lo demás son calculados por el backend y se
-    // limpian del payload antes de enviarlo, igual que en my_properties.js) =====
     const CALCULATED_FIELDS = [
         'id', '__KEY__', 'frequency_display', 'province_name', 'municipality_name',
         'property_type_display', 'offer_type_display', 'last_notified_at', 'created_at'
@@ -125,30 +116,12 @@
         return clean;
     }
 
-    // ===== REFERENCIAS A EDITORES DEL POPUP (cascada provincia→municipio
-    // y visibilidad de rangos de precio según oferta) =====
     let provinceEditorInstance = null;
     let municipalityEditorInstance = null;
     const priceEditorInstances = {};
+    let gridInstanceRef = null;
 
-    // Instancia del Form del popup + bandera de "ya renderizado al menos
-    // una vez para esta apertura". Se usan desde form.onFieldDataChanged
-    // (ver más abajo) para saber si un cambio en offer_type/province_id
-    // es una acción real del usuario o la asignación inicial de datos al
-    // abrir el popup en modo edición.
-    let formInstance = null;
-    let formReady = false;
-
-    // isUserAction=false (valor por defecto): la cascada solo actualiza el
-    // dataSource/placeholder del municipio, nunca borra su valor. Esto
-    // cubre la vez que onFieldDataChanged se dispara con formReady=false
-    // (asignación inicial de datos al abrir el popup en modo edición) --
-    // si en ese caso se limpiara el municipio, se perdería un valor que
-    // el usuario nunca tocó. Solo cuando el cambio de provincia llega
-    // con formReady=true (el popup ya terminó su primer render y el
-    // cambio es una interacción real del usuario) tiene sentido limpiar
-    // un municipio que ya no encaja con la provincia recién elegida.
-    function updateMunicipalityOptions(provinceId, isUserAction) {
+    function updateMunicipalityOptions(provinceId) {
         if (!municipalityEditorInstance) return;
         const filtered = provinceId
             ? municipalityLookupAll.filter(m => String(m.province_id) === String(provinceId))
@@ -157,18 +130,13 @@
         if (!provinceId) {
             municipalityEditorInstance.option('placeholder', gettext('Cualquier municipio'));
         } else if (filtered.length === 0) {
-            if (isUserAction) municipalityEditorInstance.option('value', null);
+            municipalityEditorInstance.option('value', null);
             municipalityEditorInstance.option('placeholder', gettext('No hay municipios para esta provincia'));
         } else {
             municipalityEditorInstance.option('placeholder', gettext('Cualquier municipio'));
         }
     }
 
-    // Igual convención que my_properties.js: sale_price-like campos solo
-    // tienen sentido para 'sale'/'sale_or_rent'; rent_price-like para
-    // 'rent'/'sale_or_rent'. offer_type vacío ("Cualquiera") o 'swap'
-    // deshabilita ambos rangos -- no hay un precio único al que aplicar
-    // un filtro cuando la alerta no se restringe a un tipo de oferta.
     function isPriceFieldEnabled(dataField, offerType) {
         if (!offerType) return false;
         if (['min_sale_price', 'max_sale_price'].includes(dataField)) {
@@ -180,53 +148,18 @@
         return true;
     }
 
-    // Título de la card fusionada "Rango de precio" según el offer_type
-    // actual -- puramente informativo (UI), no toca formData/values, así
-    // que no interfiere en absoluto con qué se guarda al pulsar Guardar.
-    function priceRangeCaption(offerType) {
-        if (offerType === 'sale') return gettext('Rango de precio · Venta');
-        if (offerType === 'rent') return gettext('Rango de precio · Alquiler (mensual)');
-        if (offerType === 'sale_or_rent') return gettext('Rango de precio · Venta y alquiler');
-        return gettext('Rango de precio');
-    }
-
-    // isUserAction=false (valor por defecto): solo actualiza el estado
-    // visual disabled/enabled, NUNCA toca el valor introducido. Necesario
-    // porque esta función se llama también desde form.onContentReady --
-    // que se dispara de forma programática cada vez que se (re)renderiza
-    // el contenido del form, incluida la revalidación interna que
-    // DevExtreme hace al pulsar "Guardar" en un form con pestañas -- y en
-    // esos disparos offerType puede llegar undefined de forma transitoria
-    // aunque el usuario nunca haya tocado "Tipo de oferta". Si en ese
-    // momento se limpiara el valor, se perdería el precio ya introducido
-    // justo antes de construir el payload que se envía al backend (el bug
-    // reportado: precio de venta y provincia desaparecidos tras guardar).
-    // Solo cuando form.onFieldDataChanged confirma que el popup ya
-    // terminó su render inicial (isUserAction=true, es decir
-    // formReady === true) tiene sentido borrar un precio que ya no
-    // aplica al nuevo tipo de oferta elegido.
-    //
-    // Nota sobre el guardado: cambiar el título de la card (más abajo,
-    // formInstance.itemOption(..., 'caption', ...)) es solo estético y
-    // se hace SIEMPRE, tenga o no isUserAction=true -- a diferencia de
-    // limpiar un valor, mostrar el título correcto nunca puede perder
-    // datos, así que no hace falta protegerlo detrás de isUserAction.
-    function updatePriceFieldsAvailability(offerType, isUserAction) {
-        Object.keys(priceEditorInstances).forEach(field => {
+    function updatePriceFieldsAvailability(offerType) {
+        Object.keys(priceEditorInstances).forEach(function (field) {
             const editor = priceEditorInstances[field];
             if (!editor) return;
             const enabled = isPriceFieldEnabled(field, offerType);
             editor.option('disabled', !enabled);
-            if (isUserAction && !enabled && editor.option('value') !== null) {
+            if (!enabled && editor.option('value') !== null) {
                 editor.option('value', null);
             }
         });
-        if (formInstance) {
-            formInstance.itemOption('priceRangeCard', 'caption', priceRangeCaption(offerType));
-        }
     }
 
-    // ===== RESUMEN LEGIBLE DE FILTROS (celda "Alerta") =====
     function buildSummary(data) {
         const parts = [];
         parts.push(data.property_type_display || gettext('Cualquier tipo'));
@@ -251,7 +184,6 @@
         return parts.join(' · ');
     }
 
-    // ===== CUSTOM STORE =====
     const store = new DevExpress.data.CustomStore({
         key: 'id',
         load: function () {
@@ -274,13 +206,7 @@
         }
     });
 
-    // Getter reasignado por el editor de offer_type en cuanto se
-    // inicializa (dentro del popup); el placeholder cubre el caso de que
-    // se consulte antes de que el popup se haya abierto una vez.
-    let offerTypeCurrentValue = function () { return null; };
-
-    // ===== GRID PRINCIPAL =====
-    const gridInstanceRef = $('#alertsGrid').dxDataGrid({
+    gridInstanceRef = $('#alertsGrid').dxDataGrid({
         dataSource: store,
         keyExpr: 'id',
         showBorders: true,
@@ -289,7 +215,6 @@
         columnResizingMode: 'widget',
         allowColumnResizing: true,
         wordWrapEnabled: false,
-        height: 'auto',
 
         noDataText: gettext('Aún no tienes alertas guardadas. Crea una para recibir un aviso cuando aparezcan inmuebles que encajen con tus filtros.'),
 
@@ -314,33 +239,30 @@
             popup: {
                 title: gettext('Alerta de búsqueda'),
                 showTitle: true,
-                // Antes 800px, luego 920px: al fusionar las dos cards de
-                // "Rango de precio" en una sola (ver priceRangeCard más
-                // abajo) las otras 3 cards de la fila -- Tipo de
-                // inmueble, Ubicación y Comodidades -- son las que fijan
-                // el ancho de columna en el layout a 3 columnas, y ahí
-                // viven los selects (sobre todo provincia/municipio, con
-                // nombres largos) cuyo valor elegido se veía cortado por
-                // falta de espacio. Más ancho de popup = más ancho de
-                // columna = más ancho de cada select.
-                width: function () { return Math.min(window.innerWidth * 0.97, 1000); },
-                // FIX (reemplaza el enfoque anterior basado en height:'auto'
-                // + deferRendering:false): con height 'auto' el popup mide
-                // su alto contra el contenido de la pestaña activa, así que
-                // el resultado depende de CUÁL pestaña esté abierta en ese
-                // momento. Aquí se fija una altura EXPLÍCITA e idéntica para
-                // las dos pestañas (proporción del viewport, con techo);
-                // title y barra Guardar/Cancelar quedan fuera de ese
-                // presupuesto (ver my_alerts.css, flex-shrink:0) y el
-                // contenido intermedio (.dx-popup-content) hace scroll
-                // interno si una pestaña no cabe. Resultado: los botones
-                // ocupan siempre la misma posición, se cambie o no de
-                // pestaña. Techo subido de 640 a 700: junto con las 3
-                // columnas de arriba (5 cards en 2 filas en vez de 3),
-                // esto es lo que permite que "Filtros de búsqueda" quepa
-                // sin scroll con el tamaño de letra más grande.
-                height: function () { return Math.min(window.innerHeight * 0.86, 700); },
+                width: function () {
+                    return Math.min(window.innerWidth * 0.94, 1000);
+                },
+                height: 'auto',
+                maxHeight: function () {
+                    return window.innerHeight * 0.92;
+                },
                 wrapperAttr: { class: 'alert-edit-popup' },
+                hideOnOutsideClick: false,
+                animation: {
+                    show: { type: 'fade', duration: 200 },
+                    hide: { type: 'fade', duration: 150 }
+                },
+                onShown: function(e) {
+                    const $content = $(e.component.content());
+                    $content.css('overflow', 'visible');
+                    
+                    const $bottom = $content.find('.dx-popup-bottom');
+                    if ($bottom.length) {
+                        $bottom.css('overflow', 'visible');
+                        $bottom.find('.dx-toolbar').css('overflow', 'visible');
+                        $bottom.find('.dx-toolbar-items-container').css('overflow', 'visible');
+                    }
+                },
                 onInitialized: function (e) {
                     e.component.option('toolbarItems[0].options.icon', 'save');
                     e.component.option('toolbarItems[0].options.type', 'success');
@@ -348,64 +270,23 @@
                     e.component.option('toolbarItems[1].options.icon', 'close');
                     e.component.option('toolbarItems[1].options.type', 'danger');
                     e.component.option('toolbarItems[1].options.stylingMode', 'contained');
+                },
+                onHiding: function() {
+                    try {
+                        Object.keys(priceEditorInstances).forEach(function(key) {
+                            priceEditorInstances[key] = null;
+                        });
+                        provinceEditorInstance = null;
+                        municipalityEditorInstance = null;
+                    } catch(e) {}
                 }
             },
             form: {
+                labelLocation: 'top',
                 colCount: 1,
-                onInitialized: function (e) {
-                    formInstance = e.component;
-                    // Nueva apertura de popup: hasta que el primer
-                    // onContentReady confirme que el render inicial
-                    // terminó, cualquier onFieldDataChanged que llegue
-                    // es la carga de datos existentes, no un clic real
-                    // del usuario.
-                    formReady = false;
-                },
-                onContentReady: function () {
-                    // Puede dispararse varias veces por sesión de popup
-                    // (apertura inicial, cambio de pestaña, revalidación
-                    // al pulsar Guardar en un form con pestañas). Por eso
-                    // se llama SIN isUserAction=true: solo sincroniza el
-                    // estado visual disabled/enabled de los precios según
-                    // la oferta actual, nunca borra un valor ya
-                    // introducido por el usuario (ver comentario en
-                    // updatePriceFieldsAvailability).
-                    const offerType = offerTypeCurrentValue();
-                    updatePriceFieldsAvailability(offerType);
-                    formReady = true;
-                },
-                // ÚNICO sitio donde reaccionamos a los cambios de
-                // offer_type/province_id. A diferencia de
-                // editorOptions.onValueChanged (que SUSTITUYE el
-                // manejador interno de Form y rompe la sincronización
-                // value -> formData, dejando el campo fuera de
-                // e.data/values al guardar), onFieldDataChanged es un
-                // evento del Form que se dispara DESPUÉS de que Form ya
-                // actualizó formData por su cuenta. No compite con la
-                // sincronización interna, así que no hace falta (ni es
-                // seguro) llamar a formInstance.updateData() a mano aquí.
-                onFieldDataChanged: function (e) {
-                    if (e.dataField === 'offer_type') {
-                        updatePriceFieldsAvailability(e.value, formReady);
-                    } else if (e.dataField === 'province_id') {
-                        updateMunicipalityOptions(e.value, formReady);
-                    }
-                },
                 items: [
                     {
                         itemType: 'tabbed',
-                        // NOTA: ya no depende de esto la altura del popup
-                        // (ahora es fija, ver popup.height más arriba). Se
-                        // mantiene deferRendering:false por una razón
-                        // distinta: los editores de la pestaña "Filtros de
-                        // búsqueda" (offer_type, province_id,
-                        // municipality_id, precios) necesitan estar
-                        // inicializados desde la apertura del popup para
-                        // que la cascada provincia→municipio y la
-                        // habilitación de los rangos de precio según
-                        // offer_type (ver form.onContentReady) se
-                        // sincronicen correctamente aunque el usuario abra
-                        // el popup directamente sobre la pestaña "General".
                         tabPanelOptions: {
                             deferRendering: false,
                             animationEnabled: true,
@@ -423,7 +304,10 @@
                                             {
                                                 dataField: 'name',
                                                 label: { text: gettext('Nombre de la alerta') },
-                                                editorOptions: { placeholder: gettext('Ej. Apartamentos en La Habana') }
+                                                editorOptions: { placeholder: gettext('Ej. Apartamentos en La Habana') },
+                                                validationRules: [
+                                                    { type: 'required', message: gettext('El nombre es obligatorio.') }
+                                                ]
                                             },
                                             {
                                                 dataField: 'frequency',
@@ -447,24 +331,6 @@
                             },
                             {
                                 title: gettext('Filtros de búsqueda'),
-                                // Antes: colCount fijo a 2 -> las 5 cards
-                                // (Tipo de inmueble / Ubicación / Venta /
-                                // Alquiler / Comodidades) ocupaban 3 filas
-                                // y la pestaña necesitaba scroll vertical
-                                // dentro de la altura fija del popup.
-                                // Ahora: las cards "Rango de precio ·
-                                // Venta" y "Rango de precio · Alquiler" se
-                                // fusionan en una sola ("priceRangeCard",
-                                // más abajo) cuyo título y campos
-                                // visibles cambian según "Tipo de
-                                // oferta". Con eso quedan 4 cards en vez
-                                // de 5: 3 caben en la primera fila (3
-                                // columnas en desktop) y la de precio
-                                // ocupa las 2/3 de la segunda fila --
-                                // todo en 2 filas, sin scroll.
-                                // colCountByScreen reduce a 2 o 1 columna
-                                // en pantallas medianas o móviles en vez
-                                // de aplastar 3 columnas estrechas.
                                 colCountByScreen: { xs: 1, sm: 1, md: 2, lg: 3 },
                                 items: [
                                     {
@@ -492,11 +358,7 @@
                                                     dataSource: offerTypeLookup,
                                                     valueExpr: 'code',
                                                     displayExpr: 'label',
-                                                    searchEnabled: false,
-                                                    onInitialized: function (args) {
-                                                        // guarda getter accesible desde onContentReady
-                                                        offerTypeCurrentValue = function () { return args.component.option('value'); };
-                                                    }
+                                                    searchEnabled: false
                                                 }
                                             }
                                         ]
@@ -546,7 +408,7 @@
                                         itemType: 'group',
                                         cssClass: 'alert-form-card',
                                         caption: gettext('Comodidades'),
-                                        colCount: 2,
+                                        colCount: 1,
                                         items: [
                                             { dataField: 'has_elevator', label: { text: gettext('Ascensor') }, editorType: 'dxCheckBox' },
                                             { dataField: 'has_air_conditioning', label: { text: gettext('A/C') }, editorType: 'dxCheckBox' }
@@ -555,31 +417,18 @@
                                     {
                                         itemType: 'group',
                                         cssClass: 'alert-form-card',
-                                        // "name" es lo que permite localizar esta card más
-                                        // tarde vía formInstance.itemOption('priceRangeCard', ...)
-                                        // para cambiarle el título en caliente. El texto inicial
-                                        // (gettext('Rango de precio')) se sustituye enseguida por
-                                        // updatePriceFieldsAvailability() en cuanto el form conoce
-                                        // el offer_type actual (onContentReady / onFieldDataChanged),
-                                        // así que este valor solo se ve en el primerísimo instante.
-                                        name: 'priceRangeCard',
                                         caption: gettext('Rango de precio'),
                                         colSpan: 2,
                                         colCount: 2,
                                         items: [
                                             {
                                                 dataField: 'min_sale_price',
-                                                // Etiquetas con sufijo fijo ("venta"/"alquiler") en
-                                                // vez de solo "Mínimo"/"Máximo": antes se distinguían
-                                                // solo por el título de su card separada; al fusionar
-                                                // las dos cards en una (con offer_type='sale_or_rent'
-                                                // pueden verse los 4 campos a la vez) hace falta que
-                                                // cada campo se identifique por sí mismo.
                                                 label: { text: gettext('Mínimo (venta)') },
                                                 editorType: 'dxNumberBox',
                                                 editorOptions: {
                                                     format: { type: 'currency', currency: 'EUR' },
                                                     min: 0,
+                                                    placeholder: gettext('€'),
                                                     onInitialized: function (args) { priceEditorInstances['min_sale_price'] = args.component; }
                                                 }
                                             },
@@ -590,6 +439,7 @@
                                                 editorOptions: {
                                                     format: { type: 'currency', currency: 'EUR' },
                                                     min: 0,
+                                                    placeholder: gettext('€'),
                                                     onInitialized: function (args) { priceEditorInstances['max_sale_price'] = args.component; }
                                                 }
                                             },
@@ -600,6 +450,7 @@
                                                 editorOptions: {
                                                     format: { type: 'currency', currency: 'EUR' },
                                                     min: 0,
+                                                    placeholder: gettext('€'),
                                                     onInitialized: function (args) { priceEditorInstances['min_rent_price'] = args.component; }
                                                 }
                                             },
@@ -610,6 +461,7 @@
                                                 editorOptions: {
                                                     format: { type: 'currency', currency: 'EUR' },
                                                     min: 0,
+                                                    placeholder: gettext('€'),
                                                     onInitialized: function (args) { priceEditorInstances['max_rent_price'] = args.component; }
                                                 }
                                             }
@@ -624,13 +476,49 @@
         },
 
         onInitNewRow: function (e) {
-            // Valores por defecto de una alerta nueva: activa, frecuencia
-            // diaria, sin ningún filtro todavía (equivale a "cualquier
-            // inmueble nuevo").
             e.data.is_active = true;
             e.data.frequency = 'daily';
             e.data.has_elevator = false;
             e.data.has_air_conditioning = false;
+        },
+
+        onEditorPreparing: function (e) {
+            if (e.parentType !== 'dataRow') return;
+
+            if (e.dataField === 'province_id') {
+                const originalOnValueChanged = e.editorOptions.onValueChanged;
+                e.editorOptions.onValueChanged = function (args) {
+                    if (originalOnValueChanged) originalOnValueChanged.call(this, args);
+                    updateMunicipalityOptions(args.value);
+                    if (municipalityEditorInstance) {
+                        const currentMunicipality = municipalityEditorInstance.option('value');
+                        if (currentMunicipality) {
+                            const stillValid = municipalityLookupAll.some(
+                                m => m.id === currentMunicipality && m.province_id === args.value
+                            );
+                            if (!stillValid) municipalityEditorInstance.option('value', null);
+                        }
+                    }
+                };
+            }
+
+            if (e.dataField === 'offer_type') {
+                const originalOnValueChanged = e.editorOptions.onValueChanged;
+                e.editorOptions.onValueChanged = function (args) {
+                    if (originalOnValueChanged) originalOnValueChanged.call(this, args);
+                    updatePriceFieldsAvailability(args.value);
+                };
+            }
+
+            if (['min_sale_price', 'max_sale_price', 'min_rent_price', 'max_rent_price'].includes(e.dataField)) {
+                const originalOnInitialized = e.editorOptions.onInitialized;
+                e.editorOptions.onInitialized = function (args) {
+                    if (originalOnInitialized) originalOnInitialized.call(this, args);
+                    priceEditorInstances[e.dataField] = args.component;
+                    const currentOfferType = e.row && e.row.data ? e.row.data.offer_type : null;
+                    args.component.option('disabled', !isPriceFieldEnabled(e.dataField, currentOfferType));
+                };
+            }
         },
 
         columns: [
@@ -685,13 +573,6 @@
                 width: 110,
                 allowEditing: false
             },
-            // Columnas ocultas: mismo motivo que en my_properties.html
-            // (Bug 1) -- cualquier campo presente en editing.form.items
-            // (el popup) que NO tenga columna aquí, ni siquiera oculta,
-            // es descartado por DevExtreme de e.data al insertar/
-            // actualizar, aunque el usuario lo rellene en pantalla. Estas
-            // 11 columnas cubren TODOS los campos de la pestaña "Filtros
-            // de búsqueda" que no tienen ya una columna visible arriba.
             { dataField: 'property_type', visible: false },
             { dataField: 'offer_type', visible: false },
             { dataField: 'province_id', visible: false },
@@ -717,26 +598,12 @@
                     {
                         name: 'edit',
                         hint: gettext('Editar'),
-                        // FIX: usaba 'fas fa-pen' (Font Awesome), un glifo
-                        // distinto al que se ve en la grilla de
-                        // my_properties. Ahí el botón de editar usa el
-                        // icono propio de DevExtreme ('edit') precisamente
-                        // porque es el que coincide con el resto de iconos
-                        // nativos de la UI (toolbar, refresh, etc.) -- ver
-                        // comentario en my_properties.js. Se alinea aquí
-                        // con el mismo criterio para que ambas grillas
-                        // usen el mismo estilo de icono.
                         icon: 'edit',
                         cssClass: 'rbtn rbtn-edit'
                     },
                     {
                         name: 'delete',
                         hint: gettext('Borrar'),
-                        // Mismo criterio que 'edit': icono built-in de
-                        // DevExtreme en vez de Font Awesome, para que
-                        // ambos botones de esta columna compartan el
-                        // mismo estilo de trazo que el resto de iconos DX
-                        // de la página.
                         icon: 'trash',
                         cssClass: 'rbtn rbtn-delete'
                     }

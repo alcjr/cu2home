@@ -1,4 +1,4 @@
-    (function () {
+(function () {
     'use strict';
 
     const gridEl = document.getElementById('myPropertiesGrid');
@@ -69,16 +69,6 @@
         return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
     }
 
-    // ===== BUILD URL CORREGIDA =====
-    // FIX: el regex anterior usaba el flag global 'g', que sustituía TODAS las
-    // apariciones de "/0/" en cada .replace(), no solo una por argumento. En
-    // URLs con dos placeholders (image_cover, image_delete: ".../0/images/0/cover/")
-    // el primer argumento (rowData.id) sustituía los DOS ceros de golpe, dejando
-    // al segundo argumento (img.id) sin nada que sustituir -- "Eliminar" y
-    // "Marcar portada" acababan llamando con image_id = property_id.
-    // String.prototype.replace sin regex (con un string literal) solo sustituye
-    // la PRIMERA ocurrencia, que es justo el comportamiento posicional que
-    // necesitamos: un argumento -> el siguiente "/0/" de izquierda a derecha.
     function buildUrl(baseUrl, ...args) {
         let url = baseUrl;
         for (const arg of args) {
@@ -135,7 +125,6 @@
         
         if (body !== undefined) {
             if (isFormData) {
-                // IMPORTANTE: NO establecer Content-Type para FormData
                 opts.body = body;
                 delete opts.headers['Content-Type'];
             } else {
@@ -265,15 +254,6 @@
                 accept: 'image/*',
                 uploadMode: 'instantly',
                 uploadUrl: uploadUrl,
-                // FIX: sin esto, dxFileUploader envía el fichero con su
-                // propio nombre de campo interno por defecto, distinto
-                // de 'image'. El backend solo busca
-                // request.FILES.get('image') (my_property_image_upload),
-                // así que la petición llegaba sin el fichero reconocido
-                // y devolvía 400 "No image file provided." -- de ahí que
-                // subir fotos en EDICIÓN fallara mientras que en ALTA
-                // funcionaba (subirFicherosPendientes ya arma el
-                // FormData a mano con formData.append('image', file)).
                 name: 'image',
                 uploadHeaders: { 'X-CSRFToken': csrfToken },
                 onUploaded: function(e) {
@@ -318,12 +298,6 @@
     let pendingFilesRefs = null;
 
     // ===== GUARD ANTI "GHOST CLICK" TRAS EL DIÁLOGO NATIVO DE FICHEROS =====
-    // Bug: al abrir el selector de ficheros vía JS ($input.trigger('click')), algunos
-    // navegadores (Chromium) reenvían un click "fantasma" al elemento que queda bajo el
-    // cursor cuando el diálogo del SO se cierra. En el popup de edición, ese punto coincide
-    // con el botón "Guardar", lo que dispara un guardado prematuro (con validación fallida)
-    // y el popup se cierra solo, perdiendo pendingNewFiles. Este guard absorbe ese único
-    // click fantasma justo cuando la ventana recupera el foco tras el diálogo.
     let expectingFileDialogClose = false;
     let suppressGhostClick = false;
 
@@ -496,7 +470,6 @@
         
         const errores = [];
 
-        // Subida SECUENCIAL
         return files.reduce(function (chain, file, index) {
             return chain.then(function () {
                 console.log(`📤 Subiendo ${index + 1}/${files.length}: ${file.name} (${file.size} bytes)`);
@@ -536,25 +509,6 @@
     let municipalityEditorInstance = null;
     const priceEditorInstances = { sale_price: null, rent_price: null, seasonal_rent_price: null, deposit_amount: null };
     let gridInstanceRef = null;
-
-    // FIX: fuente única y fiable de la fila que se está editando.
-    // Antes, el template de la pestaña "Fotos" intentaba leer
-    // data.component.option('formData') desde dentro de un item anidado
-    // en itemType:'tabbed' -> tabs[].items[]. En ese contexto anidado
-    // 'data.component' no resuelve de forma fiable a la instancia del
-    // dxForm; si fallaba, el try/catch lo tragaba en silencio
-    // (console.warn) y rowData se quedaba en null, cayendo SIEMPRE a la
-    // rama de "modo ALTA" (dropzone) aunque se estuviera editando un
-    // inmueble ya persistido -- de ahí que no aparecieran las fotos
-    // guardadas, y que las fotos "añadidas" en ese estado se perdieran
-    // en silencio (el dropzone de alta solo encola en pendingNewFiles;
-    // esos ficheros solo se suben desde el callback insert() del store,
-    // nunca desde update()).
-    //
-    // onEditingStart(e) es un evento documentado y fiable de dxDataGrid
-    // que entrega la fila completa (e.data, incluida su images[]) justo
-    // al abrir el popup de edición -- se usa esa fuente en vez de fiarse
-    // del contexto del Form.
     let currentEditingRowData = null;
 
     function resetEditFormEditorRefs() {
@@ -604,16 +558,12 @@
         });
     }
 
-   
     // ===== CUSTOM STORE CORREGIDO =====
     const store = new DevExpress.data.CustomStore({
-        key: 'id',  // Usar 'key' en lugar de 'keyExpr' para CustomStore
+        key: 'id',
         load: function() {
             console.log('📥 LOAD - Cargando propiedades');
             return apiRequest(URLS.data, 'GET').then(function (data) {
-                // DEBUG TEMPORAL: para verificar si el backend ya devuelve
-                // imágenes cruzadas entre inmuebles, o si el cruce ocurre
-                // solo en el cliente después de esto.
                 console.log('🔍 DEBUG LOAD - imágenes por inmueble:', data.map(function (p) {
                     return { id: p.id, title: p.title, image_count: p.image_count, image_ids: (p.images || []).map(function (i) { return i.id; }) };
                 }));
@@ -681,6 +631,7 @@
             return apiRequest(url, 'DELETE');
         }
     });
+
     // ===== GRID PRINCIPAL =====
     gridInstanceRef = $('#myPropertiesGrid').dxDataGrid({
         dataSource: store,
@@ -707,10 +658,6 @@
             mode: 'popup',
             allowAdding: true,
             allowUpdating: true,
-            // Se retira la posibilidad de eliminar inmuebles desde esta
-            // grilla (ver columna de acciones más abajo, sin botón de
-            // papelera). Se desactiva aquí también para no dejar
-            // habilitada una operación sin ningún disparador en la UI.
             allowDeleting: false,
             useIcons: true,
             popup: {
@@ -719,36 +666,30 @@
                 width: function () {
                     return Math.min(window.innerWidth * 0.94, 1500);
                 },
-                // FIX (cambio de enfoque): los intentos anteriores fijaban
-                // una altura EXPLÍCITA al popup (a mano, o medida por JS) y
-                // forzaban todo el contenido a encajar ahí dentro vía
-                // flexbox + overflow:hidden. Cualquier pequeño desajuste en
-                // esa cuenta (una fuente que carga con métricas distintas,
-                // un dato más largo, etc.) se traducía en un recorte --ya
-                // fuera el borde inferior de una card o el de los botones--
-                // porque la caja exterior tenía un tamaño fijo del que nada
-                // podía sobresalir. Se abandona ese enfoque: el popup ahora
-                // crece según su contenido real (height:'auto', el
-                // comportamiento normal de cualquier caja HTML), sin forzar
-                // nada a encajar. maxHeight es solo un techo de seguridad
-                // para pantallas muy bajas o contenido excepcionalmente
-                // largo -- el único caso en el que debe aparecer scroll
-                // interno (dentro de .dx-popup-content, ver CSS), y no
-                // debería activarse en ninguna de las 4 pestañas actuales.
                 height: 'auto',
                 maxHeight: function () {
                     return window.innerHeight * 0.92;
                 },
                 wrapperAttr: { class: 'property-edit-popup' },
-                // FIX: NO se debe sustituir editing.popup.toolbarItems por un
-                // array propio -- eso reemplaza también el binding interno
-                // (validación, estado disabled, etc.) del botón "Guardar"
-                // que genera el grid, y en la práctica el botón dejaba de
-                // pintarse (solo sobrevivía "Cancelar"). La forma correcta y
-                // soportada de tocar esos botones es personalizar los que
-                // el propio grid genera (toolbarItems[0] = Guardar,
-                // toolbarItems[1] = Cancelar) desde onInitialized, dejando
-                // intacto su comportamiento por defecto.
+                hideOnOutsideClick: false,
+                animation: {
+                    show: { type: 'fade', duration: 200 },
+                    hide: { type: 'fade', duration: 150 }
+                },
+                onShown: function(e) {
+                    // Asegurar que el contenido del popup tenga overflow visible
+                    // para que los bordes inferiores de los botones no se recorten
+                    const $content = $(e.component.content());
+                    $content.css('overflow', 'visible');
+                    
+                    // También asegurar que el toolbar del popup tenga overflow visible
+                    const $bottom = $content.find('.dx-popup-bottom');
+                    if ($bottom.length) {
+                        $bottom.css('overflow', 'visible');
+                        $bottom.find('.dx-toolbar').css('overflow', 'visible');
+                        $bottom.find('.dx-toolbar-items-container').css('overflow', 'visible');
+                    }
+                },
                 onInitialized: function (e) {
                     e.component.option('toolbarItems[0].options.icon', 'save');
                     e.component.option('toolbarItems[0].options.type', 'success');
@@ -757,29 +698,10 @@
                     e.component.option('toolbarItems[1].options.type', 'danger');
                     e.component.option('toolbarItems[1].options.stylingMode', 'contained');
                 },
-                // FIX: sin esto, el diálogo nativo del SO para elegir fotos (input type="file")
-                // hace que el navegador pierda el foco un instante; DevExtreme lo interpreta
-                // como "click fuera del popup" y lo cierra solo, perdiendo pendingNewFiles.
-                hideOnOutsideClick: false,
-                animation: {
-                    show: { type: 'fade', duration: 200 },
-                    hide: { type: 'fade', duration: 150 }
-                },
                 onHiding: function () {
                     console.log('Popup hiding - resetting editors');
                     resetEditFormEditorRefs();
-                    // FIX: aquí (y no en cada cambio de foto) es donde se
-                    // refresca el grid, para que la fila muestre el conteo
-                    // de fotos / portada actualizados. Los cambios de fotos
-                    // (subir, borrar, marcar portada) ya se guardan al
-                    // instante contra el backend según se hacen, así que
-                    // refrescar al cerrar -- se guarde o se cancele el resto
-                    // del formulario -- es correcto y no afecta a la pestaña
-                    // activa porque el popup ya se está cerrando.
                     try { gridInstanceRef.refresh(); } catch (e) {}
-                    // FIX: evita que la fila de esta sesión de edición
-                    // sobreviva y se reutilice por error en la siguiente
-                    // apertura del popup (alta o edición de otra fila).
                     currentEditingRowData = null;
                 },
                 onHidden: function() {
@@ -886,7 +808,7 @@
                                             editorOptions: {
                                                 height: 160,
                                                 placeholder: gettext('Describe el inmueble...'),
-                                                maxLength: 500
+                                                maxLength: 10000
                                             },
                                             validationRules: [{ type: 'required', message: gettext('La descripción es obligatoria.') }]
                                         }]
@@ -1055,28 +977,12 @@
                                     name: 'imagesManager',
                                     template: function (data, container) {
                                         console.log('🎨 Renderizando pestaña Fotos');
-                                        // Misma "caption" que usan el resto de cards
-                                        // (reutilizamos la clase dx-form-group-caption
-                                        // para heredar su estilo sin CSS adicional),
-                                        // ya que este item es itemType:'item' con
-                                        // template propio y DevExtreme no genera un
-                                        // caption automático como sí hace en 'group'.
                                         $(container).append(
                                             $('<span class="dx-form-group-caption"></span>').text(gettext('Fotos'))
                                         );
                                         const $container = $('<div class="img-manager img-manager-tab"></div>');
                                         $(container).append($container);
 
-                                        // FIX: ya no se lee data.component.option('formData').
-                                        // Dentro de un item anidado en itemType:'tabbed' ->
-                                        // tabs[].items[], 'data.component' no resolvía de forma
-                                        // fiable al dxForm; cuando fallaba, el try/catch lo
-                                        // tragaba en silencio y esta pestaña caía SIEMPRE en el
-                                        // modo "ALTA" (dropzone), incluso editando un inmueble ya
-                                        // persistido con fotos guardadas. currentEditingRowData
-                                        // se rellena de forma fiable en onEditingStart(e.data) /
-                                        // se limpia en onInitNewRow, y es la misma fila que carga
-                                        // el grid (con su images[] ya resuelta por el backend).
                                         const rowData = currentEditingRowData;
 
                                         if (!rowData || !rowData.id) {
@@ -1086,24 +992,7 @@
                                         }
 
                                         console.log('📸 Modo EDICIÓN - renderizando manager con imágenes. rowData.id:', rowData.id, 'image_ids:', (rowData.images || []).map(function (i) { return i.id; }));
-                                        // FIX: antes, notifyChange() llamaba a
-                                        // gridInstanceRef.refresh() -- un refresco
-                                        // COMPLETO del grid en cada alta/baja/portada de
-                                        // foto, con el popup de edición todavía abierto.
-                                        // Ese refresh recargaba los datos y reconstruía el
-                                        // formulario del popup, y como el dxTabPanel no
-                                        // conserva su selectedIndex entre reconstrucciones,
-                                        // la pestaña activa volvía siempre a "General" (la
-                                        // primera). rowData.images es la misma referencia
-                                        // que ya usa el grid (currentEditingRowData = e.data
-                                        // en onEditingStart, ver más abajo), así que no hace
-                                        // falta refrescar nada mientras se edita: los cambios
-                                        // ya están reflejados en esa misma fila. El refresco
-                                        // real de la lista (para que el conteo de fotos y la
-                                        // miniatura de portada se vean actualizados) se hace
-                                        // una sola vez al cerrar el popup, en editing.popup.onHiding.
                                         const notifyChange = function() {};
-
                                         renderImageManager($container, rowData, notifyChange);
                                     }
                                 }]
@@ -1205,14 +1094,6 @@
                 buttons: [
                     {
                         hint: gettext('Ver ficha pública'),
-                        // FIX: 'eye' no es un nombre de icono válido del
-                        // set propio de DevExtreme (no existe en su
-                        // fuente de iconos), así que el botón se
-                        // renderizaba sin glifo -- visualmente invisible
-                        // aunque el botón sí estaba ahí y era clicable.
-                        // DevExtreme sí admite clases de Font Awesome
-                        // directamente en 'icon', y FA ya está cargado
-                        // en la página (se usa en el resto de la UI).
                         icon: 'fas fa-eye',
                         cssClass: 'rbtn rbtn-view',
                         visible: function(e) { return !!e.row.data.detail_url; },
@@ -1231,9 +1112,6 @@
                             e.component.editRow(rowIndex);
                         }
                     }
-                    // Botón "Eliminar" retirado a petición: ya no se
-                    // permite borrar inmuebles desde esta grilla (ver
-                    // editing.allowDeleting: false más arriba).
                 ]
             }
         ],
@@ -1274,23 +1152,12 @@
             e.data.is_active = true;
             e.data.status = 'available';
             resetPendingNewFiles();
-            // FIX: onEditingStart NO se dispara para altas (solo para
-            // edición de una fila existente), así que sin esto
-            // currentEditingRowData podía arrastrar la fila de la ÚLTIMA
-            // edición anterior y "colarse" en un alta nueva.
             currentEditingRowData = null;
             console.log('pendingNewFiles reiniciado');
         },
         onEditingStart: function(e) {
-            // Refuerzo: cualquier inicio de edición (alta o edición de fila
-            // existente) parte de cero en cuanto a fotos pendientes de ALTA --
-            // pendingNewFiles nunca debería sobrevivir entre sesiones de popup.
             console.log('✏️ EDITING START - key:', e.key);
             resetPendingNewFiles();
-            // FIX: fuente fiable de la fila en edición para la pestaña
-            // "Fotos" (ver comentario junto a la declaración de la
-            // variable). e.data es la fila completa tal y como la cargó
-            // el grid, incluida su images[] ya resuelta por el backend.
             currentEditingRowData = e.data;
         },
         onRowInserting: function(e) {
@@ -1301,7 +1168,6 @@
         onRowInserted: function(e) {
             console.log('✅ ROW INSERTED - e.data:', e.data);
             console.log('✅ ROW INSERTED - e.key:', e.key);
-            // Refrescar el grid para mostrar las imágenes subidas
             setTimeout(function() {
                 gridInstanceRef.refresh();
             }, 1000);

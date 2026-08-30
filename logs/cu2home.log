@@ -273,3 +273,48 @@ WARNING 2026-08-30 11:03:01,432 log Not Found: /media/properties/222/images/222_
 WARNING 2026-08-30 11:03:01,438 log Not Found: /media/properties/222/images/222_3.jpg
 WARNING 2026-08-30 11:03:01,764 log Not Found: /media/properties/222/images/222_1.jpg
 WARNING 2026-08-30 11:05:06,638 log Forbidden (CSRF token from POST incorrect.): /i18n/setlang/
+INFO 2026-08-30 11:13:12,285 autoreload Watching for file changes with StatReloader
+INFO 2026-08-30 11:30:01,217 autoreload C:\00_projects\cu2home\apps\properties\models.py changed, reloading.
+INFO 2026-08-30 11:30:03,002 autoreload Watching for file changes with StatReloader
+INFO 2026-08-30 11:31:21,140 autoreload Watching for file changes with StatReloader
+INFO 2026-08-30 11:32:45,090 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-30 11:33:37,190 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-30 11:33:40,625 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2026-08-30 11:36:45,690 autoreload Watching for file changes with StatReloader
+INFO 2026-08-30 12:03:52,579 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-30 12:03:56,272 log Not Found: /favicon.ico
+WARNING 2026-08-30 12:42:43,059 log Not Found: /favicon.ico
+WARNING 2026-08-30 12:46:26,452 log Not Found: /media/properties/323/images/323_1.jpg
+WARNING 2026-08-30 12:46:26,454 log Not Found: /media/properties/326/images/326_1.jpg
+WARNING 2026-08-30 12:46:26,456 log Not Found: /media/properties/316/images/316_1.jpg
+WARNING 2026-08-30 12:46:26,458 log Not Found: /media/properties/327/images/327_1.jpg
+WARNING 2026-08-30 12:46:26,460 log Not Found: /media/properties/321/images/321_1.jpg
+INFO 2026-08-30 15:37:38,056 autoreload Watching for file changes with StatReloader
+INFO 2026-08-30 15:46:28,650 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-30 15:46:42,468 log Not Found: /favicon.ico
+WARNING 2026-08-30 15:46:56,903 log Not Found: /favicon.ico
+WARNING 2026-08-30 15:47:25,146 log Not Found: /favicon.ico
+WARNING 2026-08-30 15:48:03,981 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2026-08-30 15:50:26,776 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-30 15:50:50,981 log Not Found: /favicon.ico
+INFO 2026-08-30 16:01:42,034 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-30 16:01:48,985 log Not Found: /favicon.ico
+WARNING 2026-08-30 16:02:13,253 log Not Found: /favicon.ico
+INFO 2026-08-30 16:07:36,779 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-30 16:07:47,178 log Not Found: /favicon.ico
+INFO 2026-08-30 16:10:34,416 autoreload Watching for file changes with StatReloader
+INFO 2026-08-30 16:17:56,843 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-30 16:18:30,403 log Not Found: /favicon.ico
+INFO 2026-08-30 16:22:15,465 autoreload Watching for file changes with StatReloader
+INFO 2026-08-30 16:30:01,962 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-30 16:37:35,977 log Not Found: /media/properties/358/images/358_1.jpg
+WARNING 2026-08-30 16:37:40,029 log Not Found: /media/properties/323/images/323_1.jpg
+WARNING 2026-08-30 16:37:40,034 log Not Found: /media/properties/321/images/321_1.jpg
+WARNING 2026-08-30 16:37:40,286 log Not Found: /media/properties/326/images/326_1.jpg
+WARNING 2026-08-30 16:37:40,295 log Not Found: /media/properties/327/images/327_1.jpg
+WARNING 2026-08-30 16:37:40,322 log Not Found: /media/properties/316/images/316_1.jpg
+WARNING 2026-08-30 16:37:40,342 log Not Found: /media/properties/315/images/315_1.jpg
+WARNING 2026-08-30 16:37:40,359 log Not Found: /media/properties/278/images/278_1.jpg
+WARNING 2026-08-30 16:37:40,368 log Not Found: /media/properties/277/images/277_1.jpg
+WARNING 2026-08-30 16:37:40,385 log Not Found: /media/properties/300/images/300_1.jpg
+INFO 2026-08-30 16:41:13,171 autoreload Watching for file changes with StatReloader
