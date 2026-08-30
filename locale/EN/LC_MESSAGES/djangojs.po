@@ -1,0 +1,1008 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-30 11:00+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:104
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:105
+#: .\static\users\js\my_alerts.js:106 .\static\users\js\my_alerts.js:107
+msgid "Cualquiera"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:156
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:161
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:533
+#: .\static\users\js\my_alerts.js:158 .\static\users\js\my_alerts.js:163
+#: .\static\users\js\my_alerts.js:535
+msgid "Cualquier municipio"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:159
+#: .\static\users\js\my_alerts.js:161
+#: ⁨.\static\users\js\my_properties - copia.js⁩:576
+#: .\static\users\js\my_properties.js:578
+msgid "No hay municipios para esta provincia"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:185
+#: .\static\users\js\my_alerts.js:187
+msgid "Rango de precio · Venta"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:186
+#: .\static\users\js\my_alerts.js:188
+msgid "Rango de precio · Alquiler (mensual)"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:187
+#: .\static\users\js\my_alerts.js:189
+msgid "Rango de precio · Venta y alquiler"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:188
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:564
+#: .\static\users\js\my_alerts.js:190 .\static\users\js\my_alerts.js:566
+msgid "Rango de precio"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:230
+#: .\static\users\js\my_alerts.js:232
+msgid "Cualquier tipo"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:231
+#: .\static\users\js\my_alerts.js:233
+msgid "Cualquier oferta"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:233
+#: .\static\users\js\my_alerts.js:235
+msgid "Cualquier ubicación"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:237
+#: .\static\users\js\my_alerts.js:239
+#: ⁨.\static\users\js\my_properties - copia.js⁩:909
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1167
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1433
+#: .\static\users\js\my_properties.js:911
+#: .\static\users\js\my_properties.js:1169
+#: .\static\users\js\my_properties.js:1435
+msgid "Venta"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:240
+#: .\static\users\js\my_alerts.js:242
+#: ⁨.\static\users\js\my_properties - copia.js⁩:930
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1168
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1434
+#: .\static\users\js\my_properties.js:932
+#: .\static\users\js\my_properties.js:1170
+#: .\static\users\js\my_properties.js:1436
+msgid "Alquiler"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:245
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:549
+#: .\static\users\js\my_alerts.js:247 .\static\users\js\my_alerts.js:551
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1041
+#: .\static\users\js\my_properties.js:1043
+msgid "Ascensor"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:246
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:550
+#: .\static\users\js\my_alerts.js:248 .\static\users\js\my_alerts.js:552
+msgid "A/C"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:292
+#: .\static\users\js\my_alerts.js:294
+msgid ""
+"Aún no tienes alertas guardadas. Crea una para recibir un aviso cuando "
+"aparezcan inmuebles que encajen con tus filtros."
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:296
+#: .\static\users\js\my_alerts.js:298
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:149
+#: .\static\users\js\my_favorites.js:151
+#: ⁨.\static\users\js\my_properties - copia.js⁩:702
+#: .\static\users\js\my_properties.js:704
+msgid "Buscar..."
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:305
+#: .\static\users\js\my_alerts.js:307
+msgid "¿Borrar esta alerta? Dejarás de recibir avisos para estos filtros."
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:306
+#: .\static\users\js\my_alerts.js:308
+msgid "Borrar alerta"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:307
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:753
+#: .\static\users\js\my_alerts.js:309 .\static\users\js\my_alerts.js:755
+msgid "Nueva alerta"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:308
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:717
+#: .\static\users\js\my_alerts.js:310 .\static\users\js\my_alerts.js:719
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1224
+#: .\static\users\js\my_properties.js:1226
+msgid "Editar"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:309
+#: .\static\users\js\my_alerts.js:311
+msgid "Guardar"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:310
+#: .\static\users\js\my_alerts.js:312
+msgid "Cancelar"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:313
+#: .\static\users\js\my_alerts.js:315
+msgid "Alerta de búsqueda"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:414
+#: .\static\users\js\my_alerts.js:416
+#: ⁨.\static\users\js\my_properties - copia.js⁩:807
+#: .\static\users\js\my_properties.js:809
+msgid "General"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:419
+#: .\static\users\js\my_alerts.js:421
+#: ⁨.\static\users\js\my_properties - copia.js⁩:814
+#: .\static\users\js\my_properties.js:816
+msgid "Datos generales"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:423
+#: .\static\users\js\my_alerts.js:425
+msgid "Nombre de la alerta"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:424
+#: .\static\users\js\my_alerts.js:426
+msgid "Ej. Apartamentos en La Habana"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:428
+#: .\static\users\js\my_alerts.js:430
+msgid "Frecuencia de aviso"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:439
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:669
+#: .\static\users\js\my_alerts.js:441 .\static\users\js\my_alerts.js:671
+msgid "Activa"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:447
+#: .\static\users\js\my_alerts.js:449
+msgid "Filtros de búsqueda"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:471
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:476
+#: .\static\users\js\my_alerts.js:473 .\static\users\js\my_alerts.js:478
+msgid "Tipo de inmueble"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:487
+#: .\static\users\js\my_alerts.js:489
+msgid "Tipo de oferta"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:505
+#: .\static\users\js\my_alerts.js:507
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:200
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:356
+#: .\static\users\js\my_favorites.js:202 .\static\users\js\my_favorites.js:358
+#: ⁨.\static\users\js\my_properties - copia.js⁩:966
+#: .\static\users\js\my_properties.js:968
+msgid "Ubicación"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:510
+#: .\static\users\js\my_alerts.js:512
+#: ⁨.\static\users\js\my_properties - copia.js⁩:985
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1157
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1433
+#: .\static\users\js\my_properties.js:987
+#: .\static\users\js\my_properties.js:1159
+#: .\static\users\js\my_properties.js:1435
+msgid "Provincia"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:517
+#: .\static\users\js\my_alerts.js:519
+msgid "Cualquier provincia"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:526
+#: .\static\users\js\my_alerts.js:528
+#: ⁨.\static\users\js\my_properties - copia.js⁩:997
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1163
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1433
+#: .\static\users\js\my_properties.js:999
+#: .\static\users\js\my_properties.js:1165
+#: .\static\users\js\my_properties.js:1435
+msgid "Municipio"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:546
+#: .\static\users\js\my_alerts.js:548
+msgid "Comodidades"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:576
+#: .\static\users\js\my_alerts.js:578
+msgid "Mínimo (venta)"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:586
+#: .\static\users\js\my_alerts.js:588
+msgid "Máximo (venta)"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:596
+#: .\static\users\js\my_alerts.js:598
+msgid "Mínimo (alquiler)"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:606
+#: .\static\users\js\my_alerts.js:608
+msgid "Máximo (alquiler)"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:637
+#: .\static\users\js\my_alerts.js:639
+msgid "Alerta"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:646
+#: .\static\users\js\my_alerts.js:648
+msgid "Sin nombre"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:655
+#: .\static\users\js\my_alerts.js:657
+msgid "Frecuencia"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:664
+#: .\static\users\js\my_alerts.js:666
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:208
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:357
+#: .\static\users\js\my_favorites.js:210 .\static\users\js\my_favorites.js:359
+#: ⁨.\static\users\js\my_properties - copia.js⁩:856
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1184
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1434
+#: .\static\users\js\my_properties.js:858
+#: .\static\users\js\my_properties.js:1186
+#: .\static\users\js\my_properties.js:1436
+msgid "Estado"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:669
+#: .\static\users\js\my_alerts.js:671
+msgid "Inactiva"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:675
+#: .\static\users\js\my_alerts.js:677
+msgid "Última notif."
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:678
+#: .\static\users\js\my_alerts.js:680
+msgid "Nunca"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:682
+#: .\static\users\js\my_alerts.js:684
+msgid "Creada"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:705
+#: .\static\users\js\my_alerts.js:707
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:225
+#: .\static\users\js\my_favorites.js:227
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1194
+#: .\static\users\js\my_properties.js:1196
+msgid "Acciones"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:732
+#: .\static\users\js\my_alerts.js:734
+msgid "Borrar"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:747
+#: .\static\users\js\my_alerts.js:749
+msgid "Mis alertas"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:762
+#: .\static\users\js\my_alerts.js:764
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:269
+#: .\static\users\js\my_favorites.js:271
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1254
+#: .\static\users\js\my_properties.js:1256
+msgid "Actualizar"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:769
+#: .\static\users\js\my_alerts.js:771
+msgid "Alerta creada"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:772
+#: .\static\users\js\my_alerts.js:774
+msgid "Alerta actualizada"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:775
+#: .\static\users\js\my_alerts.js:777
+msgid "Alerta eliminada"
+msgstr ""
+
+#: ⁨.\static\users\js\my_alerts - copia.js⁩:781
+#: .\static\users\js\my_alerts.js:783
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:293
+#: .\static\users\js\my_favorites.js:295
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1370
+#: .\static\users\js\my_properties.js:1372
+msgid "Datos actualizados"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:145
+#: .\static\users\js\my_favorites.js:147
+msgid ""
+"Aún no has guardado ningún inmueble en favoritos. Pulsa el corazón en la "
+"ficha de un inmueble para guardarlo aquí."
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:161
+#: .\static\users\js\my_favorites.js:163
+msgid "¿Quitar este inmueble de tus favoritos?"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:162
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:248
+#: .\static\users\js\my_favorites.js:164 .\static\users\js\my_favorites.js:250
+msgid "Quitar de favoritos"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:169
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:355
+#: .\static\users\js\my_favorites.js:171 .\static\users\js\my_favorites.js:357
+#: ⁨.\static\users\js\my_properties - copia.js⁩:715
+#: .\static\users\js\my_properties.js:717
+msgid "Inmueble"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:179
+#: .\static\users\js\my_favorites.js:181
+msgid "Sin referencia"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:188
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:355
+#: .\static\users\js\my_favorites.js:190 .\static\users\js\my_favorites.js:357
+#: ⁨.\static\users\js\my_properties - copia.js⁩:830
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1138
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1432
+#: .\static\users\js\my_properties.js:832
+#: .\static\users\js\my_properties.js:1140
+#: .\static\users\js\my_properties.js:1434
+msgid "Tipo"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:199
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:355
+#: .\static\users\js\my_favorites.js:201 .\static\users\js\my_favorites.js:357
+#: ⁨.\static\users\js\my_properties - copia.js⁩:843
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1151
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1432
+#: .\static\users\js\my_properties.js:845
+#: .\static\users\js\my_properties.js:1153
+#: .\static\users\js\my_properties.js:1434
+msgid "Oferta"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:202
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:356
+#: .\static\users\js\my_favorites.js:204 .\static\users\js\my_favorites.js:358
+#: ⁨.\static\users\js\my_properties - copia.js⁩:902
+#: .\static\users\js\my_properties.js:904
+msgid "Precio"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:205
+#: .\static\users\js\my_favorites.js:207
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1024
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1169
+#: .\static\users\js\my_properties.js:1026
+#: .\static\users\js\my_properties.js:1171
+msgid "m²"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:218
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:357
+#: .\static\users\js\my_favorites.js:220 .\static\users\js\my_favorites.js:359
+msgid "Guardado el"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:236
+#: .\static\users\js\my_favorites.js:238
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1205
+#: .\static\users\js\my_properties.js:1207
+msgid "Ver ficha pública"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:258
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:353
+#: .\static\users\js\my_favorites.js:260 .\static\users\js\my_favorites.js:355
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1241
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1430
+#: .\static\users\js\my_properties.js:1243
+#: .\static\users\js\my_properties.js:1432
+msgid "Total"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:264
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:300
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:338
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:351
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:373
+#: .\static\users\js\my_favorites.js:266 .\static\users\js\my_favorites.js:302
+#: .\static\users\js\my_favorites.js:340 .\static\users\js\my_favorites.js:353
+#: .\static\users\js\my_favorites.js:375
+msgid "Mis favoritos"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:274
+#: .\static\users\js\my_favorites.js:276
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1259
+#: .\static\users\js\my_properties.js:1261
+msgid "Exportar a Excel"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:279
+#: .\static\users\js\my_favorites.js:281
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1264
+#: .\static\users\js\my_properties.js:1266
+msgid "Imprimir listado"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:287
+#: .\static\users\js\my_favorites.js:289
+msgid "Inmueble quitado de favoritos"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:297
+#: .\static\users\js\my_favorites.js:299
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1374
+#: .\static\users\js\my_properties.js:1376
+msgid "Generando archivo Excel…"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:320
+#: .\static\users\js\my_favorites.js:322
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1397
+#: .\static\users\js\my_properties.js:1399
+msgid "Excel exportado correctamente"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:324
+#: .\static\users\js\my_favorites.js:326
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1401
+#: .\static\users\js\my_properties.js:1403
+msgid "Error al exportar"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:324
+#: .\static\users\js\my_favorites.js:326
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1401
+#: .\static\users\js\my_properties.js:1403
+msgid "desconocido"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:331
+#: .\static\users\js\my_favorites.js:333
+msgid "No hay favoritos para imprimir"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:352
+#: .\static\users\js\my_favorites.js:354
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1429
+#: .\static\users\js\my_properties.js:1431
+msgid "Generado el"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:352
+#: .\static\users\js\my_favorites.js:354
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1429
+#: .\static\users\js\my_properties.js:1431
+msgid "a las"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:353
+#: .\static\users\js\my_favorites.js:355
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1430
+#: .\static\users\js\my_properties.js:1432
+msgid "inmuebles"
+msgstr ""
+
+#: ⁨.\static\users\js\my_favorites - copia.js⁩:376
+#: .\static\users\js\my_favorites.js:378
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1454
+#: .\static\users\js\my_properties.js:1456
+msgid "Active las ventanas emergentes para imprimir"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:177
+#: ⁨.\static\users\js\my_properties - copia.js⁩:187
+#: .\static\users\js\my_properties.js:179
+#: .\static\users\js\my_properties.js:189
+msgid "Ha ocurrido un error."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:198
+#: .\static\users\js\my_properties.js:200
+msgid ""
+"Guarda primero los datos generales del inmueble. En cuanto se cree, podrás "
+"añadir fotos editando el registro."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:207
+#: ⁨.\static\users\js\my_properties - copia.js⁩:429
+#: .\static\users\js\my_properties.js:209
+#: .\static\users\js\my_properties.js:431
+msgid "fotos"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:213
+#: .\static\users\js\my_properties.js:215
+msgid "Foto del inmueble"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:215
+#: ⁨.\static\users\js\my_properties - copia.js⁩:402
+#: .\static\users\js\my_properties.js:217
+#: .\static\users\js\my_properties.js:404
+msgid "Portada"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:219
+#: .\static\users\js\my_properties.js:221
+msgid "Marcar portada"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:235
+#: .\static\users\js\my_properties.js:237
+msgid "Eliminar"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:261
+#: .\static\users\js\my_properties.js:263
+msgid "Añadir foto"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:283
+#: .\static\users\js\my_properties.js:285
+msgid "Foto añadida correctamente"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:285
+#: .\static\users\js\my_properties.js:287
+msgid "Error al procesar la respuesta del servidor"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:289
+#: .\static\users\js\my_properties.js:291
+msgid "No se pudo subir la imagen."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:306
+#: .\static\users\js\my_properties.js:308
+msgid "formato no admitido (solo JPG, PNG, WEBP o HEIC)"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:309
+#: .\static\users\js\my_properties.js:311
+msgid "pesa demasiado; el máximo permitido es 8 MB"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:356
+#: .\static\users\js\my_properties.js:358
+msgid "Solo puede adjuntar un máximo de"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:356
+#: .\static\users\js\my_properties.js:358
+msgid "fotos."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:404
+#: .\static\users\js\my_properties.js:406
+msgid "Quitar"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:413
+#: .\static\users\js\my_properties.js:415
+msgid "de"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:413
+#: .\static\users\js\my_properties.js:415
+msgid "fotos seleccionadas"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:422
+#: .\static\users\js\my_properties.js:424
+msgid ""
+"Puedes añadir fotos ahora mismo: se subirán automáticamente en cuanto "
+"guardes el inmueble."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:426
+#: .\static\users\js\my_properties.js:428
+msgid "Adjuntar fotos del inmueble"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:428
+#: .\static\users\js\my_properties.js:430
+msgid "Arrastra tus fotos aquí o haz clic para seleccionar"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:429
+#: .\static\users\js\my_properties.js:431
+msgid "o"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:429
+#: .\static\users\js\my_properties.js:431
+msgid "máx."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:429
+#: .\static\users\js\my_properties.js:431
+msgid "hasta"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:508
+#: .\static\users\js\my_properties.js:510
+msgid "error desconocido"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:513
+#: .\static\users\js\my_properties.js:515
+msgid "Inmueble guardado, pero algunas fotos no se pudieron subir"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:517
+#: .\static\users\js\my_properties.js:519
+msgid "Inmueble y"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:517
+#: .\static\users\js\my_properties.js:519
+msgid "foto(s) guardados correctamente"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:573
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1004
+#: .\static\users\js\my_properties.js:575
+#: .\static\users\js\my_properties.js:1006
+msgid "Selecciona primero una provincia..."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:578
+#: .\static\users\js\my_properties.js:580
+msgid "Selecciona un municipio..."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:630
+#: .\static\users\js\my_properties.js:632
+msgid "No hay datos válidos para guardar."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:696
+#: .\static\users\js\my_properties.js:698
+msgid "Arrastre una columna aquí para agrupar"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:821
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1118
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1432
+#: .\static\users\js\my_properties.js:823
+#: .\static\users\js\my_properties.js:1120
+#: .\static\users\js\my_properties.js:1434
+msgid "Título"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:823
+#: .\static\users\js\my_properties.js:825
+msgid "El título es obligatorio."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:824
+#: .\static\users\js\my_properties.js:826
+msgid "Máximo 200 caracteres."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:836
+#: .\static\users\js\my_properties.js:838
+msgid "Selecciona un tipo..."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:838
+#: .\static\users\js\my_properties.js:840
+msgid "Selecciona un tipo de inmueble."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:849
+#: .\static\users\js\my_properties.js:851
+msgid "Selecciona un tipo de oferta..."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:851
+#: .\static\users\js\my_properties.js:853
+msgid "Selecciona un tipo de oferta."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:859
+#: .\static\users\js\my_properties.js:861
+msgid "Disponible"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:860
+#: .\static\users\js\my_properties.js:862
+msgid "Reservado"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:861
+#: .\static\users\js\my_properties.js:863
+msgid "Vendido"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:865
+#: .\static\users\js\my_properties.js:867
+msgid "Selecciona un estado..."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:867
+#: .\static\users\js\my_properties.js:869
+msgid "El estado es obligatorio."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:872
+#: .\static\users\js\my_properties.js:874
+msgid "Activo"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:879
+#: ⁨.\static\users\js\my_properties - copia.js⁩:883
+#: .\static\users\js\my_properties.js:881
+#: .\static\users\js\my_properties.js:885
+msgid "Descripción"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:886
+#: .\static\users\js\my_properties.js:888
+msgid "Describe el inmueble..."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:889
+#: .\static\users\js\my_properties.js:891
+msgid "La descripción es obligatoria."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:895
+#: .\static\users\js\my_properties.js:897
+msgid "Precio y ubicación"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:908
+#: ⁨.\static\users\js\my_properties - copia.js⁩:929
+#: ⁨.\static\users\js\my_properties - copia.js⁩:950
+#: ⁨.\static\users\js\my_properties - copia.js⁩:957
+#: .\static\users\js\my_properties.js:910
+#: .\static\users\js\my_properties.js:931
+#: .\static\users\js\my_properties.js:952
+#: .\static\users\js\my_properties.js:959
+msgid "0.00"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:914
+#: .\static\users\js\my_properties.js:916
+msgid "El precio de venta es obligatorio para ofertas de venta."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:923
+#: ⁨.\static\users\js\my_properties - copia.js⁩:944
+#: .\static\users\js\my_properties.js:925
+#: .\static\users\js\my_properties.js:946
+msgid "El precio debe ser mayor que 0."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:935
+#: .\static\users\js\my_properties.js:937
+msgid "El precio de alquiler es obligatorio para ofertas de alquiler."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:951
+#: .\static\users\js\my_properties.js:953
+msgid "Alquiler temporal"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:952
+#: .\static\users\js\my_properties.js:954
+msgid "El precio no puede ser negativo."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:958
+#: .\static\users\js\my_properties.js:960
+msgid "Depósito"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:959
+#: .\static\users\js\my_properties.js:961
+msgid "El importe no puede ser negativo."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:972
+#: .\static\users\js\my_properties.js:974
+msgid "Código postal"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:973
+#: .\static\users\js\my_properties.js:975
+msgid "CP"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:979
+#: .\static\users\js\my_properties.js:981
+msgid "Dirección"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:980
+#: .\static\users\js\my_properties.js:982
+msgid "Calle, número, etc."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:991
+#: .\static\users\js\my_properties.js:993
+msgid "Selecciona una provincia..."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1012
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1017
+#: .\static\users\js\my_properties.js:1014
+#: .\static\users\js\my_properties.js:1019
+msgid "Características"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1023
+#: .\static\users\js\my_properties.js:1025
+msgid "0.0"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1025
+#: .\static\users\js\my_properties.js:1027
+msgid "La superficie debe estar entre 0 y 10,000 m²."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1030
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1037
+#: .\static\users\js\my_properties.js:1032
+#: .\static\users\js\my_properties.js:1039
+msgid "0"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1031
+#: .\static\users\js\my_properties.js:1033
+msgid "Habitaciones"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1032
+#: .\static\users\js\my_properties.js:1034
+msgid "El número de habitaciones debe estar entre 0 y 99."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1038
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1171
+#: .\static\users\js\my_properties.js:1040
+#: .\static\users\js\my_properties.js:1173
+msgid "Baños"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1039
+#: .\static\users\js\my_properties.js:1041
+msgid "El número de baños debe estar entre 0 y 99."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1042
+#: .\static\users\js\my_properties.js:1044
+msgid "Calefacción"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1043
+#: .\static\users\js\my_properties.js:1045
+msgid "Aire acondicionado"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1049
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1063
+#: .\static\users\js\my_properties.js:1051
+#: .\static\users\js\my_properties.js:1065
+msgid "Fotos"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1129
+#: .\static\users\js\my_properties.js:1131
+msgid "Sin título"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1170
+#: .\static\users\js\my_properties.js:1172
+msgid "Hab."
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1242
+#: .\static\users\js\my_properties.js:1244
+msgid "Superficie"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1248
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1377
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1415
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1428
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1451
+#: .\static\users\js\my_properties.js:1250
+#: .\static\users\js\my_properties.js:1379
+#: .\static\users\js\my_properties.js:1417
+#: .\static\users\js\my_properties.js:1430
+#: .\static\users\js\my_properties.js:1453
+msgid "Mis inmuebles"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1362
+#: .\static\users\js\my_properties.js:1364
+msgid "Error desconocido"
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1363
+#: .\static\users\js\my_properties.js:1365
+msgid "Error: "
+msgstr ""
+
+#: ⁨.\static\users\js\my_properties - copia.js⁩:1408
+#: .\static\users\js\my_properties.js:1410
+msgid "No hay inmuebles para imprimir"
+msgstr ""

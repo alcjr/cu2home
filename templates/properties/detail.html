@@ -68,13 +68,13 @@
         flex-wrap: wrap;
         gap: 12px;
     }
-    .detail-crumb .crumb-left a { color: var(--terracota); }
+    .detail-crumb .crumb-left a { color: var(--terracotta); }
     .detail-crumb .crumb-actions {
         display: flex;
         align-items: center;
         gap: 10px;
     }
-    .detail-crumb .btn-close,
+    .detail-crumb .btn-cerrar,
     .detail-crumb .btn-print {
         display: inline-flex;
         align-items: center;
@@ -89,12 +89,24 @@
         border: none;
         cursor: pointer;
     }
-    .detail-crumb .btn-close {
-        background: var(--terracota);
-        color: #fff;
+    /* ============================================================
+       BOTÓN CERRAR — renombrado a .btn-cerrar para evitar colisión
+       con Bootstrap .btn-close (que usa background: transparent + svg)
+       ============================================================ */
+    .detail-crumb a.btn-cerrar,
+    .detail-crumb .btn-cerrar {
+        background: var(--terracotta) !important;
+        background-color: var(--terracotta) !important;
+        background-image: none !important;
+        color: #ffffff !important;
+        border: none !important;
+        box-shadow: none !important;
+        opacity: 1 !important;
     }
-    .detail-crumb .btn-close:hover {
-        background: var(--terracota-dark);
+    .detail-crumb a.btn-cerrar:hover,
+    .detail-crumb .btn-cerrar:hover {
+        background: var(--terracotta-dark) !important;
+        background-color: var(--terracotta-dark) !important;
         transform: translateY(-1px);
     }
     .detail-crumb .btn-print {
@@ -107,7 +119,7 @@
         background: #f4f7f6;
         transform: translateY(-1px);
     }
-    .detail-crumb .btn-close i,
+    .detail-crumb .btn-cerrar i,
     .detail-crumb .btn-print i { font-size: 0.9rem; }
 
     .detail-head {
@@ -134,7 +146,7 @@
         gap: 8px;
         font-size: 0.95rem;
     }
-    .detail-head .title-block .loc i { color: var(--terracota); }
+    .detail-head .title-block .loc i { color: var(--terracotta); }
     .detail-head .status-tags {
         display: flex;
         gap: 8px;
@@ -152,8 +164,8 @@
     }
     .tag.op { 
         background: transparent; 
-        color: var(--terracota); 
-        border: 1.5px solid var(--terracota);
+        color: var(--terracotta); 
+        border: 1.5px solid var(--terracotta);
     }
     .tag.type { background: #eef2f0; color: var(--azul-malecon); }
     .detail-head .price-block { text-align: right; }
@@ -296,7 +308,7 @@
         border-radius: 4px;
     }
     .gallery-thumbs-wrapper::-webkit-scrollbar-thumb {
-        background: var(--terracota);
+        background: var(--terracotta);
         border-radius: 4px;
     }
 
@@ -318,7 +330,7 @@
         transform: translateY(-2px);
     }
     .gallery-thumb.is-active {
-        border-color: var(--terracota);
+        border-color: var(--terracotta);
         opacity: 1;
         box-shadow: 0 4px 12px rgba(193, 81, 45, 0.3);
     }
@@ -359,44 +371,37 @@
     }
 
     /* ============================================================
-       GRID PRINCIPAL - align-items: stretch (por defecto)
-       para que la sidebar tenga la misma altura que la columna
-       principal y el sticky funcione correctamente.
+       RESTO DE LA PÁGINA
        ============================================================ */
     .detail-grid {
         display: grid;
         grid-template-columns: 1fr 360px;
         gap: 32px;
         padding-bottom: 64px;
-        /* align-items: stretch es el valor por defecto,
-           no es necesario declararlo explícitamente */
+        align-items: start;
     }
 
     /* ============================================================
-       SIDEBAR - CONTENEDOR CON ALTURA PARA STICKY
+       SIDEBAR - CONTENEDOR STICKY
        ============================================================ */
     .sidebar-wrapper {
         display: flex;
         flex-direction: column;
         gap: 16px;
-        height: 100%;
-        /* Ocupa toda la altura de la celda del grid */
-        position: relative;
+        position: sticky;
+        top: 90px;
+        align-self: start;
     }
 
     /* ============================================================
-       SIDEBAR CONTACTO - AGENTE (STICKY)
+       SIDEBAR CONTACTO - AGENTE
        ============================================================ */
     .contact-card {
-        position: sticky;
-        top: 90px;
         background: #fff;
         border: 1px solid var(--linea);
         border-radius: 18px;
         padding: 26px;
         box-shadow: 0 4px 20px rgba(18,34,46,0.05);
-        z-index: 10;
-        flex-shrink: 0;
     }
     .agent {
         display: flex;
@@ -453,7 +458,7 @@
         gap: 5px;
     }
     .agent .who .agency i {
-        color: var(--terracota);
+        color: var(--terracotta);
         font-size: 0.7rem;
     }
 
@@ -490,7 +495,7 @@
         background: var(--sand);
     }
     .agent-contact .contact-item i {
-        color: var(--terracota);
+        color: var(--terracotta);
         width: 18px;
         flex-shrink: 0;
         font-size: 0.9rem;
@@ -501,7 +506,7 @@
         transition: color 0.15s;
     }
     .agent-contact .contact-item a:hover {
-        color: var(--terracota);
+        color: var(--terracotta);
     }
 
     .contact-btns {
@@ -531,8 +536,8 @@
         transition: all 0.2s;
         width: 100%;
     }
-    .btn-primary { background: var(--terracota); color: #fff; }
-    .btn-primary:hover { background: var(--terracota-dark); }
+    .btn-primary { background: var(--terracotta); color: #fff; }
+    .btn-primary:hover { background: var(--terracotta-dark); }
     .btn-wa { background: #25D366; color: #fff; }
     .btn-wa:hover { background: #1da851; }
     .btn-ghost {
@@ -541,12 +546,12 @@
         border: 1px solid var(--linea) !important;
     }
     .btn-ghost:hover {
-        border-color: var(--terracota) !important;
-        color: var(--terracota);
+        border-color: var(--terracotta) !important;
+        color: var(--terracotta);
     }
     .btn-ghost.is-favorite {
-        border-color: var(--terracota) !important;
-        color: var(--terracota);
+        border-color: var(--terracotta) !important;
+        color: var(--terracotta);
         background: #faf7f0;
     }
 
@@ -580,7 +585,7 @@
         font-size: 0.9rem;
     }
     .agent-social a:hover {
-        background: var(--terracota);
+        background: var(--terracotta);
         color: #fff;
         transform: translateY(-2px);
     }
@@ -602,7 +607,7 @@
     }
 
     /* ============================================================
-       ESTADÍSTICAS - CARD (SIN STICKY, UNA SOLA COLUMNA)
+       ESTADÍSTICAS - CARD
        ============================================================ */
     .stats-card {
         background: #fff;
@@ -610,7 +615,7 @@
         border-radius: 18px;
         padding: 20px 22px;
         box-shadow: 0 4px 20px rgba(18,34,46,0.05);
-        /* IMPORTANTE: NO usar position: sticky aquí */
+        margin-top: 0;
         flex-shrink: 0;
     }
 
@@ -625,7 +630,7 @@
         gap: 10px;
     }
     .stats-title i {
-        color: var(--terracota);
+        color: var(--terracotta);
         font-size: 1rem;
     }
 
@@ -646,7 +651,7 @@
         transition: all 0.2s ease;
     }
     .stat-row:hover {
-        border-color: var(--terracota);
+        border-color: var(--terracotta);
         background: #faf7f0;
     }
 
@@ -659,7 +664,7 @@
         gap: 8px;
     }
     .stat-label i {
-        color: var(--terracota);
+        color: var(--terracotta);
         font-size: 0.85rem;
         width: 18px;
         text-align: center;
@@ -699,7 +704,7 @@
     }
     .btn-ghost.is-favorite .favorite-count-badge {
         background: rgba(193, 81, 45, 0.15);
-        color: var(--terracota);
+        color: var(--terracotta);
     }
 
     /* ============================================================
@@ -723,7 +728,7 @@
         align-items: center;
         gap: 10px;
     }
-    .panel h2 i { color: var(--terracota); font-size: 1rem; }
+    .panel h2 i { color: var(--terracotta); font-size: 1rem; }
 
     .specs {
         display: grid;
@@ -807,7 +812,7 @@
     }
     .map-loading i {
         margin-right: 10px;
-        color: var(--terracota);
+        color: var(--terracotta);
         font-size: 1.5rem;
     }
     .map-label {
@@ -819,7 +824,7 @@
         gap: 8px;
     }
     .map-label i {
-        color: var(--terracota);
+        color: var(--terracotta);
     }
 
     /* ============================================================
@@ -829,12 +834,14 @@
         .detail-grid { 
             grid-template-columns: 1fr; 
         }
+        .sidebar-wrapper {
+            position: static !important;
+            top: auto !important;
+            display: block;
+        }
         .contact-card { 
             position: static !important;
             top: auto !important;
-        }
-        .sidebar-wrapper {
-            display: block;
         }
         .stats-card { 
             margin-top: 16px !important; 
@@ -1134,7 +1141,7 @@
             <button type="button" id="btnPrintSheet" class="btn-print">
                 <i class="fas fa-print"></i> {% trans "Imprimir" %}
             </button>
-            <a href="{% url 'properties:list' %}" class="btn-close">
+            <a href="{% url 'properties:list' %}" class="btn-cerrar" id="btnCerrarDetail">
                 <i class="fas fa-times"></i> {% trans "Cerrar" %}
             </a>
         </div>
@@ -1299,7 +1306,7 @@
 
         <!-- ===== SIDEBAR ===== -->
         <aside class="sidebar-wrapper">
-            <!-- Card del Agente (sticky) -->
+            <!-- Card del Agente -->
             <div class="contact-card">
                 {% with agent=property.agent profile=property.agent.profile %}
                     {% if agent %}
@@ -1430,7 +1437,7 @@
                 {% endwith %}
             </div>
 
-            <!-- ===== CARD DE ESTADÍSTICAS (sin sticky, debajo del agente) ===== -->
+            <!-- ===== CARD DE ESTADÍSTICAS ===== -->
             <div class="stats-card">
                 <h2 class="stats-title">
                     <i class="fas fa-chart-simple"></i>
@@ -1916,31 +1923,77 @@
         }
 
         /* ============================================================
+           BOTÓN CERRAR — volver a la lista conservando la búsqueda
+           ============================================================
+           El href normal (properties:list, sin querystring) se deja
+           como fallback para accesos directos al detalle (enlace
+           compartido, nueva pestaña, favoritos, etc.), donde no hay
+           una lista previa en el historial a la que volver.
+           Cuando sí venimos de una navegación real dentro del propio
+           sitio, usamos history.back(): el navegador reutiliza la
+           página de resultados tal como quedó (con sus filtros y,
+           normalmente, sin repetir la petición al servidor).
+           ============================================================ */
+        const btnCerrar = document.getElementById('btnCerrarDetail');
+        if (btnCerrar) {
+            btnCerrar.addEventListener('click', function(e) {
+                const sameOriginRef = document.referrer && document.referrer.indexOf(window.location.origin) === 0;
+                if (sameOriginRef && window.history.length > 1) {
+                    e.preventDefault();
+                    window.history.back();
+                }
+            });
+        }
+
+        /* ============================================================
            FAVORITOS - AJAX
            ============================================================ */
         document.querySelectorAll('.favorite-form').forEach(function(form) {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
+
                 const url = this.action;
                 const csrfToken = this.querySelector('[name=csrfmiddlewaretoken]').value;
                 const btn = this.querySelector('.favorite-btn');
                 const icon = btn.querySelector('i');
                 const text = btn.querySelector('.favorite-text');
                 const badge = btn.querySelector('.favorite-count-badge');
-                
+
+                console.log('[FAVORITOS] URL:', url);
+                console.log('[FAVORITOS] CSRF token presente:', !!csrfToken);
+
                 btn.disabled = true;
                 btn.style.opacity = '0.7';
-                
+
                 fetch(url, {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': csrfToken,
-                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
+                    credentials: 'same-origin'
                 })
-                .then(response => response.json())
-                .then(data => {
+                .then(function(response) {
+                    console.log('[FAVORITOS] Status:', response.status, 'OK:', response.ok);
+                    console.log('[FAVORITOS] Content-Type:', response.headers.get('content-type'));
+                    if (!response.ok) {
+                        if (response.status === 403 || response.status === 401) {
+                            throw new Error('{% trans "Debes iniciar sesión para guardar favoritos"|escapejs %}');
+                        }
+                        if (response.status === 404) {
+                            throw new Error('{% trans "URL no encontrada"|escapejs %}');
+                        }
+                        throw new Error('{% trans "Error del servidor"|escapejs %} (HTTP ' + response.status + ')');
+                    }
+                    const ct = response.headers.get('content-type');
+                    if (!ct || !ct.includes('application/json')) {
+                        console.error('[FAVORITOS] Respuesta NO es JSON. Content-Type:', ct);
+                        throw new Error('{% trans "El servidor no devolvió JSON. Revisa la configuración de la vista"|escapejs %}');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    console.log('[FAVORITOS] Respuesta JSON:', data);
                     if (data.success) {
                         const isFavorite = data.is_favorite;
                         btn.classList.toggle('is-favorite', isFavorite);
@@ -1948,21 +2001,29 @@
                         text.textContent = isFavorite 
                             ? '{% trans "Guardado en favoritos"|escapejs %}' 
                             : '{% trans "Guardar en favoritos"|escapejs %}';
-                        
+
                         if (badge) {
                             badge.textContent = data.favorite_count;
                         }
-                        
+
                         const favDisplay = document.getElementById('favoriteCountDisplay');
                         if (favDisplay) {
                             favDisplay.textContent = data.favorite_count;
                         }
+                    } else if (data.error) {
+                        console.error('[FAVORITOS] Error del servidor:', data.error);
+                        alert(data.error);
                     }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
+                .catch(function(error) {
+                    console.error('[FAVORITOS] Error:', error);
+                    if (error.message && error.message.includes('iniciar sesión')) {
+                        window.location.href = "{% url 'users:login' %}?next={{ request.path|escapejs }}";
+                    } else {
+                        alert(error.message || '{% trans "No se pudo procesar la solicitud"|escapejs %}');
+                    }
                 })
-                .finally(() => {
+                .finally(function() {
                     btn.disabled = false;
                     btn.style.opacity = '1';
                 });
@@ -1975,21 +2036,40 @@
         window.incrementEmailContact = function(propertyId) {
             const url = '/properties/' + propertyId + '/increment-email-contact/';
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-            
+
             if (!csrfToken) {
-                console.warn('No CSRF token found');
+                console.warn('[EMAIL] No CSRF token found');
                 return;
             }
-            
+
+            console.log('[EMAIL] URL:', url);
+
             fetch(url, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': csrfToken,
-                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 },
+                credentials: 'same-origin'
             })
-            .then(response => response.json())
-            .then(data => {
+            .then(function(response) {
+                console.log('[EMAIL] Status:', response.status, 'OK:', response.ok);
+                console.log('[EMAIL] Content-Type:', response.headers.get('content-type'));
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('{% trans "URL no encontrada"|escapejs %}');
+                    }
+                    throw new Error('{% trans "Error del servidor"|escapejs %} (HTTP ' + response.status + ')');
+                }
+                const ct = response.headers.get('content-type');
+                if (!ct || !ct.includes('application/json')) {
+                    console.error('[EMAIL] Respuesta NO es JSON. Content-Type:', ct);
+                    throw new Error('{% trans "El servidor no devolvió JSON"|escapejs %}');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('[EMAIL] Respuesta JSON:', data);
                 if (data.success) {
                     const display = document.getElementById('emailContactsCount');
                     if (display) {
@@ -1997,10 +2077,12 @@
                     }
                 }
             })
-            .catch(error => console.error('Error incrementando contacto:', error));
+            .catch(function(error) {
+                console.error('[EMAIL] Error:', error.message);
+            });
         };
 
-    })();
+        })();
 </script>
 {% endblock %}
 

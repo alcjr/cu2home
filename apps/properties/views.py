@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET, require_POST
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 from .forms import PropertyFilterForm
 from .models import Property, Province, Municipality, PropertyOfferType

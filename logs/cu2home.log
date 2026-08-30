@@ -191,3 +191,85 @@ WARNING 2026-08-28 17:45:00,247 log Not Found: /favicon.ico
 INFO 2026-08-28 18:04:15,818 autoreload Watching for file changes with StatReloader
 WARNING 2026-08-28 18:04:38,684 log Not Found: /favicon.ico
 WARNING 2026-08-28 18:04:41,649 log Not Found: /favicon.ico
+INFO 2026-08-29 09:16:46,869 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-29 09:16:51,912 log Not Found: /favicon.ico
+WARNING 2026-08-29 09:17:38,452 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2026-08-29 09:36:27,100 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-29 09:36:47,994 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2026-08-29 09:50:32,078 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-29 09:51:08,897 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2026-08-29 09:57:23,110 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-29 09:57:37,661 log Not Found: /favicon.ico
+INFO 2026-08-29 09:59:07,725 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-29 09:59:40,409 log Not Found: /favicon.ico
+WARNING 2026-08-29 09:59:47,102 log Not Found: /favicon.ico
+INFO 2026-08-29 10:07:28,165 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-29 10:07:39,210 log Not Found: /favicon.ico
+WARNING 2026-08-29 10:07:45,821 log Not Found: /favicon.ico
+WARNING 2026-08-29 10:07:50,247 log Not Found: /favicon.ico
+WARNING 2026-08-29 10:07:54,284 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-29 10:08:01,410 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-29 10:08:19,000 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-29 10:08:44,580 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-29 10:09:30,531 log Not Found: /favicon.ico
+WARNING 2026-08-29 10:09:33,150 log Not Found: /favicon.ico
+WARNING 2026-08-29 10:09:54,576 log Forbidden (CSRF token from the 'X-Csrftoken' HTTP header incorrect.): /1064/toggle-favorite/
+WARNING 2026-08-29 10:10:13,634 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-08-29 10:10:24,116 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2026-08-29 10:47:34,336 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-29 10:47:47,467 log Not Found: /favicon.ico
+WARNING 2026-08-29 10:47:57,072 log Not Found: /favicon.ico
+INFO 2026-08-29 10:49:05,295 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-29 10:49:18,028 log Not Found: /favicon.ico
+WARNING 2026-08-29 10:50:47,124 log Not Found: /media/properties/221/images/221_1.jpg
+WARNING 2026-08-29 10:50:47,129 log Not Found: /media/properties/222/images/222_1.jpg
+WARNING 2026-08-29 10:50:51,855 log Not Found: /media/properties/235/images/235_1.jpg
+WARNING 2026-08-29 10:50:51,881 log Not Found: /media/properties/236/images/236_1.jpg
+WARNING 2026-08-29 10:51:07,077 log Not Found: /media/properties/235/images/235_1.jpg
+WARNING 2026-08-29 10:51:07,080 log Not Found: /media/properties/235/images/235_2.jpg
+WARNING 2026-08-29 10:51:07,196 log Not Found: /media/properties/235/images/235_3.jpg
+WARNING 2026-08-29 10:51:07,255 log Not Found: /media/properties/235/images/235_1.jpg
+WARNING 2026-08-29 10:51:07,263 log Not Found: /media/properties/235/images/235_2.jpg
+WARNING 2026-08-29 10:51:07,270 log Not Found: /media/properties/235/images/235_3.jpg
+WARNING 2026-08-29 10:51:07,396 log Not Found: /media/properties/235/images/235_1.jpg
+INFO 2026-08-29 12:25:05,144 autoreload Watching for file changes with StatReloader
+INFO 2026-08-29 16:01:41,417 autoreload Watching for file changes with StatReloader
+INFO 2026-08-30 10:06:00,814 autoreload Watching for file changes with StatReloader
+INFO 2026-08-30 10:14:45,864 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-30 10:16:05,657 log Forbidden (CSRF token from POST incorrect.): /i18n/setlang/
+WARNING 2026-08-30 10:16:14,489 log Forbidden (CSRF token from POST incorrect.): /i18n/setlang/
+INFO 2026-08-30 10:19:59,390 autoreload Watching for file changes with StatReloader
+INFO 2026-08-30 10:30:22,535 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-30 10:30:38,733 log Not Found: /media/properties/222/images/222_1.jpg
+WARNING 2026-08-30 10:30:38,737 log Not Found: /media/properties/221/images/221_1.jpg
+WARNING 2026-08-30 10:30:41,200 log Not Found: /media/properties/235/images/235_1.jpg
+WARNING 2026-08-30 10:30:41,224 log Not Found: /media/properties/236/images/236_1.jpg
+WARNING 2026-08-30 10:30:46,285 log Not Found: /media/properties/235/images/235_1.jpg
+WARNING 2026-08-30 10:30:46,324 log Not Found: /media/properties/235/images/235_2.jpg
+WARNING 2026-08-30 10:30:46,338 log Not Found: /media/properties/235/images/235_3.jpg
+WARNING 2026-08-30 10:30:46,478 log Not Found: /media/properties/235/images/235_1.jpg
+WARNING 2026-08-30 10:30:46,494 log Not Found: /media/properties/235/images/235_3.jpg
+WARNING 2026-08-30 10:30:46,521 log Not Found: /media/properties/235/images/235_2.jpg
+WARNING 2026-08-30 10:30:46,595 log Not Found: /media/properties/235/images/235_1.jpg
+WARNING 2026-08-30 10:30:53,954 log Not Found: /media/properties/235/images/235_1.jpg
+WARNING 2026-08-30 10:30:53,974 log Not Found: /media/properties/235/images/235_2.jpg
+WARNING 2026-08-30 10:30:54,013 log Not Found: /media/properties/235/images/235_3.jpg
+WARNING 2026-08-30 10:30:54,188 log Not Found: /media/properties/235/images/235_1.jpg
+WARNING 2026-08-30 10:30:57,783 log Not Found: /media/properties/235/images/235_1.jpg
+WARNING 2026-08-30 10:30:57,796 log Not Found: /media/properties/235/images/235_2.jpg
+WARNING 2026-08-30 10:30:57,819 log Not Found: /media/properties/235/images/235_3.jpg
+WARNING 2026-08-30 10:30:57,943 log Not Found: /media/properties/235/images/235_1.jpg
+INFO 2026-08-30 10:53:11,495 autoreload C:\00_projects\cu2home\cu2home\urls.py changed, reloading.
+INFO 2026-08-30 10:53:13,436 autoreload Watching for file changes with StatReloader
+INFO 2026-08-30 11:01:53,774 autoreload Watching for file changes with StatReloader
+WARNING 2026-08-30 11:02:36,624 log Not Found: /favicon.ico
+WARNING 2026-08-30 11:02:54,893 log Not Found: /media/properties/222/images/222_1.jpg
+WARNING 2026-08-30 11:02:54,900 log Not Found: /media/properties/221/images/221_1.jpg
+WARNING 2026-08-30 11:02:56,536 log Not Found: /media/properties/223/images/223_1.jpg
+WARNING 2026-08-30 11:02:56,574 log Not Found: /media/properties/222/images/222_1.jpg
+WARNING 2026-08-30 11:02:56,574 log Not Found: /media/properties/221/images/221_1.jpg
+WARNING 2026-08-30 11:03:01,420 log Not Found: /media/properties/222/images/222_2.jpg
+WARNING 2026-08-30 11:03:01,432 log Not Found: /media/properties/222/images/222_1.jpg
+WARNING 2026-08-30 11:03:01,438 log Not Found: /media/properties/222/images/222_3.jpg
+WARNING 2026-08-30 11:03:01,764 log Not Found: /media/properties/222/images/222_1.jpg
+WARNING 2026-08-30 11:05:06,638 log Forbidden (CSRF token from POST incorrect.): /i18n/setlang/

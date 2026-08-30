@@ -8,9 +8,7 @@
         return;
     }
 
-    // Idioma activo del sitio (base.html ya pone <html lang="{{ LANGUAGE_CODE }}">),
-    // en vez de forzar siempre español.
-    DevExpress.localization.locale(document.documentElement.lang || 'es');
+    DevExpress.localization.locale('es');
 
     const csrfToken = window.csrfToken || '';
     let URLS;

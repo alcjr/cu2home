@@ -3,7 +3,6 @@ from django.urls import path, include
 from django.conf.urls.i18n import i18n_patterns
 from django.conf import settings
 from django.conf.urls.static import static
-from django.views.i18n import JavaScriptCatalog
 
 from apps.core.views import index, panel
 
@@ -15,7 +14,6 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path('', index, name='home'),
     path('panel/', panel, name='panel'),
-    path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     path('', include('apps.properties.urls')),          # Sin namespace duplicado
     path('auth/', include('apps.authentication.urls')),
     path('dashboard/', include('apps.dashboard.urls')), # ← Ya no necesita namespace aquí
