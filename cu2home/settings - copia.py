@@ -73,21 +73,6 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
-# Render asigna un hostname *.onrender.com y lo expone en esta variable de
-# entorno automáticamente -- lo añadimos aunque no se haya fijado ALLOWED_HOSTS
-# a mano en el dashboard, para no depender de acordarse de configurarlo ahí.
-RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-
-# CSRF: en Django 5, con DEBUG=False, las peticiones POST sobre HTTPS
-# requieren que el origen esté en CSRF_TRUSTED_ORIGINS aunque el host ya
-# esté en ALLOWED_HOSTS. Se deriva automáticamente para no tener que
-# mantenerlo sincronizado a mano.
-CSRF_TRUSTED_ORIGINS = [
-    f'https://{host}' for host in ALLOWED_HOSTS if host not in ('localhost', '127.0.0.1')
-]
-
 # Database
 DATABASES = {
     'default': {
