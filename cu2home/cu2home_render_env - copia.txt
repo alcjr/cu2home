@@ -1,0 +1,7 @@
+
+DB_NAME = cu2home_db_c2aw
+DB_USER = cu2home_db_c2aw_user
+DB_PASSWORD = cli5o6AFk1GwiCu84yDv1pYhOplPBreM
+DB_HOST = dpg-dadekcvqj5pc738q0o9g-a
+DB_PORT = 5432
+    

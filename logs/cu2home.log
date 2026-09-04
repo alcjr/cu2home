@@ -344,3 +344,5 @@ WARNING 2026-09-04 16:32:54,034 log Not Found: /sw.js
 WARNING 2026-09-04 16:32:57,492 log Not Found: /sw.js
 WARNING 2026-09-04 16:33:04,338 log Not Found: /sw.js
 WARNING 2026-09-04 16:33:43,166 log Not Found: /sw.js
+INFO 2026-09-04 19:03:10,293 autoreload Watching for file changes with StatReloader
+INFO 2026-09-04 19:23:30,036 autoreload Watching for file changes with StatReloader
