@@ -1,0 +1,13 @@
+Generar un archivo de instalación (setup) que realice las tareas que abajo se indican, 
+cada una de ellas con sus validaciones necesarias para controlar la ejecución
+
+1. 	Comprobar si está instalado PostgreSQL 18, en su defecto instalarlo desde internet
+2. 	Crear base de datos cu2home_db
+3. 	Cargar copia de seguridad backup_cu2home_db_aaaammdd.dump
+4. 	Comprobar si está instalado Python 3.11.9, en su defecto instalarlo y actualizar las variables de entorno del SO
+5. 	Comprobar si está instalado Django 5.2.17, en su defecto instalarlo y actualizar las variables de entorno del SO
+6. 	Descomprimir archivo c2home.zip en c:\cu2home
+7. 	Crear entorno virtual en c:\cu2home\venv
+8. 	Activar entorno virtual c:\cu2home\venv\scripts\activate
+9. 	Instalar c:\cu2home\pip install -r requirements
+10. Ejecutar cu2home_local.bat 

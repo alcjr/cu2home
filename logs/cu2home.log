@@ -318,3 +318,29 @@ WARNING 2026-08-30 16:37:40,359 log Not Found: /media/properties/278/images/278_
 WARNING 2026-08-30 16:37:40,368 log Not Found: /media/properties/277/images/277_1.jpg
 WARNING 2026-08-30 16:37:40,385 log Not Found: /media/properties/300/images/300_1.jpg
 INFO 2026-08-30 16:41:13,171 autoreload Watching for file changes with StatReloader
+INFO 2026-09-04 16:30:55,429 autoreload Watching for file changes with StatReloader
+WARNING 2026-09-04 16:31:02,851 log Not Found: /sw.js
+WARNING 2026-09-04 16:31:19,696 log Not Found: /sw.js
+WARNING 2026-09-04 16:31:23,395 log Not Found: /sw.js
+WARNING 2026-09-04 16:31:27,295 log Not Found: /sw.js
+WARNING 2026-09-04 16:31:35,107 log Not Found: /media/properties/227/images/227_1.jpg
+WARNING 2026-09-04 16:31:35,111 log Not Found: /media/properties/223/images/223_1.jpg
+WARNING 2026-09-04 16:31:35,113 log Not Found: /media/properties/224/images/224_1.jpg
+WARNING 2026-09-04 16:31:35,114 log Not Found: /media/properties/222/images/222_1.jpg
+WARNING 2026-09-04 16:31:35,120 log Not Found: /media/properties/221/images/221_1.jpg
+WARNING 2026-09-04 16:31:36,358 log Not Found: /media/properties/229/images/229_1.jpg
+WARNING 2026-09-04 16:31:36,396 log Not Found: /media/properties/230/images/230_1.jpg
+WARNING 2026-09-04 16:31:36,447 log Not Found: /media/properties/232/images/232_1.jpg
+WARNING 2026-09-04 16:31:36,480 log Not Found: /media/properties/235/images/235_1.jpg
+WARNING 2026-09-04 16:31:36,485 log Not Found: /media/properties/231/images/231_1.jpg
+WARNING 2026-09-04 16:31:36,489 log Not Found: /media/properties/238/images/238_1.jpg
+WARNING 2026-09-04 16:31:36,505 log Not Found: /media/properties/240/images/240_1.jpg
+WARNING 2026-09-04 16:31:53,471 log Not Found: /sw.js
+WARNING 2026-09-04 16:32:16,228 log Not Found: /sw.js
+WARNING 2026-09-04 16:32:20,800 log Not Found: /sw.js
+WARNING 2026-09-04 16:32:40,294 log Not Found: /sw.js
+WARNING 2026-09-04 16:32:42,834 log Not Found: /sw.js
+WARNING 2026-09-04 16:32:54,034 log Not Found: /sw.js
+WARNING 2026-09-04 16:32:57,492 log Not Found: /sw.js
+WARNING 2026-09-04 16:33:04,338 log Not Found: /sw.js
+WARNING 2026-09-04 16:33:43,166 log Not Found: /sw.js
