@@ -1,0 +1,171 @@
+.\" Man page generated from reStructuredText
+.\" by the Docutils 0.23 manpage writer.
+.
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.TH "pipx" "1" "" "" "User Commands"
+.SH Name
+pipx \- install and run Python applications in isolated environments
+.SH SYNOPSIS
+.sp
+\fBpipx\fP [\fIglobal\-options\fP] [\fBinstall\fP | \fBinstall\-all\fP | \fBuninject\fP | \fBinject\fP | \fBexpose\fP | \fBunexpose\fP |
+\fBpin\fP | \fBunpin\fP | \fBupgrade\fP | \fBupgrade\-all\fP | \fBupgrade\-shared\fP | \fBuninstall\fP | \fBuninstall\-all\fP | \fBreset\fP
+| \fBreinstall\fP | \fBreinstall\-all\fP | \fBhealth\fP | \fBrepair\fP | \fBlist\fP | \fBinterpreter\fP | \fBcache\fP | \fBmanifest\fP |
+\fBrun\fP | \fBexec\fP | \fBrunpip\fP | \fBensurepath\fP | \fBenvironment\fP | \fBcompletions\fP | \fBhelp\fP] [\fIcommand\-options\fP]
+.SH DESCRIPTION
+.sp
+pipx installs and runs Python applications in isolated environments while exposing their commands on your
+\fBPATH\fP\&.
+.SH COMMANDS
+.INDENT 0.0
+.TP
+.B \fBinstall\fP
+Install a package
+.TP
+.B \fBinstall\-all\fP
+Install all packages
+.TP
+.B \fBuninject\fP
+Uninstall injected packages from an existing Virtual Environment
+.TP
+.B \fBinject\fP
+Install packages into an existing Virtual Environment
+.TP
+.B \fBexpose\fP
+Restore resources from a hidden environment
+.TP
+.B \fBunexpose\fP
+Hide resources without removing an environment
+.TP
+.B \fBpin\fP
+Pin the specified package to prevent it from being upgraded
+.TP
+.B \fBunpin\fP
+Unpin the specified package
+.TP
+.B \fBupgrade\fP
+Upgrade a package
+.TP
+.B \fBupgrade\-all\fP
+Upgrade all packages. Runs \fBpip install \-U <pkgname>\fP for each package.
+.TP
+.B \fBupgrade\-shared\fP
+Upgrade shared libraries.
+.TP
+.B \fBuninstall\fP
+Uninstall a package
+.TP
+.B \fBuninstall\-all\fP
+Uninstall all packages
+.TP
+.B \fBreset\fP
+Return pipx to a fresh install
+.TP
+.B \fBreinstall\fP
+Reinstall a package
+.TP
+.B \fBreinstall\-all\fP
+Reinstall all packages
+.TP
+.B \fBhealth\fP
+Check installed package environments
+.TP
+.B \fBrepair\fP
+Repair broken package environments
+.TP
+.B \fBlist\fP
+List installed packages
+.TP
+.B \fBinterpreter\fP
+Interact with interpreters managed by pipx
+.TP
+.B \fBcache\fP
+Manage cached run environments
+.TP
+.B \fBmanifest\fP
+Manage tools declared in an explicit manifest
+.TP
+.B \fBrun\fP
+Download the latest version of a package to a temporary virtual environment, then run an app from it. Also
+compatible with local \fB__pypackages__\fP directory (experimental).
+.TP
+.B \fBexec\fP
+Run an application from an existing pipx environment
+.TP
+.B \fBrunpip\fP
+Run pip in an existing pipx\-managed Virtual Environment
+.TP
+.B \fBensurepath\fP
+Ensure directories necessary for pipx operation are in your PATH environment variable.
+.TP
+.B \fBenvironment\fP
+Print a list of environment variables and paths used by pipx.
+.TP
+.B \fBcompletions\fP
+Print instructions on enabling shell completions for pipx
+.TP
+.B \fBhelp\fP
+Show help for pipx or a command
+.UNINDENT
+.sp
+Run \fBpipx\fP \fIcommand\fP \fB\-\-help\fP for command\-specific options.
+.SH GLOBAL OPTIONS
+.INDENT 0.0
+.TP
+.B \fB\-h\fP, \fB\-\-help\fP
+show this help message and exit
+.TP
+.B \fB\-\-version\fP
+Print version and exit
+.UNINDENT
+.SH ENVIRONMENT VARIABLES
+.INDENT 0.0
+.TP
+.B \fBPIPX_HOME\fP
+Directory for pipx\-managed environments and state.
+.TP
+.B \fBPIPX_BIN_DIR\fP
+Directory where pipx exposes application commands.
+.TP
+.B \fBPIPX_DEFAULT_PYTHON\fP
+Default interpreter used to create environments.
+.TP
+.B \fBPIPX_USE_EMOJI\fP
+Set to \fB0\fP to disable emoji output.
+.UNINDENT
+.SH SEE ALSO
+.sp
+Full documentation: \%<https://\:pipx\:.pypa\:.io/>
+.sp
+\fBpip\fP(1), \fBvirtualenv\fP(1)
+.SH AUTHORS
+.sp
+Chad Smith and contributors
+.sp
+\%<https://\:github\:.com/\:pypa/\:pipx>
+.\" End of generated man page.
