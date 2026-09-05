@@ -14,3 +14,4 @@ colorama>=0.4.4
 gunicorn>=21.2,<21.3
 celery[redis]>=5.4,<6.0
 redis>=5.0,<6.0
+whitenoise>=6.6,<7
