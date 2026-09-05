@@ -156,7 +156,7 @@ LOCALE_PATHS = [BASE_DIR / 'locale']
 # ==================== MIDDLEWARE ====================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # <-- NUEVO: sirve /static/ en producción
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -201,21 +201,6 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-# Almacenamiento de archivos (Django 5.0+: STORAGES sustituye a
-# STATICFILES_STORAGE). WhiteNoise sirve los estáticos comprimidos
-# directamente desde gunicorn, sin depender de nginx/CDN.
-# NOTA: esto NO afecta a MEDIA_ROOT (fotos de inmuebles) -- ese servido
-# se resuelve en urls.py, no aquí. Ver comentario en ese fichero sobre
-# el disco efímero de Render para el almacenamiento de fotos.
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
 
 # Tailwind
 TAILWIND_APP_NAME = 'theme'
@@ -320,3 +305,8 @@ CURRENCY_DECIMAL_PLACES = get_config_int('Currency', 'decimal_places', 2)
 CURRENCY_THOUSANDS_SEP = get_config('Currency', 'thousands_separator', '.')
 CURRENCY_DECIMAL_SEP = get_config('Currency', 'decimal_separator', ',')
 CURRENCY_SYMBOL_POSITION = get_config('Currency', 'symbol_position', 'before_attached')
+
+STORAGES = {
+       "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+       "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+}

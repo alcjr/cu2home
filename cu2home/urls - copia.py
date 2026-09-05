@@ -25,14 +25,6 @@ urlpatterns += i18n_patterns(
     prefix_default_language=False,
 )
 
-# Media: se sirve SIEMPRE (dev y prod), no solo bajo DEBUG. Sin esto, las
-# fotos de los inmuebles devuelven 404 en producción porque nada más las
-# sirve (WhiteNoise solo cubre STATIC_URL, no MEDIA_URL).
-# NOTA: el disco de Render es efímero -- esto resuelve el 404, pero las
-# fotos subidas desde la web se perderán en el próximo redeploy salvo
-# que se añada un disco persistente montado en MEDIA_ROOT (o se migre a
-# almacenamiento S3-compatible vía django-storages).
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
 if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
