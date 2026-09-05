@@ -305,3 +305,8 @@ CURRENCY_DECIMAL_PLACES = get_config_int('Currency', 'decimal_places', 2)
 CURRENCY_THOUSANDS_SEP = get_config('Currency', 'thousands_separator', '.')
 CURRENCY_DECIMAL_SEP = get_config('Currency', 'decimal_separator', ',')
 CURRENCY_SYMBOL_POSITION = get_config('Currency', 'symbol_position', 'before_attached')
+
+STORAGES = {
+       "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+       "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+}
