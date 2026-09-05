@@ -1,41 +1,84 @@
-.list-page {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 32px 24px 60px;
+/* ============================================================
+   MY_ALERTS.CSS — Estilos para la página de alertas del usuario
+   Basado en el patrón de my_properties.css
+   ============================================================ */
+
+/* -----------------------------------------------------------
+   TOKENS
+   ----------------------------------------------------------- */
+:root {
+    --terracotta: #d97787;
+    --terracotta-dark: #b86573;
+    --ink: #1a1a1a;
+    --muted: #64748b;
+    --line: #e5e7eb;
+    --bg-card: #ffffff;
+    --bg-subtle: #f8f6f4;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --border-light: #e5e7eb;
+    --r-sm: 8px;
+    --r-md: 12px;
+    --r-lg: 16px;
+    --r-full: 9999px;
+    --success: #22c55e;
+    --success-dark: #059669;
+    --danger: #ef4444;
+    --danger-bg: #fef2f2;
+    --t-fast: .12s;
+    --t-normal: .22s;
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.06);
 }
+
+/* -----------------------------------------------------------
+   LAYOUT PRINCIPAL
+   ----------------------------------------------------------- */
+.list-page {
+    padding: 24px 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
 .list-page-head {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
+    margin-bottom: 24px;
     flex-wrap: wrap;
     gap: 12px;
-    margin-bottom: 24px;
 }
+
 .list-page-head h1 {
-    font-family: 'Fraunces', serif;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 800;
-    letter-spacing: -0.6px;
-    color: var(--ink);
+    font-family: var(--font-display, 'Syne', sans-serif);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-900);
+    margin: 0;
 }
 .list-page-head h1 i {
     color: var(--terracotta);
     font-size: 0.8em;
     margin-right: 8px;
 }
-.list-page-head .back-link {
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--terracotta);
+
+.back-link {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-500);
     text-decoration: none;
-    transition: color 0.2s;
+    padding: 8px 16px;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    transition: all var(--t-fast);
 }
-.list-page-head .back-link:hover {
-    color: var(--terracotta-dark);
+.back-link:hover {
+    border-color: var(--terracotta);
+    color: var(--terracotta);
+    background: #fdf2ee;
 }
 
 .grid-wrapper {
@@ -46,20 +89,73 @@
     overflow: hidden;
 }
 
-/* ===== Celda "Alerta" (nombre + resumen de filtros) ===== */
-.cell-wrap { display: flex; align-items: center; gap: 10px; height: 100%; padding: 4px 0; }
-.cell-stack { display: flex; flex-direction: column; min-width: 0; }
+/* ============================================================
+   GRID — DEVEXTREME OVERRIDES
+   ============================================================ */
+#alertsGrid .dx-datagrid {
+    font-family: var(--font-body, 'DM Sans', sans-serif);
+    font-size: 13px;
+    background: transparent !important;
+    border: none !important;
+}
+
+#alertsGrid .dx-datagrid-headers {
+    background: var(--bg-subtle) !important;
+    border-bottom: 2px solid var(--terracotta) !important;
+}
+
+#alertsGrid .dx-header-row > td {
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    color: var(--muted) !important;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    padding: 12px 14px !important;
+    border-bottom: 1px solid var(--border-light) !important;
+}
+
+#alertsGrid .dx-data-row > td {
+    padding: 0 !important;
+    border-bottom: 1px solid var(--border) !important;
+    background: var(--bg-card) !important;
+    vertical-align: middle;
+}
+
+#alertsGrid .dx-data-row.dx-row-alt > td {
+    background: var(--bg-subtle) !important;
+}
+
+#alertsGrid .dx-data-row:hover > td {
+    background: var(--bg-hover, #f1f5f9) !important;
+    cursor: pointer;
+}
+
+/* ============================================================
+   CELDA "Alerta" (nombre + resumen de filtros)
+   ============================================================ */
+.cell-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    padding: 8px 14px;
+}
+.cell-stack {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
 .cell-primary {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-900);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .cell-secondary {
-    font-size: 0.72rem;
-    color: var(--muted);
+    font-size: 11px;
+    color: var(--text-400);
     margin-top: 2px;
     white-space: nowrap;
     overflow: hidden;
@@ -72,18 +168,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
+    font-size: 14px;
     flex-shrink: 0;
     background: #fdf2ee;
     color: var(--terracotta);
 }
 
-/* ===== Badges ===== */
+/* ============================================================
+   BADGES
+   ============================================================ */
 .freq-badge {
     display: inline-block;
     padding: 3px 10px;
     border-radius: 999px;
-    font-size: 0.72rem;
+    font-size: 11px;
     font-weight: 600;
     background: #eef2f0;
     color: #334155;
@@ -93,19 +191,21 @@
     display: inline-block;
     padding: 3px 10px;
     border-radius: 999px;
-    font-size: 0.75rem;
+    font-size: 11px;
     font-weight: 600;
 }
-.status-active   { background: #e7f5ec; color: #1e7e42; }
-.status-inactive { background: #f1f1f1; color: #777; }
-
-/* ===== Botones de acción de fila ===== */
-.row-actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
+.status-active {
+    background: #e7f5ec;
+    color: #1e7e42;
 }
+.status-inactive {
+    background: #f1f1f1;
+    color: #777;
+}
+
+/* ============================================================
+   BOTONES DE ACCIÓN DE FILA
+   ============================================================ */
 .rbtn {
     width: 28px;
     height: 28px;
@@ -116,9 +216,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
-    color: var(--muted);
-    transition: all 0.12s;
+    font-size: 13px;
+    color: var(--text-400);
+    transition: all var(--t-fast);
 }
 .rbtn i { color: inherit; }
 .rbtn-edit { color: var(--terracotta) !important; }
@@ -130,50 +230,9 @@
     padding: 60px 24px !important;
 }
 
-/* ===================================================================
-   TIPOGRAFÍA del popup -- letra más grande y legible en labels,
-   editores, checkboxes, pestañas y título. Los tamaños de
-   .alert-form-card / .dx-form-group-caption de más abajo también se
-   amplían a juego. El hueco vertical que esto consume se compensa con
-   el layout a 3 columnas de "Filtros de búsqueda" (ver my_alerts.js),
-   que pasa de 3 filas de cards a 2.
-   =================================================================== */
-.alert-edit-popup .dx-popup-title .dx-toolbar-label {
-    font-size: 1.2rem !important;
-    font-weight: 800 !important;
-}
-.alert-edit-popup .dx-tabs-item-text {
-    font-size: 0.95rem !important;
-    font-weight: 600 !important;
-}
-.alert-edit-popup .dx-field-item-label-text,
-.alert-edit-popup .dx-form .dx-field-item-label {
-    font-size: 0.92rem !important;
-    font-weight: 600 !important;
-    color: var(--ink) !important;
-}
-.alert-edit-popup .dx-texteditor-input {
-    font-size: 0.95rem !important;
-}
-.alert-edit-popup .dx-checkbox-text {
-    font-size: 0.9rem !important;
-    color: var(--ink) !important;
-}
-.alert-edit-popup .dx-item-content .dx-list-item,
-.alert-edit-popup .dx-selectbox-popup-wrapper .dx-list-item-content {
-    font-size: 0.92rem !important;
-}
-
-/* Foco visible y consistente con el acento del sitio (accesibilidad --
-   mismo terracota que .back-link/.rbtn-edit) en vez del azul por
-   defecto de DevExtreme, que desentona con la paleta cálida del resto
-   de la página. */
-.alert-edit-popup .dx-texteditor.dx-state-focused,
-.alert-edit-popup .dx-checkbox.dx-state-focused .dx-checkbox-icon {
-    border-color: var(--terracotta) !important;
-    box-shadow: 0 0 0 2px rgba(217, 119, 87, 0.18) !important;
-}
-
+/* ============================================================
+   POPUP DE EDICIÓN
+   ============================================================ */
 
 .alert-edit-popup {
     border-radius: 20px !important;
@@ -184,13 +243,6 @@
     background: #f8f6f4;
     padding: 20px 24px 16px !important;
     overflow-y: auto !important;
-    /* Con popup.height fijo (ver my_alerts.js) este bloque es la única zona
-       que crece/decrece: flex:1 1 auto + min-height:0 hace que ocupe
-       exactamente el hueco entre título y barra de Guardar/Cancelar
-       (ambos flex-shrink:0 más abajo) y sea SIEMPRE ese bloque, nunca el
-       popup completo, el que hace scroll si una pestaña no cabe. Así los
-       botones quedan fijos en la misma posición se cambie o no de
-       pestaña. Mismo patrón que my_properties.css. */
     flex: 1 1 auto !important;
     min-height: 0 !important;
 }
@@ -208,6 +260,11 @@
     flex-shrink: 0 !important;
 }
 
+.alert-edit-popup .dx-popup-title .dx-toolbar-label {
+    font-size: 1.2rem !important;
+    font-weight: 800 !important;
+}
+
 .alert-edit-popup .dx-popup-bottom {
     flex-shrink: 0 !important;
 }
@@ -218,76 +275,37 @@
     padding: 8px 24px !important;
     font-size: 0.95rem !important;
 }
-.alert-edit-popup .dx-popup-bottom .dx-button .dx-button-content {
-    display: flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-}
-.alert-edit-popup .dx-popup-bottom .dx-button .dx-icon {
-    font-size: 16px !important;
-    width: 16px !important;
-    height: 16px !important;
-    margin: 0 !important;
-}
-.alert-edit-popup .dx-popup-bottom .dx-button-mode-contained.dx-button-success .dx-icon { color: #fff !important; }
-.alert-edit-popup .dx-popup-bottom .dx-button-mode-contained.dx-button-danger .dx-icon { color: #64748b !important; }
 
-/* Dentro del form del popup */
-.alert-form-group-title {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 4px 0 2px;
+.alert-edit-popup .dx-tabs-item-text {
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
 }
-.alert-price-hint {
-    font-size: 0.72rem;
-    color: var(--muted);
-    margin-top: -6px;
-    margin-bottom: 8px;
+.alert-edit-popup .dx-tab.dx-tab-selected {
+    color: var(--terracotta) !important;
+    border-bottom-color: var(--terracotta) !important;
 }
 
-/* ===== Cards dentro de cada tab del popup (Datos generales / Tipo de
-   inmueble / Ubicación / Rango de precio · Venta / Rango de precio ·
-   Alquiler / Comodidades) ===== */
-.alert-form-card {
-    background: #fff;
-    border: 1px solid var(--line);
-    /* Acento terracota tipo "ficha": mismo color que el resto del sitio
-       (back-link, rbtn-edit, foco de los inputs), aquí con más grosor y
-       presencia para que cada card se distinga de un vistazo dentro del
-       popup. */
-    border-left: 4px solid var(--terracotta);
-    border-radius: 14px;
-    padding: 14px 16px 6px 18px;
-    margin-bottom: 14px;
-    box-shadow: 0 1px 3px rgba(31, 26, 23, 0.04);
+.alert-edit-popup .dx-field-item-label-text,
+.alert-edit-popup .dx-form .dx-field-item-label {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: var(--text-500) !important;
 }
-.alert-form-card:last-child {
-    margin-bottom: 0;
+.alert-edit-popup .dx-texteditor-input {
+    font-size: 13px !important;
 }
-.alert-form-card .dx-form-group-caption {
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 10px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--line);
-}
-/* Grupos anidados (p.ej. los pares de precio dentro de una card) no
-   necesitan su propio marco -- solo la card exterior */
-.alert-form-card .alert-form-card {
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    margin-bottom: 0;
+.alert-edit-popup .dx-checkbox-text {
+    font-size: 13px !important;
+    color: var(--text-700) !important;
 }
 
-@media (max-width: 768px) {
-    .list-page { padding: 20px 12px 40px; }
-    .alert-edit-popup .dx-popup-content { padding: 10px !important; }
-    .alert-form-card { padding: 10px 12px 4px 14px; border-radius: 12px; }
+.alert-edit-popup .dx-texteditor.dx-state-focused,
+.alert-edit-popup .dx-checkbox.dx-state-focused .dx-checkbox-icon {
+    border-color: var(--terracotta) !important;
+    box-shadow: 0 0 0 2px rgba(217, 119, 87, 0.18) !important;
 }
+
+/* ============================================================
+   CARDS DEL POPUP
+   ============================================================ */
+.alert-form

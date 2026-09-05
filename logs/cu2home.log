@@ -346,3 +346,34 @@ WARNING 2026-09-04 16:33:04,338 log Not Found: /sw.js
 WARNING 2026-09-04 16:33:43,166 log Not Found: /sw.js
 INFO 2026-09-04 19:03:10,293 autoreload Watching for file changes with StatReloader
 INFO 2026-09-04 19:23:30,036 autoreload Watching for file changes with StatReloader
+INFO 2026-09-04 20:37:01,776 autoreload Watching for file changes with StatReloader
+WARNING 2026-09-04 20:37:07,352 base Session data corrupted
+WARNING 2026-09-04 20:37:09,631 log Not Found: /favicon.ico
+WARNING 2026-09-04 20:37:11,740 log Not Found: /sw.js
+WARNING 2026-09-04 20:37:44,267 base Session data corrupted
+WARNING 2026-09-04 20:37:46,467 log Not Found: /sw.js
+WARNING 2026-09-04 20:39:22,188 log Not Found: /media/users/53/avatar_lecupe
+WARNING 2026-09-04 20:39:29,869 base Session data corrupted
+WARNING 2026-09-04 20:39:29,965 log Not Found: /media/users/53/avatar_lecupe
+WARNING 2026-09-04 20:39:31,852 log Not Found: /sw.js
+WARNING 2026-09-04 20:39:45,250 base Session data corrupted
+WARNING 2026-09-04 20:39:45,357 log Not Found: /media/users/53/avatar_lecupe
+WARNING 2026-09-04 20:39:47,261 log Not Found: /sw.js
+WARNING 2026-09-04 20:39:55,789 base Session data corrupted
+WARNING 2026-09-04 20:39:57,638 log Not Found: /sw.js
+WARNING 2026-09-04 20:40:01,567 base Session data corrupted
+WARNING 2026-09-04 20:40:05,172 log Not Found: /sw.js
+WARNING 2026-09-04 20:40:12,417 log Not Found: /sw.js
+WARNING 2026-09-04 20:40:13,781 log Not Found: /media/users/53/avatar_lecupe
+WARNING 2026-09-04 20:40:15,640 log Not Found: /sw.js
+WARNING 2026-09-04 20:44:09,637 log Not Found: /sw.js
+WARNING 2026-09-04 20:44:17,497 log Not Found: /sw.js
+WARNING 2026-09-04 20:44:23,942 log Not Found: /media/properties/358/images/358_1.jpg
+WARNING 2026-09-04 20:44:25,390 log Not Found: /media/properties/355/images/355_1.jpg
+WARNING 2026-09-04 20:44:25,718 log Not Found: /media/properties/347/images/347_1.jpg
+WARNING 2026-09-04 20:44:26,267 log Not Found: /media/properties/348/images/348_1.jpg
+WARNING 2026-09-04 20:45:29,600 log Not Found: /media/properties/221/images/221_1.jpg
+WARNING 2026-09-04 20:45:29,602 log Not Found: /media/properties/222/images/222_1.jpg
+INFO 2026-09-04 20:46:44,374 autoreload Watching for file changes with StatReloader
+WARNING 2026-09-04 20:46:53,469 log Not Found: /sw.js
+INFO 2026-09-05 09:35:31,719 autoreload Watching for file changes with StatReloader

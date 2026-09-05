@@ -1,741 +1,98 @@
-    .list-page {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 32px 24px 60px;
-    }
-    .list-page-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-bottom: 24px;
-    }
-    .list-page-head h1 {
-        font-family: 'Fraunces', serif;
-        font-size: clamp(1.5rem, 3vw, 2rem);
-        font-weight: 800;
-        letter-spacing: -0.6px;
-        color: var(--ink);
-    }
-    .list-page-head .back-link {
-        font-family: var(--font-body);
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--terracotta);
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        text-decoration: none;
-        transition: color 0.2s;
-    }
-    .list-page-head .back-link:hover {
-        color: var(--terracotta-dark);
-    }
-    .grid-wrapper {
-        background: #fff;
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 4px;
-        overflow: hidden;
-    }
-    .empty-state {
-        background: #fff;
-        border: 1px dashed var(--line);
-        border-radius: 16px;
-        padding: 60px 24px;
-        text-align: center;
-        color: var(--muted);
-    }
-    .empty-state i {
-        font-size: 2rem;
-        color: var(--terracotta);
-        margin-bottom: 12px;
-        display: block;
-    }
-    .status-badge {
-        display: inline-block;
-        padding: 3px 10px;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        font-weight: 600;
-    }
-    .status-available { background: #e7f5ec; color: #1e7e42; }
-    .status-reserved  { background: #fff4e0; color: #b0740a; }
-    .status-sold      { background: #f1f1f1; color: #777; }
-
-    .cell-wrap { display: flex; align-items: center; gap: 10px; height: 100%; padding: 4px 0; }
-    .cell-stack { display: flex; flex-direction: column; min-width: 0; }
-    .cell-primary {
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: var(--ink);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .cell-secondary {
-        font-size: 0.72rem;
-        color: var(--muted);
-        margin-top: 2px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
-        font-weight: 700;
-        flex-shrink: 0;
-    }
-    .tipo-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 3px 10px;
-        border-radius: 999px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        white-space: nowrap;
-    }
-
-    .row-actions { 
-        display: flex; 
-        align-items: center; 
-        justify-content: center;
-        gap: 3px; 
-    }
-    .rbtn {
-        width: 28px;
-        height: 28px;
-        border: 1px solid transparent;
-        border-radius: 6px;
-        background: transparent;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.75rem;
-        color: var(--muted);
-        transition: all 0.12s;
-    }
-    .rbtn i { color: inherit; }
-    .rbtn-view { color: var(--turquoise) !important; }
-    .rbtn-view:hover { background: #eef2f0; border-color: var(--turquoise); }
-    .rbtn-edit { color: var(--terracotta) !important; }
-    .rbtn-edit:hover { background: #fdf2ee; border-color: var(--terracotta); }
-
-    .img-manager { margin-top: 8px; }
-    .img-manager-hint {
-        font-size: 0.9rem;
-        color: var(--muted);
-        margin-bottom: 10px;
-    }
-    .img-manager-empty {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 28px 20px;
-        border: 1px dashed var(--line);
-        border-radius: 12px;
-        background: #faf9f7;
-        text-align: center;
-    }
-    .img-manager-empty i {
-        font-size: 1.6rem;
-        color: var(--terracotta);
-    }
-    .img-manager-empty p {
-        margin: 0;
-        font-size: 0.92rem;
-        line-height: 1.5;
-        color: var(--muted);
-        max-width: 320px;
-    }
-    /* ===== DROPZONE DE FOTOS PARA ALTA (inmueble aún sin id) ===== */
-    .img-dropzone {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        padding: 24px 16px;
-        border: 2px dashed var(--line);
-        border-radius: 12px;
-        background: #faf9f7;
-        text-align: center;
-        cursor: pointer;
-        transition: border-color 0.15s, background 0.15s;
-    }
-    .img-dropzone:hover,
-    .img-dropzone:focus-visible {
-        border-color: var(--terracotta);
-        background: #fdf6f3;
-        outline: none;
-    }
-    .img-dropzone.dragover {
-        border-color: var(--terracotta);
-        background: #fdf2ee;
-    }
-    .img-dropzone.has-error { border-color: #c0392b; background: #fdecea; }
-    .img-dropzone i { font-size: 1.4rem; color: var(--terracotta); }
-    .img-dropzone-text { font-size: 0.92rem; font-weight: 600; color: var(--ink); }
-    .img-dropzone-sub { display: block; font-size: 0.8rem; font-weight: 400; color: var(--muted); margin-top: 3px; }
-    .img-dropzone input[type="file"] { display: none; }
-
-    .img-pending-counter {
-        font-size: 0.9rem;
-        color: var(--muted);
-        margin: 8px 0;
-    }
-    .img-pending-counter.limit-reached { color: #c0392b; font-weight: 600; }
-
-    .img-pending-item {
-        position: relative;
-        width: 92px;
-        height: 92px;
-        border-radius: 10px;
-        overflow: hidden;
-        border: 2px solid var(--line);
-    }
-    .img-pending-item:first-child { border-color: var(--terracotta); }
-    .img-pending-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .img-pending-item .cover-tag {
-        position: absolute;
-        top: 4px;
-        left: 4px;
-        background: var(--terracotta);
-        color: #fff;
-        font-size: 0.62rem;
-        font-weight: 700;
-        padding: 1px 6px;
-        border-radius: 999px;
-    }
-    .img-pending-item .img-pending-remove {
-        position: absolute;
-        top: 3px;
-        right: 3px;
-        width: 20px;
-        height: 20px;
-        border: none;
-        border-radius: 50%;
-        background: rgba(0,0,0,0.6);
-        color: #fff;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
-        line-height: 1;
-    }
-    .img-pending-item .img-pending-remove:hover { background: #c0392b; }
-
-    .img-gallery {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 12px;
-    }
-    .img-thumb {
-        position: relative;
-        width: 92px;
-        height: 92px;
-        border-radius: 10px;
-        overflow: hidden;
-        border: 2px solid var(--line);
-    }
-    .img-thumb.is-cover { border-color: var(--terracotta); }
-    .img-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .img-thumb .cover-tag {
-        position: absolute;
-        top: 4px;
-        left: 4px;
-        background: var(--terracotta);
-        color: #fff;
-        font-size: 0.62rem;
-        font-weight: 700;
-        padding: 1px 6px;
-        border-radius: 999px;
-    }
-    .img-thumb .img-tools {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        display: flex;
-        justify-content: space-between;
-        background: rgba(0,0,0,0.55);
-        padding: 3px 5px;
-    }
-    .img-thumb .img-tools button {
-        border: none;
-        background: transparent;
-        color: #fff;
-        cursor: pointer;
-        font-size: 0.75rem;
-        padding: 2px 4px;
-        transition: color 0.2s;
-    }
-    .img-thumb .img-tools button:hover { color: var(--terracotta); }
-    
-    .dx-popup-content .img-manager {
-        padding: 8px 0;
-    }
-
-    /* ===== ESTILOS MEJORADOS DEL POPUP ===== */
-    .property-edit-popup {
-        border-radius: 20px !important;
-        box-shadow: 0 20px 60px rgba(31, 26, 23, 0.25) !important;
-    }
-
-    /* FIX: box-sizing consistente en todo el popup. Sin esto, bordes y
-       paddings de algún elemento (p.ej. el propio .dx-popup-bottom o sus
-       botones) pueden sumarse POR ENCIMA de la altura fija que fijamos
-       en JS (editing.popup.height), y como el contenedor exterior del
-       popup recorta su contenido a esa altura exacta (ver siguiente
-       regla), el sobrante -- típicamente el borde/esquina inferior de
-       los botones Guardar/Cancelar -- queda truncado en línea recta. */
-    .property-edit-popup,
-    .property-edit-popup * {
-        box-sizing: border-box;
-    }
-
-    /* FIX: el intento anterior de "overflow: visible" en el contenedor
-       exterior para liberar el borde inferior de los botones tenía un
-       efecto secundario no deseado: también desactivaba el recorte que
-       mantiene las esquinas redondeadas del popup, dejando asomar el
-       fondo de la página por debajo (ver captura: franja beige bajo
-       Guardar/Cancelar). La causa real del truncamiento era un
-       presupuesto de altura insuficiente, así que ya no hace falta
-       forzar overflow visible aquí: se mantiene el recorte por defecto
-       (oculto), que es precisamente lo que preserva las esquinas
-       redondeadas del popup. */
-
-    .property-edit-popup .dx-popup-content {
-        background: #f8f6f4;
-        /* FIX (espacio en blanco): con el popup ajustándose a su
-           contenido real (ver JS, editing.popup.height:'auto'), un
-           padding menor deja más área útil para las cards y menos
-           margen "muerto" alrededor. */
-        padding: 14px 20px 12px !important;
-        overflow-y: auto !important;
-        /* FIX: sin flex + min-height:0 este bloque crece a su altura
-           natural en vez de encogerse dentro del layout flex del popup
-           (title / content / toolbar-inferior); eso empujaba la barra de
-           Guardar/Cancelar más allá del max-height del popup, que la
-           recortaba por abajo (truncamiento de un par de píxeles en el
-           borde). Con esto, .dx-popup-content es el único que hace scroll
-           y el toolbar inferior queda siempre dentro del área visible.
-           Con height:'auto' esto normalmente no llega a activarse -- solo
-           entra en juego si algún día el contenido supera maxHeight. */
-        flex: 1 1 auto !important;
-        min-height: 0 !important;
-    }
-
-    /* Refuerzo: el propio popup debe comportarse como columna flex para
-       que lo anterior tenga efecto (título y toolbar de tamaño fijo,
-       contenido central el único que se encoge/hace scroll). */
-    .property-edit-popup .dx-popup-normal,
-    .property-edit-popup .dx-overlay-content {
-        display: flex !important;
-        flex-direction: column !important;
-        min-height: 0 !important;
-    }
-
-    .property-edit-popup .dx-popup-title {
-        flex-shrink: 0 !important;
-    }
-
-    /* FIX: la barra inferior con Guardar/Cancelar no debe encogerse ni
-       quedar tapada nunca, sea cual sea la altura del contenido; el
-       scroll debe darse solo dentro de .dx-popup-content (arriba). */
-    .property-edit-popup .dx-popup-bottom {
-        flex-shrink: 0 !important;
-    }
-
-    .property-edit-popup .dx-popup-title {
-        background: #fff;
-        border-bottom: 2px solid var(--terracotta);
-        padding: 16px 24px !important;
-        font-family: 'Fraunces', serif;
-        font-size: 1.35rem !important;
-        font-weight: 700 !important;
-        letter-spacing: -0.3px;
-        color: var(--ink);
-        border-radius: 20px 20px 0 0;
-    }
-
-    .property-edit-popup .dx-popup-title .dx-toolbar-label {
-        font-size: 1.35rem !important;
-        font-weight: 700 !important;
-    }
-
-    .property-edit-popup .dx-popup-bottom {
-        background: #fff;
-        border-top: 1px solid var(--line);
-        padding: 10px 24px !important;
-        border-radius: 0 0 20px 20px;
-    }
-
-    .property-edit-popup .dx-popup-bottom .dx-button {
-        border-radius: 10px !important;
-        font-weight: 600 !important;
-        padding: 8px 24px !important;
-        font-size: 0.95rem !important;
-        transition: all 0.2s ease;
-    }
-
-    .property-edit-popup .dx-popup-bottom .dx-button .dx-button-content {
-        display: flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-    }
-
-    .property-edit-popup .dx-popup-bottom .dx-button .dx-icon {
-        font-size: 16px !important;
-        width: 16px !important;
-        height: 16px !important;
-        margin: 0 !important;
-    }
-
-    .property-edit-popup .dx-popup-bottom .dx-button-mode-contained.dx-button-success .dx-icon {
-        color: #fff !important;
-    }
-
-    .property-edit-popup .dx-popup-bottom .dx-button-mode-contained.dx-button-danger .dx-icon {
-        color: #64748b !important;
-    }
-
-    .property-edit-popup .dx-popup-bottom .dx-button-mode-contained.dx-button-success {
-        background: var(--terracotta) !important;
-        border-color: var(--terracotta) !important;
-    }
-
-    .property-edit-popup .dx-popup-bottom .dx-button-mode-contained.dx-button-success:hover {
-        background: var(--terracotta-dark) !important;
-        border-color: var(--terracotta-dark) !important;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(192, 82, 45, 0.3);
-    }
-
-    .property-edit-popup .dx-popup-bottom .dx-button-mode-contained.dx-button-danger {
-        border-color: #e2e8f0 !important;
-        color: #64748b !important;
-        background: #f8fafc !important;
-    }
-
-    .property-edit-popup .dx-popup-bottom .dx-button-mode-contained.dx-button-danger:hover {
-        background: #f1f5f9 !important;
-        border-color: #cbd5e1 !important;
-    }
-
-    /* ===== CARDS DEL FORMULARIO (mismo patrón que .alert-form-card en
-       my_alerts.css: card con acento izquierdo terracota, aplicada vía
-       cssClass:'property-form-card' en los itemType:'group' del form) ===== */
-    .property-edit-popup .property-form-card {
-        background: #fff;
-        border: 1px solid var(--line);
-        border-left: 4px solid var(--terracotta);
-        border-radius: 14px;
-        padding: 14px 16px 6px 18px;
-        /* FIX (cards "pegadas"): antes solo había margin-bottom, pensado
-           para cards apiladas verticalmente. Cuando dos cards conviven
-           en la misma fila (colCount:2, p.ej. "Datos generales" +
-           "Descripción"), DevExtreme las coloca en celdas del 50% SIN
-           gutter propio -- el borde derecho de una tocaba literalmente
-           el borde izquierdo de la otra. Un margin horizontal simétrico
-           en la propia card (que es un div interno de ancho automático,
-           no la celda del 50% en sí) abre un hueco entre ambas sin
-           afectar el cálculo de columnas de DevExtreme. */
-        margin: 0 8px 16px 8px;
-        box-shadow: 0 1px 3px rgba(31, 26, 23, 0.04);
-    }
-
-    .property-edit-popup .property-form-card:last-child {
-        margin-bottom: 0;
-    }
-
-    /* Card de la pestaña "Fotos" (itemType:'item' con template propio,
-       cssClass:'property-form-card' reutilizado -- ver JS): el caption
-       se inserta a mano dentro del template con la misma clase
-       dx-form-group-caption que generan las cards de tipo 'group', así
-       que hereda el mismo estilo sin reglas adicionales. */
-    .property-edit-popup .property-form-card--fotos {
-        padding-bottom: 14px;
-    }
-
-    /* Grupos anidados (ninguno actualmente, pero por si acaso -- mismo
-       criterio que my_alerts.css) no necesitan su propio marco. */
-    .property-edit-popup .property-form-card .property-form-card {
-        border: none;
-        box-shadow: none;
-        padding: 0;
-        margin-bottom: 0;
-    }
-
-    .property-edit-popup .property-form-card .dx-form-group-caption {
-        font-size: 0.78rem !important;
-        font-weight: 700 !important;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        color: var(--muted) !important;
-        margin-bottom: 10px !important;
-        padding-bottom: 8px !important;
-        border-bottom: 1px solid var(--line);
-        display: block;
-    }
-
-    .property-edit-popup .dx-field-item {
-        padding: 4px 4px !important;
-    }
-
-    .property-edit-popup .dx-field-item-label,
-    .property-edit-popup .dx-field-item-label-text {
-        font-size: 0.92rem !important;
-        font-weight: 600 !important;
-        color: var(--ink) !important;
-        margin-bottom: 4px !important;
-    }
-
-    .property-edit-popup .dx-field-item-required-mark {
-        color: #dc3545 !important;
-        font-weight: 700 !important;
-        margin-left: 2px;
-    }
-
-    .property-edit-popup .dx-texteditor {
-        border-radius: 6px !important;
-    }
-
-    .property-edit-popup .dx-texteditor.dx-state-focused,
-    .property-edit-popup .dx-checkbox.dx-state-focused .dx-checkbox-icon {
-        border-color: var(--terracotta) !important;
-        box-shadow: 0 0 0 2px rgba(217, 119, 87, 0.18) !important;
-    }
-
-    .property-edit-popup .dx-texteditor .dx-texteditor-input {
-        padding: 8px 12px !important;
-        font-size: 0.95rem !important;
-        line-height: 1.4 !important;
-        border-radius: 6px !important;
-        min-height: 38px !important;
-    }
-
-    .property-edit-popup .dx-textarea .dx-texteditor-input {
-        min-height: 110px !important;
-        max-height: 130px !important;
-        resize: none !important;
-    }
-
-    .property-edit-popup .dx-selectbox .dx-texteditor-input {
-        padding: 8px 12px !important;
-        min-height: 38px !important;
-    }
-
-    .property-edit-popup .dx-numberbox .dx-texteditor-input {
-        padding: 8px 12px !important;
-        min-height: 38px !important;
-    }
-
-    .property-edit-popup .dx-item-content .dx-list-item,
-    .property-edit-popup .dx-selectbox-popup-wrapper .dx-list-item-content {
-        font-size: 0.92rem !important;
-    }
-
-    .property-edit-popup .dx-checkbox {
-        margin-top: 4px !important;
-    }
-
-    .property-edit-popup .dx-checkbox .dx-checkbox-icon {
-        border-radius: 4px !important;
-        border-color: #cbd5e1 !important;
-        width: 19px !important;
-        height: 19px !important;
-    }
-
-    .property-edit-popup .dx-checkbox .dx-checkbox-text {
-        font-size: 0.9rem !important;
-        color: var(--ink) !important;
-        padding-left: 8px !important;
-    }
-
-    .property-edit-popup .dx-checkbox.dx-checkbox-checked .dx-checkbox-icon {
-        background: var(--terracotta) !important;
-        border-color: var(--terracotta) !important;
-    }
-
-    .property-edit-popup .dx-scrollable-content {
-        padding: 0 !important;
-    }
-
-    .property-edit-popup .dx-scrollview-content {
-        padding-bottom: 4px !important;
-    }
-
-    .property-edit-popup .img-manager {
-        max-height: 260px;
-        overflow-y: auto;
-    }
-
-    .property-edit-popup .img-manager::-webkit-scrollbar {
-        width: 3px;
-    }
-
-    .property-edit-popup .img-manager::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 3px;
-    }
-
-    .property-edit-popup .img-manager::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 3px;
-    }
-
-    .property-edit-popup .img-manager::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
-    }
-
-    .property-edit-popup .dx-field-item.dx-last-row {
-        margin-bottom: 0 !important;
-    }
-
-    .property-edit-popup .dx-field-item-content .dx-checkbox {
-        margin-top: 0 !important;
-    }
-
-    /* FIX (pestañas con estilo por defecto de DevExtreme, no el
-       terracota previsto): este es el único bloque del archivo que no
-       usaba !important. dx.light.css define el borde/color de acento
-       azul de las pestañas con selectores de especificidad igual o
-       mayor, así que ganaba la cascada y las pestañas se veían con la
-       caja azul del tema por defecto en vez del texto+subrayado
-       terracota. Mismo criterio que el resto del fichero: !important
-       en cada propiedad que deba vencer al tema base. */
-    .property-edit-popup .dx-tabpanel .dx-tabs {
-        background: transparent !important;
-        border-bottom: 1px solid var(--line) !important;
-        margin-bottom: 10px !important;
-    }
-
-    .property-edit-popup .dx-tab {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    .property-edit-popup .dx-tab,
-    .property-edit-popup .dx-tabs-item-text {
-        font-weight: 600 !important;
-        font-size: 0.95rem !important;
-        letter-spacing: 0.2px;
-        color: var(--muted) !important;
-        padding: 10px 18px !important;
-    }
-
-    .property-edit-popup .dx-tab-selected {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        color: var(--terracotta) !important;
-    }
-
-    .property-edit-popup .dx-tab-selected .dx-tabs-item-text {
-        color: var(--terracotta) !important;
-    }
-
-    .property-edit-popup .dx-tabs-wrapper .dx-tab.dx-tab-selected::after,
-    .property-edit-popup .dx-tab-indicator {
-        background: var(--terracotta) !important;
-        height: 2px !important;
-    }
-
-    .property-edit-popup .dx-tab:hover {
-        background: rgba(192, 82, 45, 0.06) !important;
-    }
-
-    .property-edit-popup .dx-multiview-wrapper {
-        background: transparent;
-    }
-
-    .property-edit-popup .dx-multiview-item-content {
-        padding: 2px 2px 0 !important;
-    }
-
-    /* FIX (cambio de enfoque, ver JS: popup.height ahora es 'auto'):
-       antes se forzaba el panel de pestañas a ocupar el 100% de
-       .dx-popup-content para que las 4 pestañas midieran igual, pero
-       eso exigía que .dx-popup-content tuviera una altura FIJA de la
-       que calcular ese 100% -- precisamente lo que causaba los
-       recortes (título/card/botones no cabían siempre en esa cifra
-       fija). Con el popup creciendo según su contenido real, cada
-       pestaña ocupa su alto natural sin forzar nada; no hace falta
-       (ni tiene sentido) un 100% aquí. */
-
-    /* FIX: se retiran los forzados width:100%!important que habia aqui
-       antes en .dx-popup-wrapper y .dx-popup-content. Competian sin
-       necesidad con la funcion popup.width (ver JS) -- el form calcula el
-       ancho de sus columnas (colCount) midiendo el contenedor en el
-       momento del render, y estos !important terminaban pisando ese
-       cálculo (o el ancho inline que DevExtreme ya fija según popup.width),
-       lo que dejaba a la card de la derecha calculada más ancha de lo que
-       el popup realmente mostraba -- de ahí el borde derecho cortado.
-       Sin estas reglas, el ancho real vuelve a ser el que define
-       popup.width y el layout de columnas coincide con él. */
-
-    @media (max-width: 992px) {
-        .property-edit-popup .dx-popup-content {
-            padding: 14px !important;
-        }
-        .property-edit-popup .dx-form-group {
-            padding: 10px 12px 8px !important;
-            margin-bottom: 8px !important;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .property-edit-popup .dx-popup-content {
-            padding: 10px !important;
-            overflow-y: auto !important;
-        }
-        .property-edit-popup .dx-form-group {
-            padding: 8px 10px 6px !important;
-            margin-bottom: 6px !important;
-        }
-        .property-edit-popup .dx-popup-title {
-            padding: 10px 14px !important;
-            font-size: 1.05rem !important;
-        }
-        .property-edit-popup .dx-popup-bottom {
-            padding: 8px 14px !important;
-        }
-        .property-edit-popup .dx-popup-bottom .dx-button {
-            padding: 6px 16px !important;
-            font-size: 0.85rem !important;
-        }
-        .property-edit-popup .dx-texteditor .dx-texteditor-input {
-            font-size: 0.88rem !important;
-            min-height: 34px !important;
-            padding: 6px 10px !important;
-        }
-        .property-edit-popup .dx-textarea .dx-texteditor-input {
-            min-height: 60px !important;
-            max-height: 80px !important;
-        }
-        .property-edit-popup .img-manager {
-            max-height: 100px;
-        }
-        .img-thumb {
-            width: 70px !important;
-            height: 70px !important;
-        }
-        .img-gallery {
-            gap: 6px !important;
-        }
-    }
+/* ============================================================
+   MY_PROPERTIES.CSS — Estilos para la página de propiedades del usuario
+   Basado en el patrón de comunidad.css
+   ============================================================ */
+
+/* -----------------------------------------------------------
+   TOKENS
+   ----------------------------------------------------------- */
+:root {
+    --accent-dim: #e0f9fb;
+    --accent-hover: #0090a1;
+    --r-xs: 4px;
+    --r-sm: 8px;
+    --r-md: 12px;
+    --r-lg: 16px;
+    --r-xl: 20px;
+    --r-full: 9999px;
+    --ease: cubic-bezier(.4,0,.2,1);
+    --ease-spring: cubic-bezier(.34,1.56,.64,1);
+    --t-fast: .12s var(--ease);
+    --t-normal: .22s var(--ease);
+    --t-slow: .35s var(--ease);
+    --shadow-card: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+    --shadow-focus: 0 0 0 3px rgba(0,184,201,.28);
+    --border-light: #e5e7eb;
+    --success-border: #6ee7b7;
+    --warning-border: #fcd34d;
+    --danger-border: #fda4af;
+    --info-border: #93c5fd;
+    --purple-border: #c4b5fd;
+    --orange-border: #fdba74;
+}
+
+/* -----------------------------------------------------------
+   LAYOUT PRINCIPAL
+   ----------------------------------------------------------- */
+.list-page {
+    padding: 24px 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.list-page-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.list-page-head h1 {
+    font-family: var(--font-display, 'Syne', sans-serif);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-900);
+    margin: 0;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-500);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    transition: all var(--t-fast);
+}
+
+.back-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+}
+
+/* ============================================================
+   GRID — DEVEXTREME OVERRIDES
+   ============================================================ */
+#myPropertiesGrid .dx-datagrid {
+    font-family: var(--font-body, 'DM Sans', sans-serif);
+    font-size: 13px;
+    background: transparent !important;
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+}
+
+#myPropertiesGrid .dx-datagrid-headers {
+    background: var(--bg-subtle) !important;
+    border-bottom: 2px solid var(--accent) !important;
+}
+
+#my
