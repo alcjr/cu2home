@@ -1,0 +1,64 @@
+$env:PGPASSWORD = "0x2sE2YznhOOKHkA2jmJHOpUXz0X5b1w"
+
+pg_restore `
+  --host="dpg-dabbmtp42hec73afvd70-a.frankfurt-postgres.render.com" `
+  --port=5432 `
+  --username="fingest_db_h4l1_user" `
+  --dbname="fingest_db_h4l1" `
+  --no-owner `
+  --no-acl `
+  --clean `
+  --if-exists `
+  --verbose `
+  "C:\00_projects\fingest\backup_fingest_db_20260901.dump"
+  
+  
+Comprobaciones:
+
+Test-NetConnection `
+  dpg-dabbmtp42hec73afvd70-a.frankfurt-postgres.render.com `
+  -Port 5432
+  
+ Test-NetConnection `
+>>   dpg-dabbmtp42hec73afvd70-a.frankfurt-postgres.render.com `
+>>   -Port 5432                                                                                                                              
+                                                                                                                                             
+                                                                                                                                             
+ComputerName     : dpg-dabbmtp42hec73afvd70-a.frankfurt-postgres.render.com                                                                  
+RemoteAddress    : 3.65.142.85                                                                                                               
+RemotePort       : 5432                                                                                                                      
+InterfaceAlias   : Wi-Fi
+SourceAddress    : 172.20.185.167
+TcpTestSucceeded : True
+
+$env:PGSSLMODE = "require"
+
+psql `
+  --host="dpg-dabbmtp42hec73afvd70-a.frankfurt-postgres.render.com" `
+  
+$env:PGSSLMODE = "require"
+>> 
+>> psql `
+>>   --host="dpg-dabbmtp42hec73afvd70-a.frankfurt-postgres.render.com" `
+>> 
+psql: error: connection to server at "dpg-dabbmtp42hec73afvd70-a.frankfurt-postgres.render.com" (3.120.236.187), port 5432 failed: server closed the connection unexpectedly
+        This probably means the server terminated abnormally
+        before or while processing the request.
+(venv) PS C:\00_projects\fingest> 
+
+
+(venv) PS C:\00_projects\fingest> $env:PGSSLMODE = "require"
+>> 
+>> psql `
+>>   --host="dpg-dabbmtp42hec73afvd70-a.frankfurt-postgres.render.com" `
+>>   --port=5432 `
+>>   --username="fingest_db_h4l1_user" `
+>>   --dbname="fingest_db_h4l1" `
+>>   -W `
+>>   -c "SELECT 1;"
+Password: 
+
+psql: error: connection to server at "dpg-dabbmtp42hec73afvd70-a.frankfurt-postgres.render.com" (18.196.138.205), port 5432 failed: server closed the connection unexpectedly
+        This probably means the server terminated abnormally
+        before or while processing the request.
+
