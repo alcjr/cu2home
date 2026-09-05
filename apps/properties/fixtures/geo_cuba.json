@@ -1,0 +1,2218 @@
+[
+  {
+    "model": "properties.province",
+    "pk": 17,
+    "fields": {
+      "name": "Pinar del Río",
+      "slug": "pinar-del-rio"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 18,
+    "fields": {
+      "name": "Artemisa",
+      "slug": "artemisa"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 19,
+    "fields": {
+      "name": "La Habana",
+      "slug": "la-habana"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 20,
+    "fields": {
+      "name": "Mayabeque",
+      "slug": "mayabeque"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 21,
+    "fields": {
+      "name": "Matanzas",
+      "slug": "matanzas"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 22,
+    "fields": {
+      "name": "Cienfuegos",
+      "slug": "cienfuegos"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 23,
+    "fields": {
+      "name": "Villa Clara",
+      "slug": "villa-clara"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 24,
+    "fields": {
+      "name": "Sancti Spíritus",
+      "slug": "sancti-spiritus"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 25,
+    "fields": {
+      "name": "Ciego de Ávila",
+      "slug": "ciego-de-avila"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 26,
+    "fields": {
+      "name": "Camagüey",
+      "slug": "camaguey"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 27,
+    "fields": {
+      "name": "Las Tunas",
+      "slug": "las-tunas"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 28,
+    "fields": {
+      "name": "Holguín",
+      "slug": "holguin"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 29,
+    "fields": {
+      "name": "Granma",
+      "slug": "granma"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 30,
+    "fields": {
+      "name": "Santiago de Cuba",
+      "slug": "santiago-de-cuba"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 31,
+    "fields": {
+      "name": "Guantánamo",
+      "slug": "guantanamo"
+    }
+  },
+  {
+    "model": "properties.province",
+    "pk": 32,
+    "fields": {
+      "name": "Isla de la Juventud",
+      "slug": "isla-de-la-juventud"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 173,
+    "fields": {
+      "name": "Sandino",
+      "slug": "sandino",
+      "province": 17,
+      "latitude": 22.0811111,
+      "longitude": -84.2216667,
+      "location": "SRID=4326;POINT (-84.2216667 22.0811111)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 174,
+    "fields": {
+      "name": "Mantua",
+      "slug": "mantua",
+      "province": 17,
+      "latitude": 22.2905556,
+      "longitude": -84.2872222,
+      "location": "SRID=4326;POINT (-84.2872222 22.2905556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 175,
+    "fields": {
+      "name": "Minas de Matahambre",
+      "slug": "minas-de-matahambre",
+      "province": 17,
+      "latitude": 22.5861111,
+      "longitude": -83.9486111,
+      "location": "SRID=4326;POINT (-83.9486111 22.5861111)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 176,
+    "fields": {
+      "name": "Viñales",
+      "slug": "vinales",
+      "province": 17,
+      "latitude": 22.6185,
+      "longitude": -83.7512,
+      "location": "SRID=4326;POINT (-83.7512000 22.6185000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 177,
+    "fields": {
+      "name": "La Palma",
+      "slug": "la-palma",
+      "province": 17,
+      "latitude": 22.7563889,
+      "longitude": -83.5533333,
+      "location": "SRID=4326;POINT (-83.5533333 22.7563889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 178,
+    "fields": {
+      "name": "Consolación del Sur",
+      "slug": "consolacion-del-sur",
+      "province": 17,
+      "latitude": 22.5047222,
+      "longitude": -83.5152778,
+      "location": "SRID=4326;POINT (-83.5152778 22.5047222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 179,
+    "fields": {
+      "name": "Pinar del Río",
+      "slug": "pinar-del-rio",
+      "province": 17,
+      "latitude": 22.4175,
+      "longitude": -83.6981,
+      "location": "SRID=4326;POINT (-83.6981000 22.4175000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 180,
+    "fields": {
+      "name": "San Luis",
+      "slug": "san-luis",
+      "province": 17,
+      "latitude": 22.283,
+      "longitude": -83.757,
+      "location": "SRID=4326;POINT (-83.7570000 22.2830000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 181,
+    "fields": {
+      "name": "San Juan y Martínez",
+      "slug": "san-juan-y-martinez",
+      "province": 17,
+      "latitude": 22.2677778,
+      "longitude": -83.8358333,
+      "location": "SRID=4326;POINT (-83.8358333 22.2677778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 182,
+    "fields": {
+      "name": "Guane",
+      "slug": "guane",
+      "province": 17,
+      "latitude": 22.2016667,
+      "longitude": -84.0833333,
+      "location": "SRID=4326;POINT (-84.0833333 22.2016667)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 183,
+    "fields": {
+      "name": "Los Palacios",
+      "slug": "los-palacios",
+      "province": 17,
+      "latitude": 22.5827778,
+      "longitude": -83.2480556,
+      "location": "SRID=4326;POINT (-83.2480556 22.5827778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 184,
+    "fields": {
+      "name": "Bahía Honda",
+      "slug": "bahia-honda",
+      "province": 18,
+      "latitude": 22.9036111,
+      "longitude": -83.1652778,
+      "location": "SRID=4326;POINT (-83.1652778 22.9036111)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 185,
+    "fields": {
+      "name": "Mariel",
+      "slug": "mariel",
+      "province": 18,
+      "latitude": 22.9897222,
+      "longitude": -82.7583333,
+      "location": "SRID=4326;POINT (-82.7583333 22.9897222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 186,
+    "fields": {
+      "name": "Guanajay",
+      "slug": "guanajay",
+      "province": 18,
+      "latitude": 22.9297222,
+      "longitude": -82.6880556,
+      "location": "SRID=4326;POINT (-82.6880556 22.9297222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 187,
+    "fields": {
+      "name": "Caimito",
+      "slug": "caimito",
+      "province": 18,
+      "latitude": 22.9577778,
+      "longitude": -82.6038889,
+      "location": "SRID=4326;POINT (-82.6038889 22.9577778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 188,
+    "fields": {
+      "name": "Bauta",
+      "slug": "bauta",
+      "province": 18,
+      "latitude": 22.9821,
+      "longitude": -82.5478,
+      "location": "SRID=4326;POINT (-82.5478000 22.9821000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 189,
+    "fields": {
+      "name": "San Antonio de los Baños",
+      "slug": "san-antonio-de-los-banos",
+      "province": 18,
+      "latitude": 22.8908333,
+      "longitude": -82.5038889,
+      "location": "SRID=4326;POINT (-82.5038889 22.8908333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 190,
+    "fields": {
+      "name": "Güira de Melena",
+      "slug": "guira-de-melena",
+      "province": 18,
+      "latitude": 22.8003,
+      "longitude": -82.5068,
+      "location": "SRID=4326;POINT (-82.5068000 22.8003000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 191,
+    "fields": {
+      "name": "Alquízar",
+      "slug": "alquizar",
+      "province": 18,
+      "latitude": 22.8047222,
+      "longitude": -82.5827778,
+      "location": "SRID=4326;POINT (-82.5827778 22.8047222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 192,
+    "fields": {
+      "name": "Artemisa",
+      "slug": "artemisa",
+      "province": 18,
+      "latitude": 22.8137,
+      "longitude": -82.7619,
+      "location": "SRID=4326;POINT (-82.7619000 22.8137000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 193,
+    "fields": {
+      "name": "Candelaria",
+      "slug": "candelaria",
+      "province": 18,
+      "latitude": 22.7405556,
+      "longitude": -82.9583333,
+      "location": "SRID=4326;POINT (-82.9583333 22.7405556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 194,
+    "fields": {
+      "name": "San Cristóbal",
+      "slug": "san-cristobal",
+      "province": 18,
+      "latitude": 22.7144444,
+      "longitude": -83.0566667,
+      "location": "SRID=4326;POINT (-83.0566667 22.7144444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 195,
+    "fields": {
+      "name": "Playa",
+      "slug": "playa",
+      "province": 19,
+      "latitude": 23.0944,
+      "longitude": -82.4482,
+      "location": "SRID=4326;POINT (-82.4482000 23.0944000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 196,
+    "fields": {
+      "name": "Plaza de la Revolución",
+      "slug": "plaza-de-la-revolucion",
+      "province": 19,
+      "latitude": 23.1158333,
+      "longitude": -82.3877778,
+      "location": "SRID=4326;POINT (-82.3877778 23.1158333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 197,
+    "fields": {
+      "name": "Centro Habana",
+      "slug": "centro-habana",
+      "province": 19,
+      "latitude": 23.1336,
+      "longitude": -82.3638,
+      "location": "SRID=4326;POINT (-82.3638000 23.1336000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 198,
+    "fields": {
+      "name": "La Habana Vieja",
+      "slug": "la-habana-vieja",
+      "province": 19,
+      "latitude": 23.1355556,
+      "longitude": -82.3497222,
+      "location": "SRID=4326;POINT (-82.3497222 23.1355556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 199,
+    "fields": {
+      "name": "Regla",
+      "slug": "regla",
+      "province": 19,
+      "latitude": 23.1255556,
+      "longitude": -82.3319444,
+      "location": "SRID=4326;POINT (-82.3319444 23.1255556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 200,
+    "fields": {
+      "name": "Habana del Este",
+      "slug": "habana-del-este",
+      "province": 19,
+      "latitude": 23.1569444,
+      "longitude": -82.2977778,
+      "location": "SRID=4326;POINT (-82.2977778 23.1569444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 201,
+    "fields": {
+      "name": "Guanabacoa",
+      "slug": "guanabacoa",
+      "province": 19,
+      "latitude": 23.1180556,
+      "longitude": -82.2836111,
+      "location": "SRID=4326;POINT (-82.2836111 23.1180556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 202,
+    "fields": {
+      "name": "San Miguel del Padrón",
+      "slug": "san-miguel-del-padron",
+      "province": 19,
+      "latitude": 23.0919444,
+      "longitude": -82.3277778,
+      "location": "SRID=4326;POINT (-82.3277778 23.0919444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 203,
+    "fields": {
+      "name": "Diez de Octubre",
+      "slug": "diez-de-octubre",
+      "province": 19,
+      "latitude": 23.0888889,
+      "longitude": -82.3597222,
+      "location": "SRID=4326;POINT (-82.3597222 23.0888889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 204,
+    "fields": {
+      "name": "Cerro",
+      "slug": "cerro",
+      "province": 19,
+      "latitude": 23.1036111,
+      "longitude": -82.3819444,
+      "location": "SRID=4326;POINT (-82.3819444 23.1036111)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 205,
+    "fields": {
+      "name": "Marianao",
+      "slug": "marianao",
+      "province": 19,
+      "latitude": 23.0855556,
+      "longitude": -82.4333333,
+      "location": "SRID=4326;POINT (-82.4333333 23.0855556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 206,
+    "fields": {
+      "name": "La Lisa",
+      "slug": "la-lisa",
+      "province": 19,
+      "latitude": 23.0458333,
+      "longitude": -82.4583333,
+      "location": "SRID=4326;POINT (-82.4583333 23.0458333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 207,
+    "fields": {
+      "name": "Boyeros",
+      "slug": "boyeros",
+      "province": 19,
+      "latitude": 23.0219444,
+      "longitude": -82.4016667,
+      "location": "SRID=4326;POINT (-82.4016667 23.0219444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 208,
+    "fields": {
+      "name": "Arroyo Naranjo",
+      "slug": "arroyo-naranjo",
+      "province": 19,
+      "latitude": 23.0377778,
+      "longitude": -82.3327778,
+      "location": "SRID=4326;POINT (-82.3327778 23.0377778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 209,
+    "fields": {
+      "name": "Cotorro",
+      "slug": "cotorro",
+      "province": 19,
+      "latitude": 23.0294444,
+      "longitude": -82.2486111,
+      "location": "SRID=4326;POINT (-82.2486111 23.0294444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 210,
+    "fields": {
+      "name": "Bejucal",
+      "slug": "bejucal",
+      "province": 20,
+      "latitude": 22.9327778,
+      "longitude": -82.3861111,
+      "location": "SRID=4326;POINT (-82.3861111 22.9327778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 211,
+    "fields": {
+      "name": "San José de las Lajas",
+      "slug": "san-jose-de-las-lajas",
+      "province": 20,
+      "latitude": 22.9683,
+      "longitude": -82.1559,
+      "location": "SRID=4326;POINT (-82.1559000 22.9683000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 212,
+    "fields": {
+      "name": "Jaruco",
+      "slug": "jaruco",
+      "province": 20,
+      "latitude": 23.0422,
+      "longitude": -82.0126,
+      "location": "SRID=4326;POINT (-82.0126000 23.0422000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 213,
+    "fields": {
+      "name": "Santa Cruz del Norte",
+      "slug": "santa-cruz-del-norte",
+      "province": 20,
+      "latitude": 23.1552778,
+      "longitude": -81.9241667,
+      "location": "SRID=4326;POINT (-81.9241667 23.1552778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 214,
+    "fields": {
+      "name": "Madruga",
+      "slug": "madruga",
+      "province": 20,
+      "latitude": 22.9147,
+      "longitude": -81.8582,
+      "location": "SRID=4326;POINT (-81.8582000 22.9147000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 215,
+    "fields": {
+      "name": "Nueva Paz",
+      "slug": "nueva-paz",
+      "province": 20,
+      "latitude": 22.7625,
+      "longitude": -81.7563889,
+      "location": "SRID=4326;POINT (-81.7563889 22.7625000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 216,
+    "fields": {
+      "name": "San Nicolás",
+      "slug": "san-nicolas",
+      "province": 20,
+      "latitude": 22.7822222,
+      "longitude": -81.9166667,
+      "location": "SRID=4326;POINT (-81.9166667 22.7822222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 217,
+    "fields": {
+      "name": "Güines",
+      "slug": "guines",
+      "province": 20,
+      "latitude": 22.8408333,
+      "longitude": -82.0238889,
+      "location": "SRID=4326;POINT (-82.0238889 22.8408333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 218,
+    "fields": {
+      "name": "Melena del Sur",
+      "slug": "melena-del-sur",
+      "province": 20,
+      "latitude": 22.7825,
+      "longitude": -82.1483333,
+      "location": "SRID=4326;POINT (-82.1483333 22.7825000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 219,
+    "fields": {
+      "name": "Batabanó",
+      "slug": "batabano",
+      "province": 20,
+      "latitude": 22.7297222,
+      "longitude": -82.2894444,
+      "location": "SRID=4326;POINT (-82.2894444 22.7297222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 220,
+    "fields": {
+      "name": "Quivicán",
+      "slug": "quivican",
+      "province": 20,
+      "latitude": 22.8238889,
+      "longitude": -82.3513889,
+      "location": "SRID=4326;POINT (-82.3513889 22.8238889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 221,
+    "fields": {
+      "name": "Martí",
+      "slug": "marti",
+      "province": 21,
+      "latitude": 22.9527778,
+      "longitude": -80.9252778,
+      "location": "SRID=4326;POINT (-80.9252778 22.9527778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 222,
+    "fields": {
+      "name": "Colón",
+      "slug": "colon",
+      "province": 21,
+      "latitude": 22.7194444,
+      "longitude": -80.9055556,
+      "location": "SRID=4326;POINT (-80.9055556 22.7194444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 223,
+    "fields": {
+      "name": "Perico",
+      "slug": "perico",
+      "province": 21,
+      "latitude": 22.7702778,
+      "longitude": -81.0152778,
+      "location": "SRID=4326;POINT (-81.0152778 22.7702778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 224,
+    "fields": {
+      "name": "Jovellanos",
+      "slug": "jovellanos",
+      "province": 21,
+      "latitude": 22.8058333,
+      "longitude": -81.2027778,
+      "location": "SRID=4326;POINT (-81.2027778 22.8058333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 225,
+    "fields": {
+      "name": "Pedro Betancourt",
+      "slug": "pedro-betancourt",
+      "province": 21,
+      "latitude": 22.7263889,
+      "longitude": -81.2966667,
+      "location": "SRID=4326;POINT (-81.2966667 22.7263889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 226,
+    "fields": {
+      "name": "Limonar",
+      "slug": "limonar",
+      "province": 21,
+      "latitude": 22.9505556,
+      "longitude": -81.4088889,
+      "location": "SRID=4326;POINT (-81.4088889 22.9505556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 227,
+    "fields": {
+      "name": "Unión de Reyes",
+      "slug": "union-de-reyes",
+      "province": 21,
+      "latitude": 22.7988889,
+      "longitude": -81.5372222,
+      "location": "SRID=4326;POINT (-81.5372222 22.7988889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 228,
+    "fields": {
+      "name": "Ciénaga de Zapata",
+      "slug": "cienaga-de-zapata",
+      "province": 21,
+      "latitude": 22.2427778,
+      "longitude": -81.4155556,
+      "location": "SRID=4326;POINT (-81.4155556 22.2427778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 229,
+    "fields": {
+      "name": "Jagüey Grande",
+      "slug": "jaguey-grande",
+      "province": 21,
+      "latitude": 22.5269444,
+      "longitude": -81.1325,
+      "location": "SRID=4326;POINT (-81.1325000 22.5269444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 230,
+    "fields": {
+      "name": "Calimete",
+      "slug": "calimete",
+      "province": 21,
+      "latitude": 22.5341667,
+      "longitude": -80.9097222,
+      "location": "SRID=4326;POINT (-80.9097222 22.5341667)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 231,
+    "fields": {
+      "name": "Los Arabos",
+      "slug": "los-arabos",
+      "province": 21,
+      "latitude": 22.7330556,
+      "longitude": -80.7222222,
+      "location": "SRID=4326;POINT (-80.7222222 22.7330556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 232,
+    "fields": {
+      "name": "Matanzas",
+      "slug": "matanzas",
+      "province": 21,
+      "latitude": 23.0494,
+      "longitude": -81.5766,
+      "location": "SRID=4326;POINT (-81.5766000 23.0494000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 233,
+    "fields": {
+      "name": "Cárdenas",
+      "slug": "cardenas",
+      "province": 21,
+      "latitude": 23.0361,
+      "longitude": -81.2056,
+      "location": "SRID=4326;POINT (-81.2056000 23.0361000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 234,
+    "fields": {
+      "name": "Aguada de Pasajeros",
+      "slug": "aguada-de-pasajeros",
+      "province": 22,
+      "latitude": 22.3847222,
+      "longitude": -80.8477778,
+      "location": "SRID=4326;POINT (-80.8477778 22.3847222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 235,
+    "fields": {
+      "name": "Rodas",
+      "slug": "rodas",
+      "province": 22,
+      "latitude": 22.3422222,
+      "longitude": -80.5569444,
+      "location": "SRID=4326;POINT (-80.5569444 22.3422222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 236,
+    "fields": {
+      "name": "Palmira",
+      "slug": "palmira",
+      "province": 22,
+      "latitude": 22.2447222,
+      "longitude": -80.3933333,
+      "location": "SRID=4326;POINT (-80.3933333 22.2447222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 237,
+    "fields": {
+      "name": "Cienfuegos",
+      "slug": "cienfuegos",
+      "province": 22,
+      "latitude": 22.1456,
+      "longitude": -80.4521,
+      "location": "SRID=4326;POINT (-80.4521000 22.1456000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 238,
+    "fields": {
+      "name": "Cruces",
+      "slug": "cruces",
+      "province": 22,
+      "latitude": 22.3403,
+      "longitude": -80.2708,
+      "location": "SRID=4326;POINT (-80.2708000 22.3403000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 239,
+    "fields": {
+      "name": "Cumanayagua",
+      "slug": "cumanayagua",
+      "province": 22,
+      "latitude": 22.1538889,
+      "longitude": -80.2011111,
+      "location": "SRID=4326;POINT (-80.2011111 22.1538889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 240,
+    "fields": {
+      "name": "Lajas",
+      "slug": "lajas",
+      "province": 22,
+      "latitude": 22.4161111,
+      "longitude": -80.2930556,
+      "location": "SRID=4326;POINT (-80.2930556 22.4161111)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 241,
+    "fields": {
+      "name": "Abreus",
+      "slug": "abreus",
+      "province": 22,
+      "latitude": 22.2783,
+      "longitude": -80.5686,
+      "location": "SRID=4326;POINT (-80.5686000 22.2783000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 242,
+    "fields": {
+      "name": "Corralillo",
+      "slug": "corralillo",
+      "province": 23,
+      "latitude": 22.9872222,
+      "longitude": -80.5888889,
+      "location": "SRID=4326;POINT (-80.5888889 22.9872222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 243,
+    "fields": {
+      "name": "Quemado de Güines",
+      "slug": "quemado-de-guines",
+      "province": 23,
+      "latitude": 22.7883333,
+      "longitude": -80.2530556,
+      "location": "SRID=4326;POINT (-80.2530556 22.7883333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 244,
+    "fields": {
+      "name": "Sagua la Grande",
+      "slug": "sagua-la-grande",
+      "province": 23,
+      "latitude": 22.8058333,
+      "longitude": -80.0758333,
+      "location": "SRID=4326;POINT (-80.0758333 22.8058333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 245,
+    "fields": {
+      "name": "Encrucijada",
+      "slug": "encrucijada",
+      "province": 23,
+      "latitude": 22.6172222,
+      "longitude": -79.8661111,
+      "location": "SRID=4326;POINT (-79.8661111 22.6172222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 246,
+    "fields": {
+      "name": "Camajuaní",
+      "slug": "camajuani",
+      "province": 23,
+      "latitude": 22.4686111,
+      "longitude": -79.7238889,
+      "location": "SRID=4326;POINT (-79.7238889 22.4686111)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 247,
+    "fields": {
+      "name": "Caibarién",
+      "slug": "caibarien",
+      "province": 23,
+      "latitude": 22.5202778,
+      "longitude": -79.4683333,
+      "location": "SRID=4326;POINT (-79.4683333 22.5202778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 248,
+    "fields": {
+      "name": "Remedios",
+      "slug": "remedios",
+      "province": 23,
+      "latitude": 22.4928,
+      "longitude": -79.5458,
+      "location": "SRID=4326;POINT (-79.5458000 22.4928000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 249,
+    "fields": {
+      "name": "Placetas",
+      "slug": "placetas",
+      "province": 23,
+      "latitude": 22.3172,
+      "longitude": -79.6477,
+      "location": "SRID=4326;POINT (-79.6477000 22.3172000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 250,
+    "fields": {
+      "name": "Santa Clara",
+      "slug": "santa-clara",
+      "province": 23,
+      "latitude": 22.4069,
+      "longitude": -79.9647,
+      "location": "SRID=4326;POINT (-79.9647000 22.4069000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 251,
+    "fields": {
+      "name": "Cifuentes",
+      "slug": "cifuentes",
+      "province": 23,
+      "latitude": 22.6488889,
+      "longitude": -80.0327778,
+      "location": "SRID=4326;POINT (-80.0327778 22.6488889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 252,
+    "fields": {
+      "name": "Ranchuelo",
+      "slug": "ranchuelo",
+      "province": 23,
+      "latitude": 22.3744444,
+      "longitude": -80.1466667,
+      "location": "SRID=4326;POINT (-80.1466667 22.3744444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 253,
+    "fields": {
+      "name": "Santo Domingo",
+      "slug": "santo-domingo",
+      "province": 23,
+      "latitude": 22.5844444,
+      "longitude": -80.2397222,
+      "location": "SRID=4326;POINT (-80.2397222 22.5844444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 254,
+    "fields": {
+      "name": "Manicaragua",
+      "slug": "manicaragua",
+      "province": 23,
+      "latitude": 22.1502778,
+      "longitude": -79.9758333,
+      "location": "SRID=4326;POINT (-79.9758333 22.1502778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 255,
+    "fields": {
+      "name": "Yaguajay",
+      "slug": "yaguajay",
+      "province": 24,
+      "latitude": 22.3311,
+      "longitude": -79.2367,
+      "location": "SRID=4326;POINT (-79.2367000 22.3311000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 256,
+    "fields": {
+      "name": "Jatibonico",
+      "slug": "jatibonico",
+      "province": 24,
+      "latitude": 21.9444444,
+      "longitude": -79.1694444,
+      "location": "SRID=4326;POINT (-79.1694444 21.9444444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 257,
+    "fields": {
+      "name": "Taguasco",
+      "slug": "taguasco",
+      "province": 24,
+      "latitude": 22.0022222,
+      "longitude": -79.2641667,
+      "location": "SRID=4326;POINT (-79.2641667 22.0022222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 258,
+    "fields": {
+      "name": "Cabaiguán",
+      "slug": "cabaiguan",
+      "province": 24,
+      "latitude": 22.0794444,
+      "longitude": -79.4969444,
+      "location": "SRID=4326;POINT (-79.4969444 22.0794444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 259,
+    "fields": {
+      "name": "Fomento",
+      "slug": "fomento",
+      "province": 24,
+      "latitude": 22.1072222,
+      "longitude": -79.7194444,
+      "location": "SRID=4326;POINT (-79.7194444 22.1072222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 260,
+    "fields": {
+      "name": "Sancti Spíritus",
+      "slug": "sancti-spiritus",
+      "province": 24,
+      "latitude": 21.9322,
+      "longitude": -79.4425,
+      "location": "SRID=4326;POINT (-79.4425000 21.9322000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 261,
+    "fields": {
+      "name": "Trinidad",
+      "slug": "trinidad",
+      "province": 24,
+      "latitude": 21.8067,
+      "longitude": -79.9847,
+      "location": "SRID=4326;POINT (-79.9847000 21.8067000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 262,
+    "fields": {
+      "name": "La Sierpe",
+      "slug": "la-sierpe",
+      "province": 24,
+      "latitude": 21.7677778,
+      "longitude": -79.2433333,
+      "location": "SRID=4326;POINT (-79.2433333 21.7677778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 263,
+    "fields": {
+      "name": "Chambas",
+      "slug": "chambas",
+      "province": 25,
+      "latitude": 22.1958,
+      "longitude": -78.4917,
+      "location": "SRID=4326;POINT (-78.4917000 22.1958000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 264,
+    "fields": {
+      "name": "Morón",
+      "slug": "moron",
+      "province": 25,
+      "latitude": 22.1094,
+      "longitude": -78.6267,
+      "location": "SRID=4326;POINT (-78.6267000 22.1094000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 265,
+    "fields": {
+      "name": "Bolivia",
+      "slug": "bolivia",
+      "province": 25,
+      "latitude": 22.0758333,
+      "longitude": -78.3508333,
+      "location": "SRID=4326;POINT (-78.3508333 22.0758333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 266,
+    "fields": {
+      "name": "Ciro Redondo",
+      "slug": "ciro-redondo",
+      "province": 25,
+      "latitude": 22.0241667,
+      "longitude": -78.7030556,
+      "location": "SRID=4326;POINT (-78.7030556 22.0241667)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 267,
+    "fields": {
+      "name": "Primero de Enero",
+      "slug": "primero-de-enero",
+      "province": 25,
+      "latitude": 21.9483333,
+      "longitude": -78.4277778,
+      "location": "SRID=4326;POINT (-78.4277778 21.9483333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 268,
+    "fields": {
+      "name": "Ciego de Ávila",
+      "slug": "ciego-de-avila",
+      "province": 25,
+      "latitude": 21.84,
+      "longitude": -78.7619,
+      "location": "SRID=4326;POINT (-78.7619000 21.8400000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 269,
+    "fields": {
+      "name": "Venezuela",
+      "slug": "venezuela",
+      "province": 25,
+      "latitude": 21.7383333,
+      "longitude": -78.7858333,
+      "location": "SRID=4326;POINT (-78.7858333 21.7383333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 270,
+    "fields": {
+      "name": "Florencia",
+      "slug": "florencia",
+      "province": 25,
+      "latitude": 22.1466667,
+      "longitude": -78.9741667,
+      "location": "SRID=4326;POINT (-78.9741667 22.1466667)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 271,
+    "fields": {
+      "name": "Majagua",
+      "slug": "majagua",
+      "province": 25,
+      "latitude": 21.9233333,
+      "longitude": -78.9902778,
+      "location": "SRID=4326;POINT (-78.9902778 21.9233333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 272,
+    "fields": {
+      "name": "Baraguá",
+      "slug": "baragua",
+      "province": 25,
+      "latitude": 21.6838889,
+      "longitude": -78.6263889,
+      "location": "SRID=4326;POINT (-78.6263889 21.6838889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 273,
+    "fields": {
+      "name": "Nuevitas",
+      "slug": "nuevitas",
+      "province": 26,
+      "latitude": 21.5461,
+      "longitude": -77.2644,
+      "location": "SRID=4326;POINT (-77.2644000 21.5461000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 274,
+    "fields": {
+      "name": "Minas",
+      "slug": "minas",
+      "province": 26,
+      "latitude": 21.4897222,
+      "longitude": -77.6044444,
+      "location": "SRID=4326;POINT (-77.6044444 21.4897222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 275,
+    "fields": {
+      "name": "Sierra de Cubitas",
+      "slug": "sierra-de-cubitas",
+      "province": 26,
+      "latitude": 21.7308333,
+      "longitude": -77.7705556,
+      "location": "SRID=4326;POINT (-77.7705556 21.7308333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 276,
+    "fields": {
+      "name": "Esmeralda",
+      "slug": "esmeralda",
+      "province": 26,
+      "latitude": 21.8511111,
+      "longitude": -78.1113889,
+      "location": "SRID=4326;POINT (-78.1113889 21.8511111)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 277,
+    "fields": {
+      "name": "Camagüey",
+      "slug": "camaguey",
+      "province": 26,
+      "latitude": 21.3789,
+      "longitude": -77.9186,
+      "location": "SRID=4326;POINT (-77.9186000 21.3789000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 278,
+    "fields": {
+      "name": "Carlos Manuel de Céspedes",
+      "slug": "carlos-manuel-de-cespedes",
+      "province": 26,
+      "latitude": 21.5775,
+      "longitude": -78.2763889,
+      "location": "SRID=4326;POINT (-78.2763889 21.5775000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 279,
+    "fields": {
+      "name": "Vertientes",
+      "slug": "vertientes",
+      "province": 26,
+      "latitude": 21.2586111,
+      "longitude": -78.1502778,
+      "location": "SRID=4326;POINT (-78.1502778 21.2586111)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 280,
+    "fields": {
+      "name": "Florida",
+      "slug": "florida",
+      "province": 26,
+      "latitude": 21.5256,
+      "longitude": -78.2272,
+      "location": "SRID=4326;POINT (-78.2272000 21.5256000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 281,
+    "fields": {
+      "name": "Guáimaro",
+      "slug": "guaimaro",
+      "province": 26,
+      "latitude": 21.0552778,
+      "longitude": -77.3483333,
+      "location": "SRID=4326;POINT (-77.3483333 21.0552778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 282,
+    "fields": {
+      "name": "Sibanicú",
+      "slug": "sibanicu",
+      "province": 26,
+      "latitude": 21.2388889,
+      "longitude": -77.5258333,
+      "location": "SRID=4326;POINT (-77.5258333 21.2388889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 283,
+    "fields": {
+      "name": "Najasa",
+      "slug": "najasa",
+      "province": 26,
+      "latitude": 21.0833333,
+      "longitude": -77.7463889,
+      "location": "SRID=4326;POINT (-77.7463889 21.0833333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 284,
+    "fields": {
+      "name": "Jimaguayú",
+      "slug": "jimaguayu",
+      "province": 26,
+      "latitude": 21.2669444,
+      "longitude": -77.8302778,
+      "location": "SRID=4326;POINT (-77.8302778 21.2669444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 285,
+    "fields": {
+      "name": "Santa Cruz del Sur",
+      "slug": "santa-cruz-del-sur",
+      "province": 26,
+      "latitude": 20.7202778,
+      "longitude": -77.9936111,
+      "location": "SRID=4326;POINT (-77.9936111 20.7202778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 286,
+    "fields": {
+      "name": "Manatí",
+      "slug": "manati",
+      "province": 27,
+      "latitude": 21.3147222,
+      "longitude": -76.9361111,
+      "location": "SRID=4326;POINT (-76.9361111 21.3147222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 287,
+    "fields": {
+      "name": "Puerto Padre",
+      "slug": "puerto-padre",
+      "province": 27,
+      "latitude": 21.1958,
+      "longitude": -76.5886,
+      "location": "SRID=4326;POINT (-76.5886000 21.1958000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 288,
+    "fields": {
+      "name": "Jesús Menéndez",
+      "slug": "jesus-menendez",
+      "province": 27,
+      "latitude": 21.1605556,
+      "longitude": -76.4791667,
+      "location": "SRID=4326;POINT (-76.4791667 21.1605556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 289,
+    "fields": {
+      "name": "Majibacoa",
+      "slug": "majibacoa",
+      "province": 27,
+      "latitude": 20.9208333,
+      "longitude": -76.8752778,
+      "location": "SRID=4326;POINT (-76.8752778 20.9208333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 290,
+    "fields": {
+      "name": "Las Tunas",
+      "slug": "las-tunas",
+      "province": 27,
+      "latitude": 20.9608,
+      "longitude": -76.9511,
+      "location": "SRID=4326;POINT (-76.9511000 20.9608000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 291,
+    "fields": {
+      "name": "Jobabo",
+      "slug": "jobabo",
+      "province": 27,
+      "latitude": 20.9672222,
+      "longitude": -77.2802778,
+      "location": "SRID=4326;POINT (-77.2802778 20.9672222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 292,
+    "fields": {
+      "name": "Colombia",
+      "slug": "colombia",
+      "province": 27,
+      "latitude": 20.9894444,
+      "longitude": -77.4191667,
+      "location": "SRID=4326;POINT (-77.4191667 20.9894444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 293,
+    "fields": {
+      "name": "Amancio",
+      "slug": "amancio",
+      "province": 27,
+      "latitude": 20.8197,
+      "longitude": -77.5794,
+      "location": "SRID=4326;POINT (-77.5794000 20.8197000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 294,
+    "fields": {
+      "name": "Rafael Freyre",
+      "slug": "rafael-freyre",
+      "province": 28,
+      "latitude": 21.0319444,
+      "longitude": -75.9972222,
+      "location": "SRID=4326;POINT (-75.9972222 21.0319444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 295,
+    "fields": {
+      "name": "Gibara",
+      "slug": "gibara",
+      "province": 28,
+      "latitude": 21.1097,
+      "longitude": -76.1328,
+      "location": "SRID=4326;POINT (-76.1328000 21.1097000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 296,
+    "fields": {
+      "name": "Banes",
+      "slug": "banes",
+      "province": 28,
+      "latitude": 20.9694,
+      "longitude": -75.7186,
+      "location": "SRID=4326;POINT (-75.7186000 20.9694000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 297,
+    "fields": {
+      "name": "Antilla",
+      "slug": "antilla",
+      "province": 28,
+      "latitude": 20.8447222,
+      "longitude": -75.7472222,
+      "location": "SRID=4326;POINT (-75.7472222 20.8447222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 298,
+    "fields": {
+      "name": "Báguanos",
+      "slug": "baguanos",
+      "province": 28,
+      "latitude": 20.7625,
+      "longitude": -76.0313889,
+      "location": "SRID=4326;POINT (-76.0313889 20.7625000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 299,
+    "fields": {
+      "name": "Holguín",
+      "slug": "holguin",
+      "province": 28,
+      "latitude": 20.8881,
+      "longitude": -76.2606,
+      "location": "SRID=4326;POINT (-76.2606000 20.8881000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 300,
+    "fields": {
+      "name": "Calixto García",
+      "slug": "calixto-garcia",
+      "province": 28,
+      "latitude": 20.8555556,
+      "longitude": -76.6027778,
+      "location": "SRID=4326;POINT (-76.6027778 20.8555556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 301,
+    "fields": {
+      "name": "Cacocum",
+      "slug": "cacocum",
+      "province": 28,
+      "latitude": 20.7438889,
+      "longitude": -76.3238889,
+      "location": "SRID=4326;POINT (-76.3238889 20.7438889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 302,
+    "fields": {
+      "name": "Urbano Noris",
+      "slug": "urbano-noris",
+      "province": 28,
+      "latitude": 20.6016667,
+      "longitude": -76.1244444,
+      "location": "SRID=4326;POINT (-76.1244444 20.6016667)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 303,
+    "fields": {
+      "name": "Cueto",
+      "slug": "cueto",
+      "province": 28,
+      "latitude": 20.6480556,
+      "longitude": -75.9297222,
+      "location": "SRID=4326;POINT (-75.9297222 20.6480556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 304,
+    "fields": {
+      "name": "Mayarí",
+      "slug": "mayari",
+      "province": 28,
+      "latitude": 20.6594444,
+      "longitude": -75.6777778,
+      "location": "SRID=4326;POINT (-75.6777778 20.6594444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 305,
+    "fields": {
+      "name": "Frank País",
+      "slug": "frank-pais",
+      "province": 28,
+      "latitude": 20.6638889,
+      "longitude": -75.2816667,
+      "location": "SRID=4326;POINT (-75.2816667 20.6638889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 306,
+    "fields": {
+      "name": "Sagua de Tánamo",
+      "slug": "sagua-de-tanamo",
+      "province": 28,
+      "latitude": 20.5863889,
+      "longitude": -75.2416667,
+      "location": "SRID=4326;POINT (-75.2416667 20.5863889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 307,
+    "fields": {
+      "name": "Moa",
+      "slug": "moa",
+      "province": 28,
+      "latitude": 20.6580556,
+      "longitude": -74.9444444,
+      "location": "SRID=4326;POINT (-74.9444444 20.6580556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 308,
+    "fields": {
+      "name": "Río Cauto",
+      "slug": "rio-cauto",
+      "province": 29,
+      "latitude": 20.5591667,
+      "longitude": -76.9169444,
+      "location": "SRID=4326;POINT (-76.9169444 20.5591667)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 309,
+    "fields": {
+      "name": "Cauto Cristo",
+      "slug": "cauto-cristo",
+      "province": 29,
+      "latitude": 20.5588889,
+      "longitude": -76.4711111,
+      "location": "SRID=4326;POINT (-76.4711111 20.5588889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 310,
+    "fields": {
+      "name": "Jiguaní",
+      "slug": "jiguani",
+      "province": 29,
+      "latitude": 20.3775,
+      "longitude": -76.425,
+      "location": "SRID=4326;POINT (-76.4250000 20.3775000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 311,
+    "fields": {
+      "name": "Bayamo",
+      "slug": "bayamo",
+      "province": 29,
+      "latitude": 20.3769,
+      "longitude": -76.6436,
+      "location": "SRID=4326;POINT (-76.6436000 20.3769000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 312,
+    "fields": {
+      "name": "Yara",
+      "slug": "yara",
+      "province": 29,
+      "latitude": 20.2766667,
+      "longitude": -76.9502778,
+      "location": "SRID=4326;POINT (-76.9502778 20.2766667)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 313,
+    "fields": {
+      "name": "Manzanillo",
+      "slug": "manzanillo",
+      "province": 29,
+      "latitude": 20.3403,
+      "longitude": -77.1167,
+      "location": "SRID=4326;POINT (-77.1167000 20.3403000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 314,
+    "fields": {
+      "name": "Campechuela",
+      "slug": "campechuela",
+      "province": 29,
+      "latitude": 20.2341667,
+      "longitude": -77.2802778,
+      "location": "SRID=4326;POINT (-77.2802778 20.2341667)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 315,
+    "fields": {
+      "name": "Media Luna",
+      "slug": "media-luna",
+      "province": 29,
+      "latitude": 20.1444444,
+      "longitude": -77.4344444,
+      "location": "SRID=4326;POINT (-77.4344444 20.1444444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 316,
+    "fields": {
+      "name": "Niquero",
+      "slug": "niquero",
+      "province": 29,
+      "latitude": 20.0422222,
+      "longitude": -77.5816667,
+      "location": "SRID=4326;POINT (-77.5816667 20.0422222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 317,
+    "fields": {
+      "name": "Pilón",
+      "slug": "pilon",
+      "province": 29,
+      "latitude": 19.9055556,
+      "longitude": -77.3211111,
+      "location": "SRID=4326;POINT (-77.3211111 19.9055556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 318,
+    "fields": {
+      "name": "Bartolomé Masó",
+      "slug": "bartolome-maso",
+      "province": 29,
+      "latitude": 20.1683333,
+      "longitude": -76.9433333,
+      "location": "SRID=4326;POINT (-76.9433333 20.1683333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 319,
+    "fields": {
+      "name": "Buey Arriba",
+      "slug": "buey-arriba",
+      "province": 29,
+      "latitude": 20.1738889,
+      "longitude": -76.7488889,
+      "location": "SRID=4326;POINT (-76.7488889 20.1738889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 320,
+    "fields": {
+      "name": "Guisa",
+      "slug": "guisa",
+      "province": 29,
+      "latitude": 20.2538889,
+      "longitude": -76.5369444,
+      "location": "SRID=4326;POINT (-76.5369444 20.2538889)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 321,
+    "fields": {
+      "name": "Contramaestre",
+      "slug": "contramaestre",
+      "province": 30,
+      "latitude": 20.3016667,
+      "longitude": -76.2472222,
+      "location": "SRID=4326;POINT (-76.2472222 20.3016667)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 322,
+    "fields": {
+      "name": "Mella",
+      "slug": "mella",
+      "province": 30,
+      "latitude": 20.3805556,
+      "longitude": -75.9127778,
+      "location": "SRID=4326;POINT (-75.9127778 20.3805556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 323,
+    "fields": {
+      "name": "San Luis",
+      "slug": "san-luis",
+      "province": 30,
+      "latitude": 20.1883,
+      "longitude": -75.8508,
+      "location": "SRID=4326;POINT (-75.8508000 20.1883000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 324,
+    "fields": {
+      "name": "Songo-La Maya",
+      "slug": "songo-la-maya",
+      "province": 30,
+      "latitude": 20.1733333,
+      "longitude": -75.6469444,
+      "location": "SRID=4326;POINT (-75.6469444 20.1733333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 325,
+    "fields": {
+      "name": "Santiago de Cuba",
+      "slug": "santiago-de-cuba",
+      "province": 30,
+      "latitude": 20.0247,
+      "longitude": -75.8219,
+      "location": "SRID=4326;POINT (-75.8219000 20.0247000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 326,
+    "fields": {
+      "name": "Segundo Frente",
+      "slug": "segundo-frente",
+      "province": 30,
+      "latitude": 20.4111111,
+      "longitude": -75.5275,
+      "location": "SRID=4326;POINT (-75.5275000 20.4111111)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 327,
+    "fields": {
+      "name": "Guamá",
+      "slug": "guama",
+      "province": 30,
+      "latitude": 19.9777778,
+      "longitude": -76.4169444,
+      "location": "SRID=4326;POINT (-76.4169444 19.9777778)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 328,
+    "fields": {
+      "name": "Tercer Frente",
+      "slug": "tercer-frente",
+      "province": 30,
+      "latitude": 20.1716667,
+      "longitude": -76.3252778,
+      "location": "SRID=4326;POINT (-76.3252778 20.1716667)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 329,
+    "fields": {
+      "name": "Palma Soriano",
+      "slug": "palma-soriano",
+      "province": 30,
+      "latitude": 20.2147222,
+      "longitude": -75.9927778,
+      "location": "SRID=4326;POINT (-75.9927778 20.2147222)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 330,
+    "fields": {
+      "name": "El Salvador",
+      "slug": "el-salvador",
+      "province": 31,
+      "latitude": 20.2736111,
+      "longitude": -75.2247222,
+      "location": "SRID=4326;POINT (-75.2247222 20.2736111)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 331,
+    "fields": {
+      "name": "Manuel Tames",
+      "slug": "manuel-tames",
+      "province": 31,
+      "latitude": 20.1830556,
+      "longitude": -75.0527778,
+      "location": "SRID=4326;POINT (-75.0527778 20.1830556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 332,
+    "fields": {
+      "name": "Yateras",
+      "slug": "yateras",
+      "province": 31,
+      "latitude": 20.3505556,
+      "longitude": -74.9986111,
+      "location": "SRID=4326;POINT (-74.9986111 20.3505556)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 333,
+    "fields": {
+      "name": "Baracoa",
+      "slug": "baracoa",
+      "province": 31,
+      "latitude": 20.3478,
+      "longitude": -74.4961,
+      "location": "SRID=4326;POINT (-74.4961000 20.3478000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 334,
+    "fields": {
+      "name": "Maisí",
+      "slug": "maisi",
+      "province": 31,
+      "latitude": 20.2469,
+      "longitude": -74.1517,
+      "location": "SRID=4326;POINT (-74.1517000 20.2469000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 335,
+    "fields": {
+      "name": "Imías",
+      "slug": "imias",
+      "province": 31,
+      "latitude": 20.0691667,
+      "longitude": -74.6338889,
+      "location": "SRID=4326;POINT (-74.6338889 20.0691667)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 336,
+    "fields": {
+      "name": "San Antonio del Sur",
+      "slug": "san-antonio-del-sur",
+      "province": 31,
+      "latitude": 20.0644444,
+      "longitude": -74.8136111,
+      "location": "SRID=4326;POINT (-74.8136111 20.0644444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 337,
+    "fields": {
+      "name": "Guantánamo",
+      "slug": "guantanamo",
+      "province": 31,
+      "latitude": 20.1453,
+      "longitude": -75.2039,
+      "location": "SRID=4326;POINT (-75.2039000 20.1453000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 338,
+    "fields": {
+      "name": "Caimanera",
+      "slug": "caimanera",
+      "province": 31,
+      "latitude": 19.9933333,
+      "longitude": -75.1644444,
+      "location": "SRID=4326;POINT (-75.1644444 19.9933333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 339,
+    "fields": {
+      "name": "Niceto Pérez",
+      "slug": "niceto-perez",
+      "province": 31,
+      "latitude": 20.1269444,
+      "longitude": -75.3452778,
+      "location": "SRID=4326;POINT (-75.3452778 20.1269444)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 340,
+    "fields": {
+      "name": "Isla de la Juventud",
+      "slug": "isla-de-la-juventud",
+      "province": 32,
+      "latitude": 21.6833333,
+      "longitude": -82.85,
+      "location": "SRID=4326;POINT (-82.8500000 21.6833333)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 341,
+    "fields": {
+      "name": "Vedado",
+      "slug": "vedado",
+      "province": 19,
+      "latitude": 23.1172,
+      "longitude": -82.397,
+      "location": "SRID=4326;POINT (-82.3970000 23.1172000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 342,
+    "fields": {
+      "name": "Miramar",
+      "slug": "miramar",
+      "province": 19,
+      "latitude": 23.1106,
+      "longitude": -82.4298,
+      "location": "SRID=4326;POINT (-82.4298000 23.1106000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 343,
+    "fields": {
+      "name": "Varadero",
+      "slug": "varadero",
+      "province": 21,
+      "latitude": 23.1422,
+      "longitude": -81.2861,
+      "location": "SRID=4326;POINT (-81.2861000 23.1422000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 344,
+    "fields": {
+      "name": "El Cobre",
+      "slug": "el-cobre",
+      "province": 30,
+      "latitude": 20.0486,
+      "longitude": -75.9461,
+      "location": "SRID=4326;POINT (-75.9461000 20.0486000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 345,
+    "fields": {
+      "name": "Nueva Gerona",
+      "slug": "nueva-gerona",
+      "province": 32,
+      "latitude": 21.8867,
+      "longitude": -82.8008,
+      "location": "SRID=4326;POINT (-82.8008000 21.8867000)"
+    }
+  },
+  {
+    "model": "properties.municipality",
+    "pk": 346,
+    "fields": {
+      "name": "San Fe",
+      "slug": "san-fe",
+      "province": 32,
+      "latitude": 21.7833,
+      "longitude": -82.8833,
+      "location": "SRID=4326;POINT (-82.8833000 21.7833000)"
+    }
+  }
+]
